@@ -13,6 +13,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Detection2D.msg"
   "msg/Detection2DArray.msg"
   "msg/ObstacleWarning.msg"
+  "msg/SemanticObstacle.msg"
+  "msg/SemanticObstacleArray.msg"
   DEPENDENCIES std_msgs
 )
 

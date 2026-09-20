@@ -114,13 +114,21 @@ local_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
+        observation_sources: scan semantic_obstacles
         scan:
           topic: /scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
+          raytrace_range: 9.0
+          obstacle_range: 8.0
+        semantic_obstacles:
+          topic: /vision/costmap_obstacles
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "PointCloud2"
           raytrace_range: 9.0
           obstacle_range: 8.0
       always_send_full_costmap: True
@@ -140,13 +148,21 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
+        observation_sources: scan semantic_obstacles
         scan:
           topic: /scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
+          raytrace_range: 9.0
+          obstacle_range: 8.0
+        semantic_obstacles:
+          topic: /vision/costmap_obstacles
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "PointCloud2"
           raytrace_range: 9.0
           obstacle_range: 8.0
       static_layer:

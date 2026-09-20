@@ -12,9 +12,11 @@ ros2_ws/install/
 ros2_ws/log/
 
 # Large Model Weights & Datasets
+models/**/*.pt
 models/*.pt
+weights/
+runs/
 datasets/
-results/*.png
 results/*.mp4
 
 # Editor & System Artifacts
