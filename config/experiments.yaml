@@ -1,0 +1,29 @@
+# ==============================================================================
+# Predefined Autonomous Navigation Experiment Scenarios
+# All poses reference verified locations in config/navigation_locations.yaml
+# ==============================================================================
+
+scenarios:
+  scenario_1:
+    name: "Plaza to Warehouse South Crossing"
+    start: start_a
+    goal: goal_a
+    description: "Navigate 20m from South-West Plaza across open floor into East Warehouse corridor"
+
+  scenario_2:
+    name: "North Corridor to Office Wing"
+    start: start_b
+    goal: goal_b
+    description: "Navigate from North-West entrance through hallway into North-East Office"
+
+  scenario_3:
+    name: "Warehouse Aisle to Hospital Wing"
+    start: start_c
+    goal: goal_c
+    description: "Navigate from Warehouse aisle through central archway into Hospital Wing room"
+
+  cv_dynamic_obstacle_test:
+    name: "Dynamic Obstacle & Semantic Replanning"
+    start: start_a
+    goal: goal_a
+    description: "Cross Plaza while dynamic cart intercepts path, testing YOLOv8n detection, LiDAR fusion, and Nav2 costmap replanning"

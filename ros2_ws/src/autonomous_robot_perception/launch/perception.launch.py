@@ -34,5 +34,11 @@ def generate_launch_description():
             executable='navigation_perception_node',
             name='navigation_perception_node',
             output='screen'
+        ),
+        Node(
+            package='autonomous_robot_perception',
+            executable='navigation_controller_node',
+            name='navigation_controller_node',
+            output='screen'
         )
     ])
