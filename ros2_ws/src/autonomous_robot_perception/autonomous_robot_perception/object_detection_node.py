@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 import os
+import sys
+
+# Ensure Python AI virtual environment site-packages are accessible
+venv_site = '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/site-packages'
+if venv_site not in sys.path:
+    sys.path.insert(0, venv_site)
+
 import cv2
 import numpy as np
 import rclpy
@@ -28,7 +35,19 @@ class ObjectDetectionNode(Node):
         self.get_logger().info(f'Loading YOLO model from: {model_path} on {self.device}')
         self.model = YOLO(model_path)
         self.model.to(self.device)
-        self.get_logger().info(f'YOLO model loaded on {self.device}. GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"}')
+
+        # Strictly verify that model parameters are actually allocated on CUDA
+        param_device = next(self.model.model.parameters()).device
+        self.get_logger().info(f'YOLO device: {param_device}')
+        if torch.cuda.is_available():
+            self.get_logger().info(f'GPU: {torch.cuda.get_device_name(0)}')
+        else:
+            self.get_logger().warn('CUDA is not available according to PyTorch!')
+
+        assert str(param_device) == 'cuda:0', (
+            f"CRITICAL: Model parameters allocated on {param_device} instead of cuda:0!"
+        )
+        self.get_logger().info('Model parameter verification PASSED: cuda:0 confirmed.')
 
         self.bridge = CvBridge()
 
@@ -75,7 +94,8 @@ class ObjectDetectionNode(Node):
 
         if self.publish_annotated:
             annotated_frame = results.plot()
-            annotated_msg = self.bridge.cv2_to_imgmsg(annotated_frame, encoding='bgr8')
+            annotated_msg = self.bridge.cv2_to_imgmsg(annotated_frame, encoding='passthrough')
+            annotated_msg.encoding = 'bgr8'
             annotated_msg.header = msg.header
             self.pub_annotated.publish(annotated_msg)
 

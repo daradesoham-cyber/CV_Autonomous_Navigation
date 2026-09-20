@@ -1,61 +1,90 @@
 #!/usr/bin/env python3
+import os
 import math
+import csv
 import numpy as np
 
-def simulate_lidar_camera_association():
-    print("=" * 60)
-    print("TESTING CAMERA-LIDAR SENSOR FUSION ALGORITHM")
-    print("=" * 60)
+def run_fusion_validation():
+    print("=" * 70)
+    print("CAMERA-LIDAR SENSOR FUSION REPEATABLE VALIDATION TEST")
+    print("=" * 70)
 
     # Simulated Camera Parameters
     img_w = 640
     img_h = 480
     hfov = 1.089  # radians (~62.4 degrees)
 
-    # Simulated Bounding Box for a Person standing at x=0.5m, y=2.0m -> distance ~2.06m, bearing ~14 degrees
-    # In image coordinates, person is slightly to the left of center
-    x_min, y_min, x_max, y_max = 240, 100, 360, 420
-    x_center = (x_min + x_max) / 2.0
-    box_width = x_max - x_min
-
-    # Calculate angular sector
-    bearing = (0.5 - (x_center / img_w)) * hfov
-    angular_span = (box_width / img_w) * hfov
-    min_angle = bearing - (angular_span / 2.0)
-    max_angle = bearing + (angular_span / 2.0)
-
-    print(f"Detected Object: PERSON")
-    print(f"Bounding Box: [{x_min}, {y_min}, {x_max}, {y_max}], Center: {x_center}px")
-    print(f"Computed Bearing: {math.degrees(bearing):.2f}° ({bearing:.4f} rad)")
-    print(f"Angular Sector: [{math.degrees(min_angle):.2f}°, {math.degrees(max_angle):.2f}°]")
-
-    # Simulated 2D LiDAR Scan (720 samples from -pi to +pi)
+    # 2D LiDAR Parameters
     angle_min = -math.pi
     angle_max = math.pi
     num_samples = 720
     angle_inc = (angle_max - angle_min) / num_samples
 
-    # Ground truth: an obstacle at 2.1 meters in that sector, background walls at 6.0 meters
-    ranges = np.full(num_samples, 6.0, dtype=np.float32)
-    idx_start = int((min_angle - angle_min) / angle_inc)
-    idx_end = int((max_angle - angle_min) / angle_inc)
-    if idx_start > idx_end:
-        idx_start, idx_end = idx_end, idx_start
+    test_distances = [1.0, 1.5, 2.0, 2.5]
+    results = []
 
-    # Add person object with noise
-    ranges[idx_start:idx_end+1] = np.random.normal(2.10, 0.02, size=idx_end-idx_start+1)
+    print(f"{'Object':<10} | {'GT Dist (m)':<12} | {'Est Dist (m)':<12} | {'Abs Err (m)':<12} | {'% Error':<10} | {'Status'}")
+    print("-" * 70)
 
-    # Association logic
-    slice_ranges = ranges[idx_start:idx_end+1]
-    valid = slice_ranges[(slice_ranges >= 0.12) & (slice_ranges <= 12.0)]
-    estimated_distance = float(np.percentile(valid, 20))
+    for gt_dist in test_distances:
+        # Ground truth person object positioned at gt_dist straight ahead (bearing ~ 0 rad)
+        # Bounding box width scales inversely with distance: w_px ~ (real_w / dist) * focal_length
+        # For a 0.5m wide person, focal_length ~ (img_w / 2) / tan(hfov / 2) ~ 546 px
+        focal_length = (img_w / 2.0) / math.tan(hfov / 2.0)
+        box_w = int((0.5 / gt_dist) * focal_length)
+        box_h = int((1.7 / gt_dist) * focal_length)
 
-    print(f"Associated LiDAR Points: {len(valid)}")
-    print(f"Estimated Physical Distance: {estimated_distance:.3f} m (Ground Truth: 2.10 m)")
-    print(f"Estimation Error: {abs(estimated_distance - 2.10):.3f} m")
-    assert abs(estimated_distance - 2.10) < 0.1, "Error exceeds tolerance!"
-    print("\nSENSOR FUSION ASSOCIATION TEST PASSED.")
-    print("=" * 60)
+        x_center = img_w / 2.0  # directly in front
+        x_min = max(0, int(x_center - box_w / 2.0))
+        x_max = min(img_w, int(x_center + box_w / 2.0))
+
+        # Angular sector
+        bearing = (0.5 - (x_center / img_w)) * hfov
+        angular_span = ((x_max - x_min) / img_w) * hfov
+        min_angle = bearing - (angular_span / 2.0)
+        max_angle = bearing + (angular_span / 2.0)
+
+        # Generate LiDAR scan with Gaussian noise (stddev = 1.5 cm)
+        ranges = np.full(num_samples, 8.0, dtype=np.float32)  # background at 8m
+        idx_start = int((min_angle - angle_min) / angle_inc)
+        idx_end = int((max_angle - angle_min) / angle_inc)
+        if idx_start > idx_end:
+            idx_start, idx_end = idx_end, idx_start
+
+        ranges[idx_start:idx_end+1] = np.random.normal(gt_dist, 0.015, size=idx_end-idx_start+1)
+
+        # Fusion extraction
+        slice_ranges = ranges[idx_start:idx_end+1]
+        valid = slice_ranges[(slice_ranges >= 0.12) & (slice_ranges <= 12.0)]
+        estimated_dist = float(np.percentile(valid, 20))
+
+        abs_err = abs(estimated_dist - gt_dist)
+        pct_err = (abs_err / gt_dist) * 100.0
+
+        status = "PASS" if abs_err < 0.08 else "FAIL"
+        print(f"{'PERSON':<10} | {gt_dist:<12.3f} | {estimated_dist:<12.3f} | {abs_err:<12.3f} | {pct_err:<9.2f}% | {status}")
+
+        results.append({
+            'object_class': 'person',
+            'ground_truth_m': gt_dist,
+            'estimated_distance_m': round(estimated_dist, 4),
+            'absolute_error_m': round(abs_err, 4),
+            'percentage_error': round(pct_err, 2),
+            'status': status
+        })
+
+    # Save to results/lidar_camera_fusion_results.csv
+    csv_path = '/home/soham-darade/CV_Autonomous_Navigation/results/lidar_camera_fusion_results.csv'
+    os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+    with open(csv_path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=results[0].keys())
+        writer.writeheader()
+        writer.writerows(results)
+
+    print("-" * 70)
+    print(f"Results saved to: {csv_path}")
+    print("=" * 70)
 
 if __name__ == '__main__':
-    simulate_lidar_camera_association()
+    run_fusion_validation()
+

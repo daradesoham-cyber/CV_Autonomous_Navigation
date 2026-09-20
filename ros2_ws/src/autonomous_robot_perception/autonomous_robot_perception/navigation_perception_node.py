@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+import sys
+
+# Ensure Python AI virtual environment site-packages are accessible
+venv_site = '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/site-packages'
+if venv_site not in sys.path:
+    sys.path.insert(0, venv_site)
+
 import rclpy
 from rclpy.node import Node
 from autonomous_robot_interfaces.msg import ObstacleWarning, Detection2DArray

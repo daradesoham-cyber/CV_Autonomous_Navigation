@@ -280,5 +280,61 @@
       </link>
     </model>
 
+    <!-- ==================== DEDICATED CV TEST AREA ==================== -->
+    <model name="cv_test_area">
+      <static>true</static>
+
+      <!-- 1. Person Model: Multi-part humanoid geometry (head, torso, legs) with realistic proportions -->
+      <link name="cv_person">
+        <pose>-8.0 -10.0 0 0 0 0</pose>
+        <!-- Torso -->
+        <collision name="col_torso"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>0.3 0.5 0.7</size></box></geometry></collision>
+        <visual name="vis_torso"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>0.3 0.5 0.7</size></box></geometry><material><diffuse>0.15 0.25 0.65 1</diffuse></material></visual>
+        <!-- Head -->
+        <collision name="col_head"><pose>0 0 1.55 0 0 0</pose><geometry><sphere><radius>0.15</radius></sphere></geometry></collision>
+        <visual name="vis_head"><pose>0 0 1.55 0 0 0</pose><geometry><sphere><radius>0.15</radius></sphere></geometry><material><diffuse>0.85 0.70 0.55 1</diffuse></material></visual>
+        <!-- Left Leg -->
+        <collision name="col_lleg"><pose>0 0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry></collision>
+        <visual name="vis_lleg"><pose>0 0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><diffuse>0.1 0.1 0.15 1</diffuse></material></visual>
+        <!-- Right Leg -->
+        <collision name="col_rleg"><pose>0 -0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry></collision>
+        <visual name="vis_rleg"><pose>0 -0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><diffuse>0.1 0.1 0.15 1</diffuse></material></visual>
+      </link>
+
+      <!-- 2. Office Chair Model: Seat, backrest, support pole, and base -->
+      <link name="cv_chair">
+        <pose>-7.8 -11.2 0 0 0 0.4</pose>
+        <!-- Seat -->
+        <collision name="col_seat"><pose>0 0 0.45 0 0 0</pose><geometry><box><size>0.45 0.45 0.08</size></box></geometry></collision>
+        <visual name="vis_seat"><pose>0 0 0.45 0 0 0</pose><geometry><box><size>0.45 0.45 0.08</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+        <!-- Backrest -->
+        <collision name="col_back"><pose>-0.2 0 0.75 0 0 0</pose><geometry><box><size>0.06 0.42 0.55</size></box></geometry></collision>
+        <visual name="vis_back"><pose>-0.2 0 0.75 0 0 0</pose><geometry><box><size>0.06 0.42 0.55</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+        <!-- Support Leg -->
+        <collision name="col_leg"><pose>0 0 0.22 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.44</length></cylinder></geometry></collision>
+        <visual name="vis_leg"><pose>0 0 0.22 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.44</length></cylinder></geometry><material><diffuse>0.7 0.7 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- 3. Packaging Box: Textured corrugated brown storage box -->
+      <link name="cv_box">
+        <pose>-7.8 -8.8 0.3 0 0 -0.2</pose>
+        <collision name="col"><geometry><box><size>0.6 0.6 0.6</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.6 0.6 0.6</size></box></geometry><material><diffuse>0.68 0.48 0.28 1</diffuse><ambient>0.5 0.35 0.2 1</ambient></material></visual>
+      </link>
+
+      <!-- 4. High-Visibility Traffic Cone: Orange conical profile with white reflective strip -->
+      <link name="cv_cone">
+        <pose>-7.0 -10.0 0 0 0 0</pose>
+        <!-- Base -->
+        <collision name="col_base"><pose>0 0 0.02 0 0 0</pose><geometry><box><size>0.4 0.4 0.04</size></box></geometry></collision>
+        <visual name="vis_base"><pose>0 0 0.02 0 0 0</pose><geometry><box><size>0.4 0.4 0.04</size></box></geometry><material><diffuse>1.0 0.35 0.0 1</diffuse></material></visual>
+        <!-- Cone Body -->
+        <collision name="col_body"><pose>0 0 0.38 0 0 0</pose><geometry><cylinder><radius>0.14</radius><length>0.72</length></cylinder></geometry></collision>
+        <visual name="vis_body"><pose>0 0 0.38 0 0 0</pose><geometry><cylinder><radius>0.14</radius><length>0.72</length></cylinder></geometry><material><diffuse>1.0 0.35 0.0 1</diffuse></material></visual>
+        <!-- Reflective Stripe -->
+        <visual name="vis_stripe"><pose>0 0 0.45 0 0 0</pose><geometry><cylinder><radius>0.145</radius><length>0.15</length></cylinder></geometry><material><diffuse>0.95 0.95 0.95 1</diffuse></material></visual>
+      </link>
+    </model>
+
   </world>
 </sdf>
