@@ -1,0 +1,284 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="complex_world">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.002</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Essential Gazebo Sim Systems -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <!-- Lighting -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.5 0.3 -0.9</direction>
+    </light>
+
+    <!-- Ground Plane -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>40 40</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>40 40</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== OUTER BOUNDARY WALLS (28m x 28m) ==================== -->
+    <model name="boundary_walls">
+      <static>true</static>
+      <!-- North Wall -->
+      <link name="north_wall">
+        <pose>0 14 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>28.4 0.4 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>28.4 0.4 2.5</size></box></geometry><material><diffuse>0.7 0.72 0.75 1</diffuse></material></visual>
+      </link>
+      <!-- South Wall -->
+      <link name="south_wall">
+        <pose>0 -14 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>28.4 0.4 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>28.4 0.4 2.5</size></box></geometry><material><diffuse>0.7 0.72 0.75 1</diffuse></material></visual>
+      </link>
+      <!-- East Wall -->
+      <link name="east_wall">
+        <pose>14 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.4 28.4 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.4 28.4 2.5</size></box></geometry><material><diffuse>0.7 0.72 0.75 1</diffuse></material></visual>
+      </link>
+      <!-- West Wall -->
+      <link name="west_wall">
+        <pose>-14 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.4 28.4 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.4 28.4 2.5</size></box></geometry><material><diffuse>0.7 0.72 0.75 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== ZONE DIVIDER WALLS & CORRIDORS ==================== -->
+    <model name="interior_dividers">
+      <static>true</static>
+      <!-- Divider between South (Zones A/B) and North (Zone C) with central archway -->
+      <link name="divider_south_north_west">
+        <pose>-7.5 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>13 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>13 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      </link>
+      <link name="divider_south_north_east">
+        <pose>8.0 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>12 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>12 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- Divider between Zone A (Open) and Zone B (Warehouse) with corridor gap -->
+      <link name="divider_ab_south">
+        <pose>0 -9 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 10 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 10 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== ZONE A: OPEN PLAZA & TRANSIT ==================== -->
+    <!-- Pillars and columns -->
+    <model name="zone_a_pillars">
+      <static>true</static>
+      <link name="p1">
+        <pose>-10 -5 1.25 0 0 0</pose>
+        <collision name="col"><geometry><cylinder><radius>0.4</radius><length>2.5</length></cylinder></geometry></collision>
+        <visual name="vis"><geometry><cylinder><radius>0.4</radius><length>2.5</length></cylinder></geometry><material><diffuse>0.8 0.4 0.1 1</diffuse></material></visual>
+      </link>
+      <link name="p2">
+        <pose>-6 -8 1.25 0 0 0</pose>
+        <collision name="col"><geometry><cylinder><radius>0.4</radius><length>2.5</length></cylinder></geometry></collision>
+        <visual name="vis"><geometry><cylinder><radius>0.4</radius><length>2.5</length></cylinder></geometry><material><diffuse>0.8 0.4 0.1 1</diffuse></material></visual>
+      </link>
+      <link name="p3">
+        <pose>-9 -11 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.8 0.8 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.8 0.8 2.5</size></box></geometry><material><diffuse>0.3 0.5 0.8 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Traffic cones and bollards in Zone A -->
+    <model name="traffic_cones_zone_a">
+      <static>true</static>
+      <link name="cone1">
+        <pose>-4 -4 0.35 0 0 0</pose>
+        <collision name="col"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry></collision>
+        <visual name="vis"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry><material><diffuse>1.0 0.4 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="cone2">
+        <pose>-4 -6 0.35 0 0 0</pose>
+        <collision name="col"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry></collision>
+        <visual name="vis"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry><material><diffuse>1.0 0.4 0.0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== ZONE B: WAREHOUSE AISLES & SHELVES ==================== -->
+    <model name="warehouse_shelves">
+      <static>true</static>
+      <!-- Rack Row 1 -->
+      <link name="shelf1">
+        <pose>4 -8 1.2 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.0 8.0 2.4</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.0 8.0 2.4</size></box></geometry><material><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
+      </link>
+      <!-- Rack Row 2 -->
+      <link name="shelf2">
+        <pose>8 -8 1.2 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.0 8.0 2.4</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.0 8.0 2.4</size></box></geometry><material><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
+      </link>
+      <!-- Rack Row 3 -->
+      <link name="shelf3">
+        <pose>12 -8 1.2 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.0 8.0 2.4</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.0 8.0 2.4</size></box></geometry><material><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Warehouse Boxes and Pallets -->
+    <model name="warehouse_boxes">
+      <static>true</static>
+      <!-- Box stack in aisle 1 -->
+      <link name="box1">
+        <pose>6 -4 0.5 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.8 0.8 1.0</size></box></geometry><material><diffuse>0.7 0.5 0.3 1</diffuse></material></visual>
+      </link>
+      <!-- Box blocking path partially in aisle 2 -->
+      <link name="box2">
+        <pose>10 -7 0.4 0 0 0.3</pose>
+        <collision name="col"><geometry><box><size>0.7 0.7 0.8</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.7 0.7 0.8</size></box></geometry><material><diffuse>0.65 0.45 0.25 1</diffuse></material></visual>
+      </link>
+      <!-- Pallet stack -->
+      <link name="pallet_stack">
+        <pose>6 -11 0.6 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.2 1.2 1.2</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.2 1.2 1.2</size></box></geometry><material><diffuse>0.5 0.35 0.2 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== ZONE C: OFFICE & HOSPITAL ROOMS ==================== -->
+    <model name="zone_c_rooms">
+      <static>true</static>
+      <!-- Room 1 Wall (West Office) -->
+      <link name="r1_east">
+        <pose>-6 8 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 8 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 8 2.5</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
+      </link>
+      <link name="r1_doorway_header">
+        <pose>-6 3 2.1 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 2 0.8</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 2 0.8</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- Central Corridor Wall -->
+      <link name="corridor_wall_east">
+        <pose>3 7 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 10 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 10 2.5</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- Hospital Room Divider -->
+      <link name="hospital_room_wall">
+        <pose>8.5 7 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>11 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>11 0.3 2.5</size></box></geometry><material><diffuse>0.7 0.8 0.8 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Office & Hospital Furniture (Semantic Objects for CV) -->
+    <model name="office_furniture">
+      <static>true</static>
+      <!-- Meeting Table (detected as dining table) -->
+      <link name="table1">
+        <pose>-10 8 0.4 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.6 2.4 0.8</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.6 2.4 0.8</size></box></geometry><material><diffuse>0.4 0.25 0.15 1</diffuse></material></visual>
+      </link>
+      <!-- Office Chairs (detected as chair) -->
+      <link name="chair1">
+        <pose>-11.2 8 0.45 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.5 0.5 0.9</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+      </link>
+      <link name="chair2">
+        <pose>-8.8 8 0.45 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.5 0.5 0.9</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+      </link>
+
+      <!-- Hospital Bed / Stretcher -->
+      <link name="hospital_bed">
+        <pose>8 11 0.45 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.2 2.2 0.9</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.2 2.2 0.9</size></box></geometry><material><diffuse>0.9 0.9 0.95 1</diffuse></material></visual>
+      </link>
+      <link name="hospital_chair">
+        <pose>6.5 11 0.45 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.5 0.5 0.9</size></box></geometry><material><diffuse>0.2 0.4 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- Person Representative Model (detected as person) -->
+      <link name="person_standing">
+        <pose>-1 5 0.85 0 0 0</pose>
+        <collision name="col"><geometry><cylinder><radius>0.25</radius><length>1.7</length></cylinder></geometry></collision>
+        <visual name="vis_torso"><geometry><cylinder><radius>0.25</radius><length>1.3</length></cylinder></geometry><material><diffuse>0.2 0.3 0.7 1</diffuse></material></visual>
+        <visual name="vis_head"><pose>0 0 0.75 0 0 0</pose><geometry><sphere><radius>0.15</radius></sphere></geometry><material><diffuse>0.85 0.7 0.6 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== DYNAMIC OBSTACLES ==================== -->
+    <!-- Dynamic Cart: Moves back and forth along the corridor between Zone A and C -->
+    <model name="dynamic_obstacle_cart">
+      <pose>0 2 0.3 0 0 0</pose>
+      <link name="cart_link">
+        <inertial>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>0.5</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>0.5</iyy><iyz>0</iyz><izz>0.5</izz>
+          </inertia>
+        </inertial>
+        <collision name="col">
+          <geometry><box><size>0.8 0.6 0.6</size></box></geometry>
+        </collision>
+        <visual name="vis">
+          <geometry><box><size>0.8 0.6 0.6</size></box></geometry>
+          <material><diffuse>0.9 0.1 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
