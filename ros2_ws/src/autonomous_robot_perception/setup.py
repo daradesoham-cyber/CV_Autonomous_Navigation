@@ -28,6 +28,7 @@ setup(
             'lidar_camera_fusion_node = autonomous_robot_perception.lidar_camera_fusion_node:main',
             'navigation_perception_node = autonomous_robot_perception.navigation_perception_node:main',
             'navigation_controller_node = autonomous_robot_perception.navigation_controller_node:main',
+            'sign_detection_node = autonomous_robot_perception.sign_detection_node:main',
         ],
     },
 )

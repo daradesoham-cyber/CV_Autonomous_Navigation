@@ -22,32 +22,62 @@ class ObjectDetectionNode(Node):
     def __init__(self):
         super().__init__('object_detection_node')
 
-        self.declare_parameter('model_path', '/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n.pt')
+        self.declare_parameter(
+            'model_path',
+            '/home/soham-darade/CV_Autonomous_Navigation/models/custom_yolov8n/weights/best.pt'
+        )
         self.declare_parameter('confidence_threshold', 0.35)
         self.declare_parameter('device', 'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.declare_parameter('publish_annotated_image', True)
 
-        model_path = self.get_parameter('model_path').get_parameter_value().string_value
+        model_path = os.path.abspath(self.get_parameter('model_path').get_parameter_value().string_value)
         self.conf_thresh = self.get_parameter('confidence_threshold').get_parameter_value().double_value
         self.device = self.get_parameter('device').get_parameter_value().string_value
         self.publish_annotated = self.get_parameter('publish_annotated_image').get_parameter_value().bool_value
 
-        self.get_logger().info(f'Loading YOLO model from: {model_path} on {self.device}')
+        # Verify model file exists
+        if not os.path.isfile(model_path):
+            self.get_logger().error(f"CRITICAL: Model file not found at '{model_path}'!")
+            raise FileNotFoundError(f"YOLO model file not found: {model_path}")
+
+        # Strictly verify CUDA availability
+        if not torch.cuda.is_available():
+            self.get_logger().error("CRITICAL: CUDA is not available according to PyTorch!")
+            raise RuntimeError("CUDA is required on cuda:0 (NVIDIA RTX 3050) but not available!")
+
+        gpu_name = torch.cuda.get_device_name(0)
+
+        # Load custom YOLO model
         self.model = YOLO(model_path)
         self.model.to(self.device)
 
-        # Strictly verify that model parameters are actually allocated on CUDA
+        # Strictly verify model parameters are on cuda:0
         param_device = next(self.model.model.parameters()).device
-        self.get_logger().info(f'YOLO device: {param_device}')
-        if torch.cuda.is_available():
-            self.get_logger().info(f'GPU: {torch.cuda.get_device_name(0)}')
-        else:
-            self.get_logger().warn('CUDA is not available according to PyTorch!')
+        if str(param_device) != 'cuda:0':
+            self.get_logger().error(f"CRITICAL: Model allocated on {param_device} instead of cuda:0!")
+            raise RuntimeError(f"Expected model on cuda:0, got {param_device}")
 
-        assert str(param_device) == 'cuda:0', (
-            f"CRITICAL: Model parameters allocated on {param_device} instead of cuda:0!"
-        )
-        self.get_logger().info('Model parameter verification PASSED: cuda:0 confirmed.')
+        # Format and validate custom class names
+        class_names_list = [self.model.names[i] for i in sorted(self.model.names.keys())]
+        expected_classes = {'person', 'chair', 'box', 'cone', 'pallet', 'shelf', 'hospital_bed', 'cart'}
+        loaded_classes = set(class_names_list)
+
+        # Startup banner as required by specifications
+        print(f"\n==================================================")
+        print(f"MODEL:\n{model_path}")
+        print(f"\nDEVICE:\n{param_device}")
+        print(f"\nGPU:\n{gpu_name}")
+        print(f"\nCLASS NAMES:\n{class_names_list}")
+        print(f"==================================================\n")
+
+        self.get_logger().info(f"YOLO model successfully initialized on {param_device} ({gpu_name})")
+        self.get_logger().info(f"Loaded {len(class_names_list)} custom classes: {class_names_list}")
+
+        if not expected_classes.issubset(loaded_classes):
+            self.get_logger().warning(
+                f"Custom classes mismatch! Missing: {expected_classes - loaded_classes}. "
+                f"Loaded classes: {loaded_classes}"
+            )
 
         self.bridge = CvBridge()
 

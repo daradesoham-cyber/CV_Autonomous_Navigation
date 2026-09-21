@@ -14,13 +14,23 @@ ros2_ws/log/
 # Large Model Weights & Datasets
 models/**/*.pt
 models/*.pt
+models/yolov8n/
 weights/
 runs/
 datasets/
 results/*.mp4
 
-# Editor & System Artifacts
+# SQLite Runtime Databases & Logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+ros2_ws/src/autonomous_robot_navigation/config/navigation_memory.db
+
+# Editor, Backup & System Artifacts
 .DS_Store
 .vscode/
 *.swp
 *.bak
+*.backup
+*~

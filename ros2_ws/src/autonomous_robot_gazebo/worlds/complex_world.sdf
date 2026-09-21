@@ -19,33 +19,27 @@
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 15 0 0 0</pose>
-      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
       <specular>0.3 0.3 0.3 1</specular>
       <direction>-0.5 0.3 -0.9</direction>
     </light>
 
-    <!-- Ground Plane -->
+    <!-- Ground Plane (40m x 40m) -->
     <model name="ground_plane">
       <static>true</static>
       <link name="link">
         <collision name="collision">
           <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>40 40</size>
-            </plane>
+            <plane><normal>0 0 1</normal><size>40 40</size></plane>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>40 40</size>
-            </plane>
+            <plane><normal>0 0 1</normal><size>40 40</size></plane>
           </geometry>
           <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <ambient>0.85 0.85 0.85 1</ambient>
+            <diffuse>0.85 0.85 0.85 1</diffuse>
             <specular>0.2 0.2 0.2 1</specular>
           </material>
         </visual>
@@ -81,22 +75,30 @@
       </link>
     </model>
 
-    <!-- ==================== ZONE DIVIDER WALLS & CORRIDORS ==================== -->
+    <!-- ==================== INTERIOR DIVIDERS & CORRIDORS ==================== -->
     <model name="interior_dividers">
       <static>true</static>
-      <!-- Divider between South (Zones A/B) and North (Zone C) with central archway -->
-      <link name="divider_south_north_west">
-        <pose>-7.5 0 1.25 0 0 0</pose>
-        <collision name="col"><geometry><box><size>13 0.3 2.5</size></box></geometry></collision>
-        <visual name="vis"><geometry><box><size>13 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      <!-- Divider between South and North: West Segment with Bypass Opening at x=-8 -->
+      <link name="div_sn_west_a">
+        <pose>-11.5 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>5.0 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>5.0 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
       </link>
-      <link name="divider_south_north_east">
-        <pose>8.0 0 1.25 0 0 0</pose>
-        <collision name="col"><geometry><box><size>12 0.3 2.5</size></box></geometry></collision>
-        <visual name="vis"><geometry><box><size>12 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      <!-- West Bypass Opening is between x=-9.0 and x=-7.0 -->
+      <link name="div_sn_west_b">
+        <pose>-4.0 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>6.0 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>6.0 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
       </link>
 
-      <!-- Divider between Zone A (Open) and Zone B (Warehouse) with corridor gap -->
+      <!-- Central Archway is between x=-1.0 and x=+2.0 -->
+      <link name="div_sn_east">
+        <pose>8.0 0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>12.0 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>12.0 0.3 2.5</size></box></geometry><material><diffuse>0.6 0.65 0.7 1</diffuse></material></visual>
+      </link>
+
+      <!-- Divider between Zone A (Open) and Zone B (Warehouse) with corridor gap at y=-10 -->
       <link name="divider_ab_south">
         <pose>0 -9 1.25 0 0 0</pose>
         <collision name="col"><geometry><box><size>0.3 10 2.5</size></box></geometry></collision>
@@ -104,8 +106,73 @@
       </link>
     </model>
 
-    <!-- ==================== ZONE A: OPEN PLAZA & TRANSIT ==================== -->
-    <!-- Pillars and columns -->
+    <!-- ==================== DEAD END 1: ZONE A STORAGE ALCOVE ==================== -->
+    <model name="dead_end_1_storage_alcove">
+      <static>true</static>
+      <!-- Wall enclosing storage alcove -->
+      <link name="alcove_wall_north">
+        <pose>-11.0 -6.0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>6.0 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>6.0 0.3 2.5</size></box></geometry><material><diffuse>0.65 0.6 0.6 1</diffuse></material></visual>
+      </link>
+      <link name="alcove_wall_east">
+        <pose>-8.0 -4.5 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 3.0 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 3.0 2.5</size></box></geometry><material><diffuse>0.65 0.6 0.6 1</diffuse></material></visual>
+      </link>
+      <!-- Dead end obstruction (piles of crates/boxes) at (-12, -4.5) -->
+      <link name="alcove_boxes">
+        <pose>-12.0 -4.5 0.6 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.6 2.0 1.2</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.6 2.0 1.2</size></box></geometry><material><diffuse>0.6 0.45 0.25 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== DEAD END 2: WAREHOUSE CUL-DE-SAC ==================== -->
+    <model name="dead_end_2_warehouse_culdesac">
+      <static>true</static>
+      <!-- Partition wall at x=11.0 separating outer aisle from dead end -->
+      <link name="culdesac_wall">
+        <pose>10.5 -12.5 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 3.0 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 3.0 2.5</size></box></geometry><material><diffuse>0.6 0.6 0.65 1</diffuse></material></visual>
+      </link>
+      <!-- Obstruction pallets blocking the end at (12.5, -12.5) -->
+      <link name="culdesac_pallets">
+        <pose>12.5 -12.5 0.7 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.5 1.5 1.4</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.5 1.5 1.4</size></box></geometry><material><diffuse>0.5 0.35 0.2 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== DEAD END 3: OFFICE UTILITY CLOSET ==================== -->
+    <model name="dead_end_3_utility_closet">
+      <static>true</static>
+      <!-- Corridor walls forming narrow utility dead end at (-12, 12) -->
+      <link name="closet_wall_south">
+        <pose>-11.0 10.5 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>6.0 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>6.0 0.3 2.5</size></box></geometry><material><diffuse>0.7 0.7 0.7 1</diffuse></material></visual>
+      </link>
+      <link name="closet_wall_east">
+        <pose>-8.0 12.0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>0.3 3.0 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.3 3.0 2.5</size></box></geometry><material><diffuse>0.7 0.7 0.7 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== DEAD END 4: HOSPITAL EAST ALCOVE ==================== -->
+    <model name="dead_end_4_hospital_alcove">
+      <static>true</static>
+      <!-- Wall blocking the far east hospital corridor at (12, 8) -->
+      <link name="hospital_alcove_block">
+        <pose>12.0 8.0 1.25 0 0 0</pose>
+        <collision name="col"><geometry><box><size>3.6 0.3 2.5</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>3.6 0.3 2.5</size></box></geometry><material><diffuse>0.7 0.8 0.8 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== ZONE A: OPEN PLAZA & PILLARS ==================== -->
     <model name="zone_a_pillars">
       <static>true</static>
       <link name="p1">
@@ -125,25 +192,10 @@
       </link>
     </model>
 
-    <!-- Traffic cones and bollards in Zone A -->
-    <model name="traffic_cones_zone_a">
-      <static>true</static>
-      <link name="cone1">
-        <pose>-4 -4 0.35 0 0 0</pose>
-        <collision name="col"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry></collision>
-        <visual name="vis"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry><material><diffuse>1.0 0.4 0.0 1</diffuse></material></visual>
-      </link>
-      <link name="cone2">
-        <pose>-4 -6 0.35 0 0 0</pose>
-        <collision name="col"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry></collision>
-        <visual name="vis"><geometry><cylinder><radius>0.18</radius><length>0.7</length></cylinder></geometry><material><diffuse>1.0 0.4 0.0 1</diffuse></material></visual>
-      </link>
-    </model>
-
     <!-- ==================== ZONE B: WAREHOUSE AISLES & SHELVES ==================== -->
     <model name="warehouse_shelves">
       <static>true</static>
-      <!-- Rack Row 1 -->
+      <!-- Rack Row 1 (Main Aisle Border) -->
       <link name="shelf1">
         <pose>4 -8 1.2 0 0 0</pose>
         <collision name="col"><geometry><box><size>1.0 8.0 2.4</size></box></geometry></collision>
@@ -157,28 +209,25 @@
       </link>
       <!-- Rack Row 3 -->
       <link name="shelf3">
-        <pose>12 -8 1.2 0 0 0</pose>
-        <collision name="col"><geometry><box><size>1.0 8.0 2.4</size></box></geometry></collision>
-        <visual name="vis"><geometry><box><size>1.0 8.0 2.4</size></box></geometry><material><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
+        <pose>12 -7 1.2 0 0 0</pose>
+        <collision name="col"><geometry><box><size>1.0 6.0 2.4</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>1.0 6.0 2.4</size></box></geometry><material><diffuse>0.2 0.3 0.6 1</diffuse></material></visual>
       </link>
     </model>
 
     <!-- Warehouse Boxes and Pallets -->
     <model name="warehouse_boxes">
       <static>true</static>
-      <!-- Box stack in aisle 1 -->
       <link name="box1">
         <pose>6 -4 0.5 0 0 0</pose>
         <collision name="col"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.8 0.8 1.0</size></box></geometry><material><diffuse>0.7 0.5 0.3 1</diffuse></material></visual>
       </link>
-      <!-- Box blocking path partially in aisle 2 -->
       <link name="box2">
         <pose>10 -7 0.4 0 0 0.3</pose>
         <collision name="col"><geometry><box><size>0.7 0.7 0.8</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.7 0.7 0.8</size></box></geometry><material><diffuse>0.65 0.45 0.25 1</diffuse></material></visual>
       </link>
-      <!-- Pallet stack -->
       <link name="pallet_stack">
         <pose>6 -11 0.6 0 0 0</pose>
         <collision name="col"><geometry><box><size>1.2 1.2 1.2</size></box></geometry></collision>
@@ -195,19 +244,12 @@
         <collision name="col"><geometry><box><size>0.3 8 2.5</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.3 8 2.5</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
       </link>
-      <link name="r1_doorway_header">
-        <pose>-6 3 2.1 0 0 0</pose>
-        <collision name="col"><geometry><box><size>0.3 2 0.8</size></box></geometry></collision>
-        <visual name="vis"><geometry><box><size>0.3 2 0.8</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
-      </link>
-
       <!-- Central Corridor Wall -->
       <link name="corridor_wall_east">
         <pose>3 7 1.25 0 0 0</pose>
         <collision name="col"><geometry><box><size>0.3 10 2.5</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.3 10 2.5</size></box></geometry><material><diffuse>0.75 0.75 0.7 1</diffuse></material></visual>
       </link>
-
       <!-- Hospital Room Divider -->
       <link name="hospital_room_wall">
         <pose>8.5 7 1.25 0 0 0</pose>
@@ -219,13 +261,13 @@
     <!-- Office & Hospital Furniture (Semantic Objects for CV) -->
     <model name="office_furniture">
       <static>true</static>
-      <!-- Meeting Table (detected as dining table) -->
+      <!-- Meeting Table -->
       <link name="table1">
         <pose>-10 8 0.4 0 0 0</pose>
         <collision name="col"><geometry><box><size>1.6 2.4 0.8</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>1.6 2.4 0.8</size></box></geometry><material><diffuse>0.4 0.25 0.15 1</diffuse></material></visual>
       </link>
-      <!-- Office Chairs (detected as chair) -->
+      <!-- Office Chairs -->
       <link name="chair1">
         <pose>-11.2 8 0.45 0 0 0</pose>
         <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
@@ -236,7 +278,6 @@
         <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.5 0.5 0.9</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
       </link>
-
       <!-- Hospital Bed / Stretcher -->
       <link name="hospital_bed">
         <pose>8 11 0.45 0 0 0</pose>
@@ -248,8 +289,7 @@
         <collision name="col"><geometry><box><size>0.5 0.5 0.9</size></box></geometry></collision>
         <visual name="vis"><geometry><box><size>0.5 0.5 0.9</size></box></geometry><material><diffuse>0.2 0.4 0.7 1</diffuse></material></visual>
       </link>
-
-      <!-- Person Representative Model (detected as person) -->
+      <!-- Person Model -->
       <link name="person_standing">
         <pose>-1 5 0.85 0 0 0</pose>
         <collision name="col"><geometry><cylinder><radius>0.25</radius><length>1.7</length></cylinder></geometry></collision>
@@ -259,7 +299,6 @@
     </model>
 
     <!-- ==================== DYNAMIC OBSTACLES ==================== -->
-    <!-- Dynamic Cart: Moves back and forth along the corridor between Zone A and C -->
     <model name="dynamic_obstacle_cart">
       <pose>0 2 0.3 0 0 0</pose>
       <link name="cart_link">
@@ -270,69 +309,178 @@
             <iyy>0.5</iyy><iyz>0</iyz><izz>0.5</izz>
           </inertia>
         </inertial>
-        <collision name="col">
-          <geometry><box><size>0.8 0.6 0.6</size></box></geometry>
-        </collision>
-        <visual name="vis">
-          <geometry><box><size>0.8 0.6 0.6</size></box></geometry>
-          <material><diffuse>0.9 0.1 0.1 1</diffuse></material>
+        <collision name="col"><geometry><box><size>0.8 0.6 0.6</size></box></geometry></collision>
+        <visual name="vis"><geometry><box><size>0.8 0.6 0.6</size></box></geometry><material><diffuse>0.9 0.1 0.1 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ==================== VISUAL SIGNPOSTS AT JUNCTIONS ==================== -->
+    <!-- Signpost 1: Plaza Junction (at -5.5, -9.2 facing West/South) -->
+    <model name="signpost_1_plaza">
+      <static>true</static>
+      <pose>-5.5 -9.2 0 0 0 0</pose>
+      <!-- Post -->
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: WAREHOUSE -> -->
+        <visual name="vis_sign_warehouse">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/warehouse_right.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: OFFICE ^ -->
+        <visual name="vis_sign_office">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/office_straight.png</albedo_map></metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
 
-    <!-- ==================== DEDICATED CV TEST AREA ==================== -->
-    <model name="cv_test_area">
+    <!-- Signpost 2: Warehouse Entrance (at 2.5, -9.2 facing South) -->
+    <model name="signpost_2_warehouse_entrance">
       <static>true</static>
-
-      <!-- 1. Person Model: Multi-part humanoid geometry (head, torso, legs) with realistic proportions -->
-      <link name="cv_person">
-        <pose>-8.0 -10.0 0 0 0 0</pose>
-        <!-- Torso -->
-        <collision name="col_torso"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>0.3 0.5 0.7</size></box></geometry></collision>
-        <visual name="vis_torso"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>0.3 0.5 0.7</size></box></geometry><material><diffuse>0.15 0.25 0.65 1</diffuse></material></visual>
-        <!-- Head -->
-        <collision name="col_head"><pose>0 0 1.55 0 0 0</pose><geometry><sphere><radius>0.15</radius></sphere></geometry></collision>
-        <visual name="vis_head"><pose>0 0 1.55 0 0 0</pose><geometry><sphere><radius>0.15</radius></sphere></geometry><material><diffuse>0.85 0.70 0.55 1</diffuse></material></visual>
-        <!-- Left Leg -->
-        <collision name="col_lleg"><pose>0 0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry></collision>
-        <visual name="vis_lleg"><pose>0 0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><diffuse>0.1 0.1 0.15 1</diffuse></material></visual>
-        <!-- Right Leg -->
-        <collision name="col_rleg"><pose>0 -0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry></collision>
-        <visual name="vis_rleg"><pose>0 -0.15 0.35 0 0 0</pose><geometry><cylinder><radius>0.08</radius><length>0.7</length></cylinder></geometry><material><diffuse>0.1 0.1 0.15 1</diffuse></material></visual>
+      <pose>2.5 -9.2 0 0 0 1.57</pose>
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: WAREHOUSE ^ -->
+        <visual name="vis_sign_warehouse">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/warehouse_straight.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: HOSPITAL ^ -->
+        <visual name="vis_sign_hospital">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_straight.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
       </link>
+    </model>
 
-      <!-- 2. Office Chair Model: Seat, backrest, support pole, and base -->
-      <link name="cv_chair">
-        <pose>-7.8 -11.2 0 0 0 0.4</pose>
-        <!-- Seat -->
-        <collision name="col_seat"><pose>0 0 0.45 0 0 0</pose><geometry><box><size>0.45 0.45 0.08</size></box></geometry></collision>
-        <visual name="vis_seat"><pose>0 0 0.45 0 0 0</pose><geometry><box><size>0.45 0.45 0.08</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
-        <!-- Backrest -->
-        <collision name="col_back"><pose>-0.2 0 0.75 0 0 0</pose><geometry><box><size>0.06 0.42 0.55</size></box></geometry></collision>
-        <visual name="vis_back"><pose>-0.2 0 0.75 0 0 0</pose><geometry><box><size>0.06 0.42 0.55</size></box></geometry><material><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
-        <!-- Support Leg -->
-        <collision name="col_leg"><pose>0 0 0.22 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.44</length></cylinder></geometry></collision>
-        <visual name="vis_leg"><pose>0 0 0.22 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>0.44</length></cylinder></geometry><material><diffuse>0.7 0.7 0.7 1</diffuse></material></visual>
+    <!-- Signpost 3: Warehouse Mid Junction (at 5.5, -2.8 facing South) -->
+    <model name="signpost_3_warehouse_mid">
+      <static>true</static>
+      <pose>5.5 -2.8 0 0 0 1.57</pose>
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: HOSPITAL ^ -->
+        <visual name="vis_sign_hospital">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_straight.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: LAB <- -->
+        <visual name="vis_sign_lab">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/lab_left.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
       </link>
+    </model>
 
-      <!-- 3. Packaging Box: Textured corrugated brown storage box -->
-      <link name="cv_box">
-        <pose>-7.8 -8.8 0.3 0 0 -0.2</pose>
-        <collision name="col"><geometry><box><size>0.6 0.6 0.6</size></box></geometry></collision>
-        <visual name="vis"><geometry><box><size>0.6 0.6 0.6</size></box></geometry><material><diffuse>0.68 0.48 0.28 1</diffuse><ambient>0.5 0.35 0.2 1</ambient></material></visual>
+    <!-- Signpost 4: Central Archway Junction (at 0.8, 1.2 facing South) -->
+    <model name="signpost_4_central_archway">
+      <static>true</static>
+      <pose>0.8 1.2 0 0 0 1.57</pose>
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: HOSPITAL -> -->
+        <visual name="vis_sign_hospital">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_right.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: OFFICE <- -->
+        <visual name="vis_sign_office">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/office_left.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
       </link>
+    </model>
 
-      <!-- 4. High-Visibility Traffic Cone: Orange conical profile with white reflective strip -->
-      <link name="cv_cone">
-        <pose>-7.0 -10.0 0 0 0 0</pose>
-        <!-- Base -->
-        <collision name="col_base"><pose>0 0 0.02 0 0 0</pose><geometry><box><size>0.4 0.4 0.04</size></box></geometry></collision>
-        <visual name="vis_base"><pose>0 0 0.02 0 0 0</pose><geometry><box><size>0.4 0.4 0.04</size></box></geometry><material><diffuse>1.0 0.35 0.0 1</diffuse></material></visual>
-        <!-- Cone Body -->
-        <collision name="col_body"><pose>0 0 0.38 0 0 0</pose><geometry><cylinder><radius>0.14</radius><length>0.72</length></cylinder></geometry></collision>
-        <visual name="vis_body"><pose>0 0 0.38 0 0 0</pose><geometry><cylinder><radius>0.14</radius><length>0.72</length></cylinder></geometry><material><diffuse>1.0 0.35 0.0 1</diffuse></material></visual>
-        <!-- Reflective Stripe -->
-        <visual name="vis_stripe"><pose>0 0 0.45 0 0 0</pose><geometry><cylinder><radius>0.145</radius><length>0.15</length></cylinder></geometry><material><diffuse>0.95 0.95 0.95 1</diffuse></material></visual>
+    <!-- Signpost 5: Office Junction (at -4.2, 3.8 facing East) -->
+    <model name="signpost_5_office">
+      <static>true</static>
+      <pose>-4.2 3.8 0 0 0 3.14</pose>
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: OFFICE ^ -->
+        <visual name="vis_sign_office">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/office_straight.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: LAB <- -->
+        <visual name="vis_sign_lab">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/lab_left.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Signpost 6: Hospital Junction (at 4.5, 5.2 facing West) -->
+    <model name="signpost_6_hospital">
+      <static>true</static>
+      <pose>4.5 5.2 0 0 0 0</pose>
+      <link name="post">
+        <collision name="col"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="vis_post"><pose>0 0 0.75 0 0 0</pose><geometry><cylinder><radius>0.04</radius><length>1.5</length></cylinder></geometry><material><diffuse>0.3 0.3 0.3 1</diffuse></material></visual>
+        <!-- Sign Board: HOSPITAL -> -->
+        <visual name="vis_sign_hospital">
+          <pose>0 0 1.25 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_right.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+        <!-- Sign Board: CAFETERIA <- -->
+        <visual name="vis_sign_cafeteria">
+          <pose>0 0 0.85 0 0 0</pose>
+          <geometry><box><size>0.8 0.04 0.4</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/cafeteria_left.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
       </link>
     </model>
 

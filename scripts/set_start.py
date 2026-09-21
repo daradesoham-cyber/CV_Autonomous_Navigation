@@ -40,10 +40,20 @@ def euler_to_quaternion(yaw):
 
 class InitialPosePublisher(Node):
     def __init__(self):
-        super().__init__('set_start_pose_node')
+        super().__init__(
+            'set_start_pose_node',
+            parameter_overrides=[
+                rclpy.parameter.Parameter('use_sim_time', rclpy.Parameter.Type.BOOL, True)
+            ]
+        )
         self.pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
 
     def publish_pose(self, x, y, yaw, num_repeats=5):
+        # Allow clock to sync if using simulation time
+        start_wait = time.time()
+        while self.get_clock().now().nanoseconds == 0 and (time.time() - start_wait) < 3.0:
+            rclpy.spin_once(self, timeout_sec=0.1)
+
         msg = PoseWithCovarianceStamped()
         msg.header.frame_id = 'map'
         msg.header.stamp = self.get_clock().now().to_msg()
@@ -71,9 +81,9 @@ class InitialPosePublisher(Node):
         )
 
         for _ in range(num_repeats):
+            rclpy.spin_once(self, timeout_sec=0.1)
             msg.header.stamp = self.get_clock().now().to_msg()
             self.pub.publish(msg)
-            rclpy.spin_once(self, timeout_sec=0.1)
             time.sleep(0.1)
 
         self.get_logger().info('Initial pose successfully published to AMCL.')

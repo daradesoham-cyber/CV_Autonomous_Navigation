@@ -67,3 +67,72 @@ locations:
     y: 8.0
     yaw: 1.57
     description: "Zone C: Hospital central hallway"
+
+  # ==============================================================================
+  # Realistic Facility World (32m x 26m) Verified Locations
+  # ==============================================================================
+  start_realistic:
+    x: 0.0
+    y: -11.0
+    yaw: 1.57
+    description: "Realistic Facility: Main Entrance Spawn Point"
+
+  reception:
+    x: 0.0
+    y: -8.0
+    yaw: 1.57
+    description: "Realistic Facility: Reception Desk & Waiting Area"
+
+  junction_1:
+    x: 0.0
+    y: -5.0
+    yaw: 1.57
+    description: "Realistic Facility: Central South Crossway (Junction 1)"
+
+  hospital:
+    x: 6.5
+    y: -9.5
+    yaw: -1.57
+    description: "Realistic Facility: Hospital Medical Ward (Destination)"
+
+  triage:
+    x: 12.0
+    y: -4.0
+    yaw: 0.0
+    description: "Realistic Facility: Triage Room (Destination)"
+
+  warehouse:
+    x: 8.0
+    y: 7.0
+    yaw: 1.57
+    description: "Realistic Facility: Industrial Warehouse Hub (Destination)"
+
+  office:
+    x: 0.0
+    y: 10.5
+    yaw: 1.57
+    description: "Realistic Facility: Executive Office Suite (Destination)"
+
+  cafeteria:
+    x: -7.0
+    y: -9.5
+    yaw: -1.57
+    description: "Realistic Facility: Cafeteria Dining Hall (Destination)"
+
+  lab:
+    x: -7.5
+    y: 9.5
+    yaw: 1.57
+    description: "Realistic Facility: Research Laboratory (Destination)"
+
+  storage:
+    x: -7.0
+    y: 3.0
+    yaw: 1.57
+    description: "Realistic Facility: Storage Depot (Destination)"
+
+  exit:
+    x: -13.0
+    y: -9.0
+    yaw: -1.57
+    description: "Realistic Facility: Emergency Exit Door (Destination)"

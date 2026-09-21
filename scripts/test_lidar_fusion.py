@@ -6,7 +6,7 @@ import numpy as np
 
 def run_fusion_validation():
     print("=" * 70)
-    print("CAMERA-LIDAR SENSOR FUSION REPEATABLE VALIDATION TEST")
+    print("SYNTHETIC FUSION VALIDATION (Algorithmic Simulation Only - Not Real Gazebo Data)")
     print("=" * 70)
 
     # Simulated Camera Parameters

@@ -59,7 +59,7 @@ class NavigationPerceptionNode(Node):
         )
 
     def semantic_callback(self, msg: SemanticObstacleArray):
-        now = time.time()
+        now = self.get_clock().now().nanoseconds / 1e9
         new_points = []
         status_alerts = []
 
@@ -97,7 +97,7 @@ class NavigationPerceptionNode(Node):
             self.pub_nav_status.publish(status_msg)
 
     def timer_publish_costmap(self):
-        now = time.time()
+        now = self.get_clock().now().nanoseconds / 1e9
         # Prune expired obstacles
         self.active_obstacles = [
             (t, pts) for (t, pts) in self.active_obstacles

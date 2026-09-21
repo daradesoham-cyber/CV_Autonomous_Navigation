@@ -6,6 +6,7 @@ venv_site = '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/si
 if venv_site not in sys.path:
     sys.path.insert(0, venv_site)
 
+from collections import deque
 import math
 import numpy as np
 import rclpy
@@ -37,18 +38,46 @@ SEMANTIC_SAFETY_CONFIG = {
 DEFAULT_CONFIG = {'radius': 0.50, 'is_dynamic': False}
 
 class LidarCameraFusionNode(Node):
+    """
+    Synchronized LiDAR-Camera Fusion Node.
+
+    Geometry & Assumptions:
+    - Robot Base: base_link
+    - LiDAR: laser_link mounted at xyz=(0.10, 0, 0.175) relative to base_link (yaw=0)
+    - Camera: camera_link mounted at xyz=(0.22, 0, 0.12) relative to base_link (yaw=0)
+    - Camera Optical: camera_optical_link (Z forward, X right, Y down)
+    - Relative Baseline: Camera is located dx = 0.12m ahead of LiDAR on the robot centerline (dy = 0.0m).
+    - Parallax: For an object at range R and bearing theta_cam from the camera,
+      its coordinates relative to the LiDAR are:
+        x_L = dx + R * cos(theta_cam)
+        y_L = dy + R * sin(theta_cam)
+        theta_L = atan2(y_L, x_L)
+      At close range (0.5m - 2.0m), this 0.12m baseline induces up to ~6 deg angular shift.
+      This node accounts for this translation across the expected detection depth interval.
+    """
     def __init__(self):
         super().__init__('lidar_camera_fusion_node')
 
         self.declare_parameter('camera_hfov_rad', 1.089)  # approx 62.4 deg
         self.declare_parameter('image_width', 640.0)
         self.declare_parameter('critical_distance_m', 2.5)
+        self.declare_parameter('max_sync_age_ms', 100.0)  # Max scan-camera time disparity in ms
+        self.declare_parameter('camera_dx_from_lidar', 0.12)  # Longitudinal baseline (m)
+        self.declare_parameter('camera_dy_from_lidar', 0.00)  # Lateral baseline (m)
+        self.declare_parameter('min_valid_cluster_points', 3)  # Rejects isolated noise/spurs
+        self.declare_parameter('cluster_distance_tolerance_m', 0.35)  # Max gap within obstacle surface
 
         self.hfov = self.get_parameter('camera_hfov_rad').get_parameter_value().double_value
         self.img_w = self.get_parameter('image_width').get_parameter_value().double_value
         self.crit_dist = self.get_parameter('critical_distance_m').get_parameter_value().double_value
+        self.max_sync_age_ms = self.get_parameter('max_sync_age_ms').get_parameter_value().double_value
+        self.cam_dx = self.get_parameter('camera_dx_from_lidar').get_parameter_value().double_value
+        self.cam_dy = self.get_parameter('camera_dy_from_lidar').get_parameter_value().double_value
+        self.min_cluster_pts = self.get_parameter('min_valid_cluster_points').get_parameter_value().integer_value
+        self.cluster_tol = self.get_parameter('cluster_distance_tolerance_m').get_parameter_value().double_value
 
-        self.latest_scan = None
+        # Short history buffer of LaserScan messages (stores ~2s at 20 Hz)
+        self.scan_buffer = deque(maxlen=40)
 
         # Subscribers
         self.sub_scan = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
@@ -59,16 +88,87 @@ class LidarCameraFusionNode(Node):
         self.pub_obstacles = self.create_publisher(ObstacleWarning, '/vision/obstacles', 10)
         self.pub_semantic = self.create_publisher(SemanticObstacleArray, '/vision/semantic_obstacles', 10)
 
-        self.get_logger().info('LidarCameraFusionNode initialized: angular association and semantic safety pipeline active.')
+        self.get_logger().info(
+            f'LidarCameraFusionNode active: max_sync_age={self.max_sync_age_ms:.1f}ms, '
+            f'baseline dx={self.cam_dx:.2f}m, dy={self.cam_dy:.2f}m, '
+            f'clustering tol={self.cluster_tol:.2f}m (min_pts={self.min_cluster_pts})'
+        )
 
     def scan_callback(self, msg: LaserScan):
-        self.latest_scan = msg
+        self.scan_buffer.append(msg)
+
+    def get_synchronized_scan(self, det_stamp):
+        """Find the LaserScan in history whose timestamp is closest to det_stamp."""
+        if not self.scan_buffer:
+            return None
+
+        det_sec = det_stamp.sec + det_stamp.nanosec * 1e-9
+        best_scan = None
+        min_diff = float('inf')
+
+        for scan in self.scan_buffer:
+            scan_sec = scan.header.stamp.sec + scan.header.stamp.nanosec * 1e-9
+            diff = abs(scan_sec - det_sec)
+            if diff < min_diff:
+                min_diff = diff
+                best_scan = scan
+
+        max_allowable_sec = self.max_sync_age_ms / 1000.0
+        if min_diff > max_allowable_sec:
+            self.get_logger().warning(
+                f'Timestamp synchronization: closest scan time delta is {min_diff*1000.0:.1f}ms '
+                f'(exceeds max_sync_age_ms={self.max_sync_age_ms:.1f}ms). Rejecting stale scan association.',
+                throttle_duration_sec=2.0
+            )
+            return None
+
+        return best_scan
+
+    def camera_ray_to_lidar_angle(self, theta_cam, depth):
+        """Convert a camera optical ray bearing at given depth to LiDAR coordinate frame angle."""
+        x_l = self.cam_dx + depth * math.cos(theta_cam)
+        y_l = self.cam_dy + depth * math.sin(theta_cam)
+        return math.atan2(y_l, x_l)
+
+    def extract_robust_cluster_distance(self, valid_ranges):
+        """
+        Cluster candidate ranges and extract a robust near-surface percentile
+        from the closest consistent cluster, rejecting isolated outliers and background bleed.
+        """
+        if len(valid_ranges) < self.min_cluster_pts:
+            return -1.0
+
+        sorted_r = np.sort(valid_ranges)
+
+        # Segment into clusters using spatial jump threshold
+        clusters = []
+        cur_cluster = [sorted_r[0]]
+
+        for r in sorted_r[1:]:
+            if (r - cur_cluster[-1]) <= self.cluster_tol:
+                cur_cluster.append(r)
+            else:
+                if len(cur_cluster) >= self.min_cluster_pts:
+                    clusters.append(cur_cluster)
+                cur_cluster = [r]
+        if len(cur_cluster) >= self.min_cluster_pts:
+            clusters.append(cur_cluster)
+
+        if not clusters:
+            return -1.0
+
+        # Select closest consistent cluster (the primary obstacle face)
+        closest_cluster = clusters[0]
+
+        # Use 20th percentile within the closest cluster for robust front-surface distance
+        surface_dist = float(np.percentile(closest_cluster, 20))
+        return surface_dist
 
     def detections_callback(self, msg: Detection2DArray):
-        if self.latest_scan is None:
+        scan = self.get_synchronized_scan(msg.header.stamp)
+        if scan is None:
             return
 
-        scan = self.latest_scan
         angle_min = scan.angle_min
         angle_inc = scan.angle_increment
         ranges = np.array(scan.ranges)
@@ -80,20 +180,30 @@ class LidarCameraFusionNode(Node):
         semantic_array.header = msg.header
 
         for det in msg.detections:
-            # Center of bounding box horizontally in pixels
             x_center = (det.x_min + det.x_max) / 2.0
             box_width = det.x_max - det.x_min
 
-            # Angular projection (0 is straight ahead, positive is left in standard ROS optical/robot frame)
-            bearing = (0.5 - (x_center / self.img_w)) * self.hfov
-            angular_span = (box_width / self.img_w) * self.hfov
+            # Angular projection in camera frame (0 is straight ahead, positive left)
+            bearing_cam = (0.5 - (x_center / self.img_w)) * self.hfov
+            angular_span_cam = (box_width / self.img_w) * self.hfov
 
-            # Calculate LiDAR index range corresponding to the bounding box angular slice
-            min_angle = bearing - (angular_span / 2.0)
-            max_angle = bearing + (angular_span / 2.0)
+            min_angle_cam = bearing_cam - (angular_span_cam / 2.0)
+            max_angle_cam = bearing_cam + (angular_span_cam / 2.0)
 
-            idx_start = int((min_angle - angle_min) / angle_inc)
-            idx_end = int((max_angle - angle_min) / angle_inc)
+            # Account for camera-LiDAR baseline across depth range [0.3m, 6.0m]
+            # to compute the accurate LiDAR angular envelope
+            depth_samples = [0.4, 0.8, 1.5, 3.0, 5.0]
+            lidar_angles = []
+            for d in depth_samples:
+                lidar_angles.append(self.camera_ray_to_lidar_angle(min_angle_cam, d))
+                lidar_angles.append(self.camera_ray_to_lidar_angle(max_angle_cam, d))
+                lidar_angles.append(self.camera_ray_to_lidar_angle(bearing_cam, d))
+
+            min_lidar_angle = min(lidar_angles) - 0.03  # Add small 0.03 rad tolerance
+            max_lidar_angle = max(lidar_angles) + 0.03
+
+            idx_start = int((min_lidar_angle - angle_min) / angle_inc)
+            idx_end = int((max_lidar_angle - angle_min) / angle_inc)
 
             if idx_start > idx_end:
                 idx_start, idx_end = idx_end, idx_start
@@ -102,16 +212,25 @@ class LidarCameraFusionNode(Node):
             idx_end = max(0, min(idx_end, len(ranges) - 1))
 
             slice_ranges = ranges[idx_start:idx_end + 1]
-            valid_ranges = slice_ranges[(slice_ranges >= scan.range_min) & (slice_ranges <= scan.range_max) & np.isfinite(slice_ranges)]
+            valid_mask = (
+                (slice_ranges >= scan.range_min) &
+                (slice_ranges <= scan.range_max) &
+                np.isfinite(slice_ranges)
+            )
+            valid_ranges = slice_ranges[valid_mask]
 
-            if len(valid_ranges) > 0:
-                # Use 20th percentile to get front surface distance robust to background points
-                distance = float(np.percentile(valid_ranges, 20))
+            # Extract robust cluster distance
+            distance = self.extract_robust_cluster_distance(valid_ranges)
+
+            # Convert distance back to base_link / robot frame bearing
+            if distance > 0:
+                # Correct bearing for the estimated distance
+                effective_bearing = float(self.camera_ray_to_lidar_angle(bearing_cam, distance))
             else:
-                distance = -1.0
+                effective_bearing = float(bearing_cam)
 
             det.distance = distance
-            det.bearing = float(bearing)
+            det.bearing = effective_bearing
             updated_detections.detections.append(det)
 
             # Retrieve semantic classification parameters
@@ -127,7 +246,7 @@ class LidarCameraFusionNode(Node):
                 sem_obs.class_name = det.class_name
                 sem_obs.confidence = det.confidence
                 sem_obs.distance = distance
-                sem_obs.bearing = float(bearing)
+                sem_obs.bearing = effective_bearing
                 sem_obs.safety_radius = safety_radius
                 sem_obs.is_dynamic = is_dynamic
                 semantic_array.obstacles.append(sem_obs)
@@ -137,13 +256,13 @@ class LidarCameraFusionNode(Node):
                 warn.header = msg.header
                 warn.obstacle_type = det.class_name
                 warn.distance = distance
-                warn.bearing = float(bearing)
+                warn.bearing = effective_bearing
                 warn.requires_clearance = is_dynamic
                 self.pub_obstacles.publish(warn)
 
                 self.get_logger().info(
                     f'Semantic Obstacle: {det.class_name.upper()} | Conf: {det.confidence:.2f} | Dist: {distance:.2f}m | '
-                    f'Bearing: {math.degrees(bearing):.1f}° | Safety Radius: {safety_radius:.2f}m | Dynamic: {is_dynamic}',
+                    f'Bearing: {math.degrees(effective_bearing):.1f}° | Safety Radius: {safety_radius:.2f}m | Dynamic: {is_dynamic}',
                     throttle_duration_sec=1.0
                 )
 

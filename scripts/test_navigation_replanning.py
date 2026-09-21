@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-Repeatable Test Script for Nav2 Planning, Obstacle Marking, and Replanning.
+ALGORITHMIC SIMULATION VALIDATION (Mathematical Simulation Only - Not Real Gazebo Data)
 Validates:
-1. Initial path generation from START (-10, -10) to GOAL (10, -10).
-2. Introduction of dynamic obstacle in corridor/path.
-3. Costmap obstacle marking & cost inflation.
-4. Path collision detection and successful replanning around the obstacle.
+1. Mathematical path generation from START (-10, -10) to GOAL (10, -10).
+2. Introduction of geometric obstacle in corridor/path.
+3. Theoretical costmap obstacle marking & cost inflation.
+4. Path collision detection and geometric detour replanning around the obstacle.
 """
 import math
 import numpy as np
 
 def run_navigation_test():
     print("=" * 70)
-    print("NAV2 PATH PLANNING & DYNAMIC REPLANNING VALIDATION")
+    print("ALGORITHMIC SIMULATION VALIDATION (Mathematical Simulation Only - Not Real Gazebo Data)")
     print("=" * 70)
 
     start = np.array([-10.0, -10.0])

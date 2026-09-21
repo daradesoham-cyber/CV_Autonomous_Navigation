@@ -12,6 +12,52 @@ echo "======================================================================"
 echo "    ROS 2 Lyrical + Gazebo Autonomous CV Navigation Launcher"
 echo "======================================================================"
 
+# Clean up any stale simulation / ROS 2 processes to ensure exactly one stack runs
+cleanup_stale_processes() {
+    local stale_pids
+    stale_pids=$(pgrep -f "gz sim|parameter_bridge|rviz2|nav2_map_server|nav2_amcl|nav2_planner|nav2_controller|navigation_controller_node|navigation_perception_node" || true)
+    if [ -n "$stale_pids" ]; then
+        echo "[INFO] Existing simulation/ROS processes detected. Cleaning up stale stack..."
+        pkill -f "gz sim" > /dev/null 2>&1 || true
+        pkill -f "parameter_bridge" > /dev/null 2>&1 || true
+        pkill -f "rviz2" > /dev/null 2>&1 || true
+        pkill -f "nav2_" > /dev/null 2>&1 || true
+        pkill -f "map_server" > /dev/null 2>&1 || true
+        pkill -f "amcl" > /dev/null 2>&1 || true
+        pkill -f "autonomous_robot_" > /dev/null 2>&1 || true
+        pkill -f "navigation_" > /dev/null 2>&1 || true
+
+        for i in {1..5}; do
+            if ! pgrep -f "gz sim|parameter_bridge|rviz2|nav2_map_server|nav2_amcl" > /dev/null 2>&1; then
+                break
+            fi
+            sleep 1
+        done
+
+        pkill -9 -f "gz sim" > /dev/null 2>&1 || true
+        pkill -9 -f "parameter_bridge" > /dev/null 2>&1 || true
+        pkill -9 -f "rviz2" > /dev/null 2>&1 || true
+        pkill -9 -f "nav2_" > /dev/null 2>&1 || true
+        pkill -9 -f "autonomous_robot_" > /dev/null 2>&1 || true
+        pkill -9 -f "navigation_" > /dev/null 2>&1 || true
+        sleep 1
+        echo "[OK] Cleaned up stale simulation stack."
+    fi
+}
+
+cleanup_on_exit() {
+    echo ""
+    echo "[INFO] Terminating simulation stack..."
+    cleanup_stale_processes
+    echo "[OK] All simulation processes stopped."
+}
+
+# Trap termination signals to ensure no orphaned processes remain
+trap cleanup_on_exit EXIT INT TERM
+
+# Ensure single clean simulation instance before startup
+cleanup_stale_processes
+
 # 1. Check and Source ROS 2 Lyrical
 if [ -f "/opt/ros/lyrical/setup.bash" ]; then
     source /opt/ros/lyrical/setup.bash

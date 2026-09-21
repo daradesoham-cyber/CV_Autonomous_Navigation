@@ -9,6 +9,7 @@ Usage:
 """
 import os
 import sys
+import time
 import math
 import argparse
 import yaml
@@ -42,7 +43,12 @@ def euler_to_quaternion(yaw):
 
 class Nav2GoalSender(Node):
     def __init__(self):
-        super().__init__('send_goal_client')
+        super().__init__(
+            'send_goal_client',
+            parameter_overrides=[
+                rclpy.parameter.Parameter('use_sim_time', rclpy.Parameter.Type.BOOL, True)
+            ]
+        )
         self._action_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
         self.goal_done = False
         self.success = False
@@ -54,6 +60,11 @@ class Nav2GoalSender(Node):
                 'Action server /navigate_to_pose not available! Ensure Nav2 is running.'
             )
             return False
+
+        # Allow clock to sync if using simulation time
+        start_wait = time.time()
+        while self.get_clock().now().nanoseconds == 0 and (time.time() - start_wait) < 3.0:
+            rclpy.spin_once(self, timeout_sec=0.1)
 
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose.header.frame_id = 'map'
