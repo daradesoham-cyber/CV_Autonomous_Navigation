@@ -1,36 +1,76 @@
-# Python Virtual Environments & Cache
+# ==============================================================================
+# Git Ignore Configuration for CV Autonomous Navigation System
+# Platform: Ubuntu 26.04 LTS | ROS 2 Lyrical | Gazebo Sim 10.5 | PyTorch / YOLO
+# ==============================================================================
+
+# Python Virtual Environments, Caches & Bytecode
 .venv
 venv/
 env/
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
 
-# ROS 2 Colcon Build Artifacts
+# ROS 2 Colcon Build Artifacts & Logs
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
+build/
+install/
+log/
+COLCON_IGNORE
 
-# Large Model Weights & Datasets
-models/**/*.pt
-models/*.pt
-models/yolov8n/
-weights/
+# Gazebo Simulation Cache & Runtime Artifacts
+.cache/
+*.cache
+*.log
+*.tlog
+
+# PyTorch / Ultralytics Intermediate Checkpoints & Training Runs
 runs/
-datasets/
+models/yolov8n/
+models/custom_yolov8n/weights/last.pt
+/weights/
 results/*.mp4
+results/*.avi
 
-# SQLite Runtime Databases & Logs
+# Note: Core model weights (models/custom_yolov8n/weights/best.pt and models/yolov8n.pt)
+# are managed and tracked via Git LFS (.gitattributes).
+
+# SQLite Runtime Databases & Persistent Caches
 *.db
 *.sqlite
 *.sqlite3
-*.log
 ros2_ws/src/autonomous_robot_navigation/config/navigation_memory.db
 
-# Editor, Backup & System Artifacts
+# MATLAB Auxiliary Files
+*.asv
+*.mat
+slprj/
+
+# IDE, Editor & OS Artifacts
 .DS_Store
 .vscode/
+.idea/
 *.swp
+*.swo
 *.bak
 *.backup
 *~

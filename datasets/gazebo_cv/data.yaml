@@ -1,0 +1,14 @@
+names:
+  0: person
+  1: chair
+  2: box
+  3: cone
+  4: pallet
+  5: shelf
+  6: hospital_bed
+  7: cart
+nc: 8
+path: /home/soham-darade/CV_Autonomous_Navigation/datasets/gazebo_cv
+test: images/test
+train: images/train
+val: images/val
