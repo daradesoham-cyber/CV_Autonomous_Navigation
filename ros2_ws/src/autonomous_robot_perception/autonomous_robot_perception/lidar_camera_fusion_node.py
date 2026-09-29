@@ -12,6 +12,8 @@ import numpy as np
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Float32
+from visualization_msgs.msg import Marker, MarkerArray
 from autonomous_robot_interfaces.msg import (
     Detection2DArray,
     ObstacleWarning,
@@ -20,19 +22,27 @@ from autonomous_robot_interfaces.msg import (
 )
 
 # Configurable semantic safety parameters
+# V2.4 semantic safety parameters — includes all 10 V2.4 classes
 SEMANTIC_SAFETY_CONFIG = {
+    # V2.4 classes
     'person': {'radius': 0.90, 'is_dynamic': True},
     'cart': {'radius': 0.75, 'is_dynamic': True},
+    'forklift': {'radius': 1.10, 'is_dynamic': True},
+    'pallet': {'radius': 0.60, 'is_dynamic': False},
+    'box': {'radius': 0.45, 'is_dynamic': False},
+    'obstacle': {'radius': 0.50, 'is_dynamic': False},
+    'door': {'radius': 0.70, 'is_dynamic': False},
+    'charging_station': {'radius': 0.65, 'is_dynamic': False},
+    'hospital_bed': {'radius': 0.85, 'is_dynamic': False},
+    'directional_sign': {'radius': 0.05, 'is_dynamic': False},  # sign: not a physical obstacle
+    # V2.3 legacy class names (kept for backward compatibility)
     'chair': {'radius': 0.55, 'is_dynamic': False},
     'dining table': {'radius': 0.65, 'is_dynamic': False},
     'table': {'radius': 0.65, 'is_dynamic': False},
-    'box': {'radius': 0.45, 'is_dynamic': False},
     'suitcase': {'radius': 0.45, 'is_dynamic': False},
     'traffic cone': {'radius': 0.50, 'is_dynamic': False},
     'cone': {'radius': 0.50, 'is_dynamic': False},
     'shelf': {'radius': 0.60, 'is_dynamic': False},
-    'pallet': {'radius': 0.55, 'is_dynamic': False},
-    'hospital_bed': {'radius': 0.85, 'is_dynamic': False},
     'bed': {'radius': 0.85, 'is_dynamic': False},
 }
 DEFAULT_CONFIG = {'radius': 0.50, 'is_dynamic': False}
@@ -41,11 +51,14 @@ class LidarCameraFusionNode(Node):
     """
     Synchronized LiDAR-Camera Fusion Node.
 
-    Geometry & Assumptions:
+    Geometry & Assumptions (V2.4 Updated):
     - Robot Base: base_link
     - LiDAR: laser_link mounted at xyz=(0.10, 0, 0.175) relative to base_link (yaw=0)
-    - Camera: camera_link mounted at xyz=(0.22, 0, 0.12) relative to base_link (yaw=0)
+    - Camera: camera_link mounted at xyz=(0.22, 0, 0.35) relative to base_link, rpy=(0, -0.05, 0)
     - Camera Optical: camera_optical_link (Z forward, X right, Y down)
+    - V2.4 FOV: horizontal_fov = 1.15 rad (~65.9 deg), updated from V2.3 1.089 rad
+    - Camera height: 0.35m above base_link (base_link is 0.06m above floor → camera ~0.41m AGL)
+    - Sign eye-level: 1.10m AGL → signs are ~0.69m above camera optical center
     - Relative Baseline: Camera is located dx = 0.12m ahead of LiDAR on the robot centerline (dy = 0.0m).
     - Parallax: For an object at range R and bearing theta_cam from the camera,
       its coordinates relative to the LiDAR are:
@@ -58,7 +71,7 @@ class LidarCameraFusionNode(Node):
     def __init__(self):
         super().__init__('lidar_camera_fusion_node')
 
-        self.declare_parameter('camera_hfov_rad', 1.089)  # approx 62.4 deg
+        self.declare_parameter('camera_hfov_rad', 1.15)  # V2.4: 65.9 deg (was 1.089 in V2.3)
         self.declare_parameter('image_width', 640.0)
         self.declare_parameter('critical_distance_m', 2.5)
         self.declare_parameter('max_sync_age_ms', 100.0)  # Max scan-camera time disparity in ms
@@ -79,6 +92,10 @@ class LidarCameraFusionNode(Node):
         # Short history buffer of LaserScan messages (stores ~2s at 20 Hz)
         self.scan_buffer = deque(maxlen=40)
 
+        # Cross-frame object tracker (V2.2 Section 9 & 10)
+        self.tracks = {}
+        self.next_track_id = 1
+
         # Subscribers
         self.sub_scan = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
         self.sub_detections = self.create_subscription(Detection2DArray, '/vision/detections', self.detections_callback, 10)
@@ -87,6 +104,9 @@ class LidarCameraFusionNode(Node):
         self.pub_objects = self.create_publisher(Detection2DArray, '/vision/objects', 10)
         self.pub_obstacles = self.create_publisher(ObstacleWarning, '/vision/obstacles', 10)
         self.pub_semantic = self.create_publisher(SemanticObstacleArray, '/vision/semantic_obstacles', 10)
+        self.pub_fused_objects = self.create_publisher(SemanticObstacleArray, '/fused_objects', 10)
+        self.pub_markers = self.create_publisher(MarkerArray, '/vision/fused_object_markers', 10)
+        self.pub_ttc = self.create_publisher(Float32, '/vision/ttc', 10)
 
         self.get_logger().info(
             f'LidarCameraFusionNode active: max_sync_age={self.max_sync_age_ms:.1f}ms, '
@@ -178,6 +198,10 @@ class LidarCameraFusionNode(Node):
 
         semantic_array = SemanticObstacleArray()
         semantic_array.header = msg.header
+        closing_ttcs = []
+
+        marker_array = MarkerArray()
+        marker_id = 0
 
         for det in msg.detections:
             x_center = (det.x_min + det.x_max) / 2.0
@@ -240,34 +264,217 @@ class LidarCameraFusionNode(Node):
             is_dynamic = cfg['is_dynamic']
 
             if distance > 0.1 and distance <= self.crit_dist:
+                raw_x = float(0.10 + distance * math.cos(effective_bearing))
+                raw_y = float(0.00 + distance * math.sin(effective_bearing))
+
+                now_ts = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+
+                # Match with existing track
+                matched_id = None
+                min_match_dist = 0.65
+                for tid, tr in self.tracks.items():
+                    if tr['class_name'] == det.class_name:
+                        track_d = math.hypot(raw_x - tr['x'], raw_y - tr['y'])
+                        if track_d < min_match_dist:
+                            min_match_dist = track_d
+                            matched_id = tid
+
+                if matched_id is not None:
+                    # Update matched track with temporal smoothing & velocity estimation
+                    tr = self.tracks[matched_id]
+                    dt = max(0.02, now_ts - tr['last_time'])
+                    vx = (raw_x - tr['x']) / dt
+                    vy = (raw_y - tr['y']) / dt
+                    speed = math.hypot(vx, vy)
+                    dr = (distance - tr['distance']) / dt
+
+                    # Temporal smoothing (exponential moving average)
+                    smooth_x = 0.65 * tr['x'] + 0.35 * raw_x
+                    smooth_y = 0.65 * tr['y'] + 0.35 * raw_y
+                    smooth_dist = 0.65 * tr['distance'] + 0.35 * distance
+
+                    # Classify motion state (Section 9)
+                    if speed < 0.08:
+                        motion_state = "STATIC"
+                    else:
+                        if dr > 0.05:
+                            motion_state = "MOVING_AWAY"
+                        elif dr < -0.05:
+                            motion_state = "MOVING_TOWARDS"
+                        elif abs(vy) > 0.12:
+                            motion_state = "CROSSING"
+                        else:
+                            motion_state = "MOVING"
+
+                    if abs(smooth_y) > 0.85:
+                        motion_state = "OUTSIDE_PATH"
+
+                    tr['x'] = smooth_x
+                    tr['y'] = smooth_y
+                    tr['distance'] = smooth_dist
+                    tr['vx'] = vx
+                    tr['vy'] = vy
+                    tr['speed'] = speed
+                    tr['last_time'] = now_ts
+                    tr['motion_state'] = motion_state
+                    tr['frames'] += 1
+
+                    pos_x = smooth_x
+                    pos_y = smooth_y
+                    final_dist = smooth_dist
+                    track_id = matched_id
+                else:
+                    # Create new track
+                    track_id = self.next_track_id
+                    self.next_track_id += 1
+                    motion_state = "MOVING_TOWARDS" if is_dynamic else "STATIC"
+                    if abs(raw_y) > 0.85:
+                        motion_state = "OUTSIDE_PATH"
+
+                    self.tracks[track_id] = {
+                        'id': track_id,
+                        'class_name': det.class_name,
+                        'x': raw_x,
+                        'y': raw_y,
+                        'distance': distance,
+                        'vx': 0.0,
+                        'vy': 0.0,
+                        'speed': 0.0,
+                        'last_time': now_ts,
+                        'motion_state': motion_state,
+                        'frames': 1
+                    }
+                    pos_x = raw_x
+                    pos_y = raw_y
+                    final_dist = distance
+
+                # Determine human-readable direction
+                deg = math.degrees(effective_bearing)
+                if deg > 45.0:
+                    dir_base = "Left"
+                elif deg > 10.0:
+                    dir_base = "Front-Left"
+                elif deg < -45.0:
+                    dir_base = "Right"
+                elif deg < -10.0:
+                    dir_base = "Front-Right"
+                else:
+                    dir_base = "Front-Center"
+
+                # Time-To-Collision (TTC) calculation for dynamic obstacles
+                obs_ttc = -1.0
+                closing_speed = 0.0
+                if matched_id is not None:
+                    if dr < -0.05:
+                        closing_speed = -dr
+                elif motion_state in ["MOVING_TOWARDS", "CROSSING"] and is_dynamic:
+                    closing_speed = 0.35  # Initial closing speed assumption for dynamic object
+
+                if closing_speed > 0.05 and pos_x > 0.05 and abs(pos_y) < 0.85:
+                    obs_ttc = float(final_dist / closing_speed)
+                    closing_ttcs.append(obs_ttc)
+
+                # Formatted direction string with motion state, track ID, and TTC
+                if obs_ttc > 0.0:
+                    direction_str = f"{dir_base} | {motion_state} | ID:{track_id} | TTC:{obs_ttc:.1f}s"
+                else:
+                    direction_str = f"{dir_base} | {motion_state} | ID:{track_id}"
+                pos_z = 0.25
+
                 # Semantic Obstacle Message
                 sem_obs = SemanticObstacle()
                 sem_obs.header = msg.header
+                sem_obs.header.frame_id = 'base_link'
                 sem_obs.class_name = det.class_name
-                sem_obs.confidence = det.confidence
-                sem_obs.distance = distance
-                sem_obs.bearing = effective_bearing
-                sem_obs.safety_radius = safety_radius
-                sem_obs.is_dynamic = is_dynamic
+                sem_obs.confidence = float(det.confidence)
+                sem_obs.distance = float(final_dist)
+                sem_obs.bearing = float(effective_bearing)
+                sem_obs.safety_radius = float(safety_radius)
+                sem_obs.is_dynamic = bool(is_dynamic or motion_state in ["MOVING", "MOVING_TOWARDS", "CROSSING"])
+                sem_obs.direction = direction_str
+                sem_obs.x = pos_x
+                sem_obs.y = pos_y
+                sem_obs.z = pos_z
                 semantic_array.obstacles.append(sem_obs)
 
                 # Obstacle Warning Message
                 warn = ObstacleWarning()
                 warn.header = msg.header
                 warn.obstacle_type = det.class_name
-                warn.distance = distance
-                warn.bearing = effective_bearing
-                warn.requires_clearance = is_dynamic
+                warn.distance = float(final_dist)
+                warn.bearing = float(effective_bearing)
+                warn.requires_clearance = bool(sem_obs.is_dynamic)
                 self.pub_obstacles.publish(warn)
 
-                self.get_logger().info(
-                    f'Semantic Obstacle: {det.class_name.upper()} | Conf: {det.confidence:.2f} | Dist: {distance:.2f}m | '
-                    f'Bearing: {math.degrees(effective_bearing):.1f}° | Safety Radius: {safety_radius:.2f}m | Dynamic: {is_dynamic}',
-                    throttle_duration_sec=1.0
-                )
+                # Marker 1: 3D bounding box / shape
+                shape_marker = Marker()
+                shape_marker.header.frame_id = 'base_link'
+                shape_marker.header.stamp = msg.header.stamp
+                shape_marker.ns = 'fused_shapes'
+                shape_marker.id = marker_id
+                marker_id += 1
+                shape_marker.type = Marker.CUBE
+                shape_marker.action = Marker.ADD
+                shape_marker.pose.position.x = pos_x
+                shape_marker.pose.position.y = pos_y
+                shape_marker.pose.position.z = pos_z
+                shape_marker.pose.orientation.w = 1.0
+                shape_marker.scale.x = max(0.3, safety_radius * 1.2)
+                shape_marker.scale.y = max(0.3, safety_radius * 1.2)
+                shape_marker.scale.z = 0.6
+                if motion_state == "MOVING_AWAY":
+                    shape_marker.color.r = 0.2
+                    shape_marker.color.g = 0.8
+                    shape_marker.color.b = 0.2
+                elif is_dynamic or motion_state in ["MOVING_TOWARDS", "CROSSING"]:
+                    shape_marker.color.r = 1.0
+                    shape_marker.color.g = 0.2
+                    shape_marker.color.b = 0.2
+                else:
+                    shape_marker.color.r = 1.0
+                    shape_marker.color.g = 0.7
+                    shape_marker.color.b = 0.0
+                shape_marker.color.a = 0.75
+                shape_marker.lifetime.sec = 1
+                marker_array.markers.append(shape_marker)
+
+                # Marker 2: Floating 3D text label
+                text_marker = Marker()
+                text_marker.header.frame_id = 'base_link'
+                text_marker.header.stamp = msg.header.stamp
+                text_marker.ns = 'fused_labels'
+                text_marker.id = marker_id
+                marker_id += 1
+                text_marker.type = Marker.TEXT_VIEW_FACING
+                text_marker.action = Marker.ADD
+                text_marker.pose.position.x = pos_x
+                text_marker.pose.position.y = pos_y
+                text_marker.pose.position.z = pos_z + 0.5
+                text_marker.pose.orientation.w = 1.0
+                text_marker.scale.z = 0.22
+                text_marker.color.r = 1.0
+                text_marker.color.g = 1.0
+                text_marker.color.b = 1.0
+                text_marker.color.a = 0.95
+                text_marker.text = f"[{track_id}] {det.class_name.upper()}\n{final_dist:.1f}m | {motion_state}\n({det.confidence*100:.0f}%)"
+                text_marker.lifetime.sec = 1
+                marker_array.markers.append(text_marker)
+
+        # Prune stale tracks older than 1.2 seconds
+        curr_time = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        stale_ids = [tid for tid, tr in self.tracks.items() if (curr_time - tr['last_time']) > 1.2]
+        for tid in stale_ids:
+            del self.tracks[tid]
+
+        # Publish Time-to-Collision (TTC) across closing forward path obstacles
+        ttc_msg = Float32()
+        ttc_msg.data = float(min(closing_ttcs)) if closing_ttcs else -1.0
+        self.pub_ttc.publish(ttc_msg)
 
         self.pub_objects.publish(updated_detections)
         self.pub_semantic.publish(semantic_array)
+        self.pub_fused_objects.publish(semantic_array)
+        self.pub_markers.publish(marker_array)
 
 def main(args=None):
     rclpy.init(args=args)

@@ -48,6 +48,7 @@ runs/
 models/yolov8n/
 models/custom_yolov8n/weights/last.pt
 /weights/
+/yolov8n.pt
 results/*.mp4
 results/*.avi
 

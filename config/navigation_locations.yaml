@@ -79,7 +79,7 @@ locations:
 
   reception:
     x: 0.0
-    y: -8.0
+    y: -8.6
     yaw: 1.57
     description: "Realistic Facility: Reception Desk & Waiting Area"
 
@@ -109,30 +109,61 @@ locations:
 
   office:
     x: 0.0
-    y: 10.5
+    y: 10.0
     yaw: 1.57
     description: "Realistic Facility: Executive Office Suite (Destination)"
 
   cafeteria:
-    x: -7.0
+    x: -6.0
     y: -9.5
     yaw: -1.57
     description: "Realistic Facility: Cafeteria Dining Hall (Destination)"
 
   lab:
-    x: -7.5
+    x: -7.0
     y: 9.5
     yaw: 1.57
     description: "Realistic Facility: Research Laboratory (Destination)"
 
   storage:
-    x: -7.0
+    x: -6.5
     y: 3.0
     yaw: 1.57
     description: "Realistic Facility: Storage Depot (Destination)"
 
   exit:
-    x: -13.0
+    x: -12.5
     y: -9.0
     yaw: -1.57
     description: "Realistic Facility: Emergency Exit Door (Destination)"
+
+  room_a:
+    x: -7.0
+    y: 9.5
+    yaw: 1.57
+    description: "Realistic Facility: Room A - Advanced Robotics Lab"
+
+  room_b:
+    x: 6.5
+    y: -9.5
+    yaw: -1.57
+    description: "Realistic Facility: Room B - Medical Ward Inspection"
+
+  charging:
+    x: -13.5
+    y: 2.0
+    yaw: 1.57
+    description: "Realistic Facility: AGV Automated Charging Station"
+
+  loading:
+    x: 12.0
+    y: 2.0
+    yaw: 0.0
+    description: "Realistic Facility: Industrial Cargo Loading & Unloading Zone"
+
+  restricted:
+    x: 12.5
+    y: -9.0
+    yaw: -1.57
+    description: "Realistic Facility: Restricted Vault Zone"
+

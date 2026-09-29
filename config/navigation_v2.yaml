@@ -1,0 +1,45 @@
+# ==============================================================================
+# Autonomous Navigation System V2 Configuration
+# Multi-criteria Route Cost Weighting, Safety Clearances, and Recovery Behavior
+# ==============================================================================
+
+navigation:
+  max_speed: 0.50
+  min_speed: 0.05
+  safe_distance: 0.45
+  critical_distance: 0.28
+  goal_tolerance: 0.35
+  node_arrival_distance: 0.85
+  replanning_distance: 2.2
+  recovery_timeout: 4.0
+  oscillation_timeout: 3.0
+  stuck_timeout: 5.0
+  backtrack_distance: 0.8
+  reverse_speed: 0.20
+
+# Multi-criteria Route Cost Function:
+# Route Cost = w_dist * Distance + w_obs * ObstacleDensity + w_hist * FailurePenalty
+#            + w_cong * Congestion + w_turn * SharpTurns + w_narrow * NarrowCorridorPenalty
+#            + w_time * HistoricalTravelTime
+route_cost_weights:
+  distance_weight: 1.0
+  obstacle_weight: 3.5
+  history_failure_weight: 5.0
+  congestion_weight: 2.0
+  turn_penalty_weight: 0.8
+  narrow_corridor_penalty: 2.5
+  travel_time_weight: 0.5
+  dead_end_penalty: 10000.0
+  blocked_edge_penalty: 100000.0
+
+# Recovery System Parameters
+recovery:
+  max_recovery_attempts: 3
+  reorient_angle_rad: 0.785  # 45 degrees
+  reverse_duration_sec: 2.5
+  backtrack_to_waypoint: true
+  min_clearance_recovery_threshold: 0.25
+
+# Database Persistence
+database:
+  db_path: "/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_navigation/config/navigation_memory.db"

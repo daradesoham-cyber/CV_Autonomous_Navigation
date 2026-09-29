@@ -90,6 +90,20 @@ class SignDetectionNode(Node):
             if base == 'emergency_exit':
                 text = 'EMERGENCY EXIT'
                 direction = 'STRAIGHT'
+            elif base == 'keep_left':
+                text = 'KEEP LEFT'
+                direction = 'LEFT'
+            elif base == 'keep_right':
+                text = 'KEEP RIGHT'
+                direction = 'RIGHT'
+            elif base.startswith('room_a'):
+                text = 'ROOM A'
+                parts = base.split('_')
+                direction = parts[-1].upper() if len(parts) > 2 else 'STRAIGHT'
+            elif base.startswith('room_b'):
+                text = 'ROOM B'
+                parts = base.split('_')
+                direction = parts[-1].upper() if len(parts) > 2 else 'STRAIGHT'
             else:
                 parts = base.split('_')
                 text = parts[0].upper()

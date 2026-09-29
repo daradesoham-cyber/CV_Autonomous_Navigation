@@ -1,0 +1,432 @@
+# ==============================================================================
+# CV AUTONOMOUS NAVIGATION V2.4 — UNIFIED SEMANTIC MAP & SIGN GROUND TRUTH
+# Single source of truth for Facility Topology, Physical Signs, and Semantics
+# World: realistic_facility_world (32m x 26m)
+# ==============================================================================
+
+version: "2.4"
+facility_name: "Realistic Industrial & Medical Facility"
+dimensions:
+  width_x: 32.0
+  height_y: 26.0
+
+# ------------------------------------------------------------------------------
+# 1. SEMANTIC DESTINATIONS & ROOMS
+# ------------------------------------------------------------------------------
+destinations:
+  room_a:
+    name: "Room A - Advanced Robotics Lab"
+    category: "lab"
+    node_id: "room_a"
+    x: -7.0
+    y: 9.5
+    yaw: 1.5708
+    entrance_junction: "junction_8"
+    description: "Main laboratory research room"
+
+  storage:
+    name: "Storage Depot"
+    category: "storage"
+    node_id: "storage"
+    x: -6.5
+    y: 3.0
+    yaw: 1.5708
+    entrance_junction: "junction_7"
+    description: "Primary goods and equipment storage warehouse"
+
+  hospital:
+    name: "Hospital Medical Ward"
+    category: "medical"
+    node_id: "hospital"
+    x: 6.5
+    y: -9.5
+    yaw: -1.5708
+    entrance_junction: "junction_2"
+    description: "Inpatient medical treatment and care ward"
+
+  loading:
+    name: "Industrial Cargo Loading Bay"
+    category: "industrial"
+    node_id: "loading"
+    x: 12.0
+    y: 2.0
+    yaw: 0.0
+    entrance_junction: "wh_junction_6"
+    description: "Truck docking and cargo pallet handling zone"
+
+  charging:
+    name: "Automated AGV Charging Station"
+    category: "service"
+    node_id: "charging"
+    x: -13.5
+    y: 2.0
+    yaw: 1.5708
+    entrance_junction: "west_bypass_north"
+    description: "High-power inductive charging bays"
+
+  warehouse:
+    name: "Industrial Warehouse Hub"
+    category: "industrial"
+    node_id: "warehouse"
+    x: 8.0
+    y: 7.0
+    yaw: 1.5708
+    entrance_junction: "wh_junction_6"
+    description: "Heavy inventory storage and logistics hub"
+
+  exit:
+    name: "Emergency Exit Door"
+    category: "emergency"
+    node_id: "exit"
+    x: -12.5
+    y: -9.0
+    yaw: -1.5708
+    entrance_junction: "junction_3"
+    description: "West emergency egress corridor"
+
+  office:
+    name: "Executive Office Suite"
+    category: "administrative"
+    node_id: "office"
+    x: 0.0
+    y: 10.0
+    yaw: 1.5708
+    entrance_junction: "junction_5"
+    description: "Administrative staff offices and conference room"
+
+  room_b:
+    name: "Room B - Medical Ward Inspection"
+    category: "medical"
+    node_id: "room_b"
+    x: 6.5
+    y: -9.5
+    yaw: -1.5708
+    entrance_junction: "junction_2"
+    description: "Clinical examination and isolation room"
+
+  reception:
+    name: "Main Reception Foyer"
+    category: "public"
+    node_id: "reception"
+    x: 0.0
+    y: -8.6
+    yaw: 1.5708
+    entrance_junction: "junction_1"
+    description: "Facility check-in and waiting area"
+
+  utility_service:
+    name: "Utility Service Room (Dead End)"
+    category: "dead_end"
+    node_id: "dead_end_2"
+    x: -15.0
+    y: -4.5
+    yaw: 3.14159
+    entrance_junction: "junction_3"
+    description: "Restricted maintenance cul-de-sac"
+
+# ------------------------------------------------------------------------------
+# 2. PHYSICAL DIRECTIONAL SIGNS GRAPH
+# Every sign is physically attached to a wall, faces the approaching corridor,
+# and provides real directional guidance for approaching junctions.
+# Height z is standardized to 1.10m (eye level for robot camera).
+# ------------------------------------------------------------------------------
+signs:
+  # --- Junction 1 (Central South Foyer / Crossway: x=0.0, y=-5.0) ---
+  sign_j1_hospital:
+    id: "sign_j1_hospital"
+    junction: "junction_1"
+    destination: "hospital"
+    direction: "RIGHT"
+    text: "HOSPITAL"
+    texture_file: "hospital_right.png"
+    wall_attachment:
+      wall_name: "wall_spine_e_corner"
+      x: 1.20
+      y: -4.20
+      z: 0.85
+      yaw: 3.14159   # Facing south towards approaching robot from reception
+    approaching_from: ["reception"]
+    branch_node: "corridor_east_1"
+    confidence_prior: 0.96
+
+  sign_j1_office:
+    id: "sign_j1_office"
+    junction: "junction_1"
+    destination: "office"
+    direction: "STRAIGHT"
+    text: "OFFICE"
+    texture_file: "office_straight.png"
+    wall_attachment:
+      wall_name: "wall_spine_mid"
+      x: 0.00
+      y: -3.80
+      z: 0.85
+      yaw: 3.14159   # Facing south
+    approaching_from: ["reception"]
+    branch_node: "central_archway"
+    confidence_prior: 0.96
+
+  sign_j1_exit:
+    id: "sign_j1_exit"
+    junction: "junction_1"
+    destination: "exit"
+    direction: "LEFT"
+    text: "EXIT"
+    texture_file: "exit_left.png"
+    wall_attachment:
+      wall_name: "wall_spine_w_corner"
+      x: -1.20
+      y: -4.20
+      z: 0.85
+      yaw: 3.14159   # Facing south
+    approaching_from: ["reception", "corridor_east_1"]
+    branch_node: "corridor_west_1"
+    confidence_prior: 0.95
+
+  # --- Junction 2 (Southeast Hospital Intersection: x=6.0, y=-5.0) ---
+  sign_j2_hospital:
+    id: "sign_j2_hospital"
+    junction: "junction_2"
+    destination: "hospital"
+    direction: "RIGHT"
+    text: "HOSPITAL"
+    texture_file: "hospital_right.png"
+    wall_attachment:
+      wall_name: "wall_j2_east"
+      x: 7.20
+      y: -4.70
+      z: 0.85
+      yaw: 1.5708    # Facing west towards approaching robot
+    approaching_from: ["corridor_east_1"]
+    branch_node: "hospital_ward_entry"
+    confidence_prior: 0.97
+
+  sign_j2_warehouse:
+    id: "sign_j2_warehouse"
+    junction: "junction_2"
+    destination: "warehouse"
+    direction: "LEFT"
+    text: "WAREHOUSE"
+    texture_file: "warehouse_left.png"
+    wall_attachment:
+      wall_name: "wall_j2_east"
+      x: 7.20
+      y: -5.30
+      z: 0.85
+      yaw: 1.5708    # Facing west towards approaching robot
+    approaching_from: ["corridor_east_1"]
+    branch_node: "east_bypass_1"
+    confidence_prior: 0.95
+
+  # --- Junction 3 (Southwest Exit & Service Split: x=-6.0, y=-5.0) ---
+  sign_j3_exit:
+    id: "sign_j3_exit"
+    junction: "junction_3"
+    destination: "exit"
+    direction: "STRAIGHT"
+    text: "EXIT"
+    texture_file: "exit_straight.png"
+    wall_attachment:
+      wall_name: "wall_j3_west"
+      x: -7.20
+      y: -4.70
+      z: 0.85
+      yaw: -1.5708   # Facing east towards approaching robot
+    approaching_from: ["corridor_west_1"]
+    branch_node: "exit"
+    confidence_prior: 0.96
+
+  sign_j3_storage:
+    id: "sign_j3_storage"
+    junction: "junction_3"
+    destination: "storage"
+    direction: "RIGHT"
+    text: "STORAGE"
+    texture_file: "storage_right.png"
+    wall_attachment:
+      wall_name: "wall_j3_west"
+      x: -7.20
+      y: -5.30
+      z: 0.85
+      yaw: -1.5708   # Facing east towards approaching robot
+    approaching_from: ["corridor_west_1"]
+    branch_node: "west_bypass_south"
+    confidence_prior: 0.94
+
+  # --- Junction 4 (Central Corridor Hub: x=0.0, y=1.0) ---
+  sign_j4_office:
+    id: "sign_j4_office"
+    junction: "junction_4"
+    destination: "office"
+    direction: "STRAIGHT"
+    text: "OFFICE"
+    texture_file: "office_straight.png"
+    wall_attachment:
+      wall_name: "wall_j4_north"
+      x: 0.00
+      y: 2.50
+      z: 0.85
+      yaw: 3.14159   # Facing south towards robot moving north
+    approaching_from: ["central_archway"]
+    branch_node: "junction_5"
+    confidence_prior: 0.97
+
+  sign_j4_warehouse:
+    id: "sign_j4_warehouse"
+    junction: "junction_4"
+    destination: "warehouse"
+    direction: "RIGHT"
+    text: "WAREHOUSE"
+    texture_file: "warehouse_right.png"
+    wall_attachment:
+      wall_name: "wall_j4_east"
+      x: 1.40
+      y: 1.20
+      z: 0.85
+      yaw: 3.14159   # Facing south towards robot moving north
+    approaching_from: ["central_archway"]
+    branch_node: "wh_corridor_entry"
+    confidence_prior: 0.95
+
+  sign_j4_lab:
+    id: "sign_j4_lab"
+    junction: "junction_4"
+    destination: "room_a"
+    direction: "LEFT"
+    text: "LAB"
+    texture_file: "lab_left.png"
+    wall_attachment:
+      wall_name: "wall_j4_west"
+      x: -1.40
+      y: 1.20
+      z: 0.85
+      yaw: 3.14159   # Facing south towards robot moving north
+    approaching_from: ["central_archway"]
+    branch_node: "lab_corridor_entry"
+    confidence_prior: 0.96
+
+  # --- Junction 7 (Storage Approach & Lab Bypass: x=-6.0, y=2.5) ---
+  sign_j7_storage:
+    id: "sign_j7_storage"
+    junction: "junction_7"
+    destination: "storage"
+    direction: "STRAIGHT"
+    text: "STORAGE"
+    texture_file: "storage_straight.png"
+    wall_attachment:
+      wall_name: "wall_storage_approach"
+      x: -5.80
+      y: 2.40
+      z: 0.85
+      yaw: 3.14159   # Facing south towards approaching robot
+    approaching_from: ["lab_bypass_entry"]
+    branch_node: "storage"
+    confidence_prior: 0.97
+
+  sign_j7_charging:
+    id: "sign_j7_charging"
+    junction: "junction_7"
+    destination: "charging"
+    direction: "LEFT"
+    text: "CHARGING"
+    texture_file: "charging_left.png"
+    wall_attachment:
+      wall_name: "wall_storage_west"
+      x: -6.50
+      y: 1.80
+      z: 0.85
+      yaw: 3.14159   # Facing south towards approaching robot
+    approaching_from: ["storage_approach"]
+    branch_node: "west_bypass_north"
+    confidence_prior: 0.94
+
+  # --- Junction 8 (Room A Entrance Approach: x=-6.0, y=7.5) ---
+  sign_j8_room_a:
+    id: "sign_j8_room_a"
+    junction: "junction_8"
+    destination: "room_a"
+    direction: "STRAIGHT"
+    text: "ROOM A"
+    texture_file: "room_a_straight.png"
+    wall_attachment:
+      wall_name: "wall_room_a_door"
+      x: -5.80
+      y: 8.50
+      z: 0.85
+      yaw: 3.14159   # Facing south towards approaching robot
+    approaching_from: ["lab_bypass_entry"]
+    branch_node: "room_a"
+    confidence_prior: 0.98
+
+  sign_j8_storage:
+    id: "sign_j8_storage"
+    junction: "junction_8"
+    destination: "storage"
+    direction: "STRAIGHT"
+    text: "STORAGE"
+    texture_file: "storage_straight.png"
+    wall_attachment:
+      wall_name: "wall_room_a_south"
+      x: -6.20
+      y: 6.50
+      z: 0.85
+      yaw: 0.0       # Facing north towards robot exiting Room A heading south
+    approaching_from: ["room_a"]
+    branch_node: "lab_bypass_entry"
+    confidence_prior: 0.96
+
+  # --- Warehouse Hub Approach (Junction 6: x=6.0, y=2.0) ---
+  sign_j6_loading:
+    id: "sign_j6_loading"
+    junction: "wh_junction_6"
+    destination: "loading"
+    direction: "RIGHT"
+    text: "LOADING"
+    texture_file: "loading_right.png"
+    wall_attachment:
+      wall_name: "wall_wh_j6_north"
+      x: 7.20
+      y: 1.30
+      z: 0.85
+      yaw: 1.5708    # Facing west towards approaching robot
+    approaching_from: ["wh_corridor_entry"]
+    branch_node: "loading"
+    confidence_prior: 0.96
+
+  sign_j6_charging:
+    id: "sign_j6_charging"
+    junction: "wh_junction_6"
+    destination: "charging"
+    direction: "LEFT"
+    text: "CHARGING"
+    texture_file: "charging_left.png"
+    wall_attachment:
+      wall_name: "wall_wh_j6_south"
+      x: 5.50
+      y: 0.80
+      z: 0.85
+      yaw: -1.5708   # Facing east towards robot returning from Warehouse/Loading
+    approaching_from: ["loading"]
+    branch_node: "wh_corridor_entry"
+    confidence_prior: 0.93
+
+# ------------------------------------------------------------------------------
+# 3. DYNAMIC / TEMPORARY SIGN MUTATIONS (FOR V2.4 SCENARIO TESTING)
+# Demonstrates changing sign understanding where visual observation overrides map priors
+# ------------------------------------------------------------------------------
+dynamic_sign_scenarios:
+  scenario_storage_closed:
+    target_sign_id: "sign_j7_storage"
+    new_text: "STORAGE CLOSED"
+    new_direction: "BLOCKED"
+    new_texture_file: "storage_closed.png"
+    action: "PENALIZE_EDGE"
+    penalty_factor: 10.0
+
+  scenario_storage_detour:
+    target_sign_id: "sign_j3_storage"
+    new_text: "STORAGE"
+    new_direction: "LEFT"  # Changed from RIGHT to LEFT detour
+    new_texture_file: "storage_left.png"
+    action: "REDIRECT_BRANCH"
+    redirect_branch_node: "corridor_east_1"

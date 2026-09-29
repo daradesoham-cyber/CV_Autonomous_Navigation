@@ -61,6 +61,20 @@ def test_sign_navigation():
         if base == 'emergency_exit':
             exp_text = 'EMERGENCY EXIT'
             exp_dir = 'STRAIGHT'
+        elif base == 'keep_left':
+            exp_text = 'KEEP LEFT'
+            exp_dir = 'LEFT'
+        elif base == 'keep_right':
+            exp_text = 'KEEP RIGHT'
+            exp_dir = 'RIGHT'
+        elif base.startswith('room_a'):
+            exp_text = 'ROOM A'
+            parts = base.split('_')
+            exp_dir = parts[-1].upper() if len(parts) > 2 else 'STRAIGHT'
+        elif base.startswith('room_b'):
+            exp_text = 'ROOM B'
+            parts = base.split('_')
+            exp_dir = parts[-1].upper() if len(parts) > 2 else 'STRAIGHT'
         else:
             parts = base.split('_')
             exp_text = parts[0].upper()

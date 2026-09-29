@@ -1,0 +1,2832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Navigation V2.1 | Mission Control & Perception</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-card: #121826;
+      --bg-card-hover: #1b2337;
+      --border-color: #232e47;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #8b5cf6;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    /* Header */
+    header {
+      background: #0f1523;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 52px;
+      flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .brand { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .brand-badge { background: var(--accent-cyan); color: #000; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+    .status-pulse { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--accent-emerald); }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+    
+    .nav-tabs { display: flex; gap: 8px; }
+    .nav-tab {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .nav-tab:hover { background: var(--bg-card); color: #fff; }
+    .nav-tab.active { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
+
+    .header-controls { display: flex; gap: 8px; align-items: center; }
+    .btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-pause { background: #374151; color: #fbbf24; }
+    .btn-pause:hover { background: #4b5563; }
+    .btn-abort { background: rgba(244, 63, 94, 0.2); border: 1px solid var(--accent-rose); color: var(--accent-rose); }
+    .btn-abort:hover { background: var(--accent-rose); color: #fff; }
+    .btn-reset { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
+    .btn-reset:hover { border-color: #64748b; color: #fff; }
+
+    /* SYSTEM OVERVIEW ARCHITECTURE PANEL (Phase 14) */
+    .system-overview-bar {
+      background: #0d121f;
+      border-bottom: 1px solid var(--border-color);
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: auto;
+      gap: 8px;
+      font-size: 0.72rem;
+      flex-shrink: 0;
+    }
+    .pipeline-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      justify-content: center;
+    }
+    .pipeline-step {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .step-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .step-dot.ONLINE { background: var(--accent-emerald); box-shadow: 0 0 6px var(--accent-emerald); }
+    .step-dot.WARNING { background: var(--accent-amber); box-shadow: 0 0 6px var(--accent-amber); }
+    .step-dot.OFFLINE, .step-dot.STANDBY { background: #64748b; }
+    .pipeline-arrow {
+      color: #475569;
+      font-weight: 800;
+      font-size: 0.75rem;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+    .tab-content { display: none; width: 100%; height: 100%; }
+    .tab-content.active { display: flex; }
+
+    /* Screen 1: Monitor Layout */
+    #tab-monitor {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      gap: 10px;
+      padding: 10px 14px;
+    }
+    .monitor-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 330px;
+      min-height: 480px;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .panel {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 12px;
+      gap: 12px;
+      max-height: 480px;
+    }
+    .panel-right {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+    .center-map-panel {
+      position: relative;
+      background: #090c14;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 480px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .state-banner {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+    }
+    .state-banner.NAVIGATING { background: rgba(59, 130, 246, 0.2); border: 1px solid var(--accent-blue); color: #60a5fa; }
+    .state-banner.IDLE { background: rgba(148, 163, 184, 0.15); border: 1px solid #475569; color: var(--text-muted); }
+    .state-banner.GOAL_REACHED { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--accent-emerald); color: var(--accent-emerald); }
+    .state-banner.OBSTACLE_DETECTED, .state-banner.DEAD_END { background: rgba(245, 158, 11, 0.25); border: 1px solid var(--accent-amber); color: var(--accent-amber); }
+    .state-banner.REPLANNING, .state-banner.BACKTRACKING, .state-banner.RECOVERY { background: rgba(139, 92, 246, 0.25); border: 1px solid var(--accent-purple); color: #c084fc; }
+    .state-banner.FAILED { background: rgba(244, 63, 94, 0.25); border: 1px solid var(--accent-rose); color: var(--accent-rose); }
+    .state-banner.PAUSED { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #fde047; }
+
+    .metric-row { display: flex; justify-content: space-between; font-size: 0.78rem; }
+    .metric-label { color: var(--text-muted); }
+    .metric-val { font-family: var(--font-mono); font-weight: 600; color: #fff; }
+
+    .goal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .goal-chip {
+      background: #182236;
+      border: 1px solid var(--border-color);
+      color: #93c5fd;
+      padding: 6px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .goal-chip:hover {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+
+    /* Center Map Panel Overlay UI (Phase 5) */
+    #mapCanvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+    .map-overlay-controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 10;
+    }
+    .map-btn {
+      width: 28px;
+      height: 28px;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .map-btn:hover { background: var(--bg-card-hover); }
+
+    .map-coords-hud {
+      position: absolute;
+      top: 10px;
+      left: 48px;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .map-compass-hud {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      z-index: 10;
+    }
+    .compass-needle {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+    }
+
+    .map-scale-bar {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      z-index: 10;
+    }
+    .scale-line {
+      height: 4px;
+      background: #fff;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #fff;
+      width: 80px;
+    }
+
+    .history-overlay-select-box {
+      position: absolute;
+      top: 10px;
+      left: 220px;
+      z-index: 10;
+    }
+    .history-overlay-select {
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.72rem;
+      outline: none;
+    }
+
+    .map-legend {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(18, 24, 38, 0.92);
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px 12px;
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      z-index: 10;
+      max-width: 380px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-color { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    /* Right Panel Elements */
+    .alt-routes-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-top: 4px; }
+    .alt-routes-table th { text-align: left; padding: 4px 6px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
+    .alt-routes-table td { padding: 5px 6px; font-family: var(--font-mono); border-bottom: 1px solid rgba(35, 46, 71, 0.4); }
+    .alt-routes-table tr.selected { background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-weight: 700; }
+
+    .clearance-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .clearance-box {
+      background: #0f1523;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 6px 2px;
+      text-align: center;
+    }
+    .clearance-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 700; }
+    .clearance-num { font-size: 0.78rem; font-family: var(--font-mono); font-weight: 700; margin-top: 2px; }
+
+    .cost-breakdown-box {
+      background: #0d121f;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 0.68rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .cost-item { display: flex; justify-content: space-between; font-family: var(--font-mono); }
+
+    .log-container {
+      background: #090c14;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      height: 180px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .log-entry { display: flex; gap: 6px; line-height: 1.3; }
+    .log-time { color: #64748b; flex-shrink: 0; }
+    .log-msg { flex: 1; word-break: break-word; }
+    .log-INFO .log-msg { color: #94a3b8; }
+    .log-WARN .log-msg { color: #f59e0b; }
+    .log-ERROR .log-msg { color: #f43f5e; font-weight: 700; }
+    .log-SUCCESS .log-msg { color: #10b981; }
+
+    /* Camera Perception Panel (V2.3 Upgrade) */
+    .camera-perception-panel {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      gap: 12px;
+      min-height: 280px;
+      flex-shrink: 0;
+    }
+    .cam-stream-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cam-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0b0f19;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 5px 8px;
+    }
+    .cam-live-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .cam-meta-pill {
+      font-size: 0.62rem;
+      font-family: var(--font-mono);
+      background: #182236;
+      color: #94a3b8;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .cam-meta-pill.active {
+      color: var(--accent-emerald);
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .cam-viewport-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 235px;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cam-viewport-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .cam-view-badge {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: var(--accent-cyan);
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      backdrop-filter: blur(4px);
+    }
+    .cam-mode-tag {
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #e2e8f0;
+      font-size: 0.62rem;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .camera-sign-overlay {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+      border-radius: 6px;
+      padding: 5px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(4px);
+    }
+    .sign-tag-icon { font-size: 1rem; }
+    .sign-tag-text { font-size: 0.78rem; font-weight: 800; color: #38bdf8; font-family: var(--font-mono); }
+    .sign-tag-meta { font-size: 0.62rem; color: #94a3b8; font-family: var(--font-mono); }
+
+    .cam-inspector-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .inspector-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+    .inspector-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+      font-size: 0.68rem;
+    }
+
+    /* Bottom Drawer */
+    .bottom-drawer {
+      height: 125px;
+      background: #0c101c;
+      border-top: 1px solid var(--border-color);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 6px 12px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .drawer-section { display: flex; flex-direction: column; gap: 4px; }
+    .health-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 4px; }
+    .node-health-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-align: center;
+    }
+    .node-health-status { display: flex; align-items: center; gap: 4px; }
+    .node-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .node-dot.ONLINE { background: var(--accent-emerald); }
+    .node-dot.WARNING { background: var(--accent-amber); }
+    .node-dot.OFFLINE, .node-dot.STANDBY { background: #64748b; }
+    .cam-toggle-btn {
+      background: #182236;
+      border: 1px solid var(--border-color);
+      color: #94a3b8;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cam-toggle-btn:hover { color: #fff; background: var(--bg-card-hover); }
+    .cam-toggle-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+    /* SCREEN 2: TRAVEL HISTORY & ANALYTICS (Phase 6) */
+    #tab-history {
+      flex-direction: column;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+    .analytics-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .kpi-title { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+    .kpi-val { font-size: 1.25rem; font-family: var(--font-mono); font-weight: 800; color: #fff; }
+
+    .history-main-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 14px;
+      min-height: 380px;
+    }
+    .history-table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: auto;
+      max-height: 420px;
+    }
+    .history-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+    .history-table th { background: #161e31; padding: 8px 10px; text-align: left; color: var(--text-muted); font-size: 0.68rem; position: sticky; top: 0; }
+    .history-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); font-family: var(--font-mono); }
+    .history-table tr:hover { background: #192237; cursor: pointer; }
+    .history-table tr.selected-row { background: rgba(59, 130, 246, 0.2); }
+    .result-badge { padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; }
+    .result-SUCCESS { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .result-FAILED, .result-INTERRUPTED { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+    /* Mission Summary Card (Phase 6) */
+    .mission-summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--accent-blue);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .summary-preview-canvas {
+      width: 100%;
+      height: 180px;
+      background: #090c14;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Journey Comparison Tool Panel (Phase 6) */
+    .compare-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .compare-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .compare-table th { padding: 6px; text-align: left; color: var(--text-muted); background: #101625; }
+    .compare-table td { padding: 6px; border-bottom: 1px solid var(--border-color); font-family: var(--font-mono); }
+    .delta-pos { color: var(--accent-emerald); font-weight: 700; }
+    .delta-neg { color: var(--accent-rose); font-weight: 700; }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      height: 190px;
+    }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chart-container { flex: 1; position: relative; }
+
+    /* SCREEN 3: ROUTE HEATMAP (Phase 7) */
+    #tab-heatmap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    #heatmapCanvas { width: 100%; height: 100%; display: block; cursor: pointer; }
+    
+    .corridor-inspect-card {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(18, 24, 38, 0.95);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 8px;
+      padding: 12px;
+      width: 310px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 20;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .corridor-category-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .cat-FrequentlyUsed { background: rgba(16, 185, 129, 0.25); color: #34d399; }
+    .cat-Normal { background: rgba(59, 130, 246, 0.25); color: #60a5fa; }
+    .cat-ObstacleHeavy { background: rgba(245, 158, 11, 0.25); color: #fbbf24; }
+    .cat-HighFailure { background: rgba(244, 63, 94, 0.25); color: #fb7185; }
+    .cat-DeadEnd { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+    .cat-Blocked { background: rgba(220, 38, 38, 0.35); color: #ef4444; border: 1px solid #ef4444; }
+
+    /* MISSION REPLAY MODAL (Phase 13) */
+    .replay-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .replay-modal-backdrop.active { display: flex; }
+    .replay-modal {
+      width: 92vw;
+      height: 88vh;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+    }
+    .replay-header {
+      background: #0f1523;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .replay-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      overflow: hidden;
+    }
+    .replay-canvas-container {
+      position: relative;
+      background: #090c14;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #replayCanvas { width: 100%; height: 100%; display: block; }
+    .replay-timeline-panel {
+      background: var(--bg-dark);
+      border-left: 1px solid var(--border-color);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+    }
+    .timeline-item {
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: #111827;
+      border-left: 3px solid var(--accent-blue);
+      font-size: 0.72rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .timeline-item.active { border-left-color: var(--accent-emerald); background: #172554; }
+    .replay-controls-bar {
+      background: #0f1523;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .replay-scrub {
+      flex: 1;
+      accent-color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <div class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        AUTONOMOUS NAV <span class="brand-badge">V2.1 POLISH</span>
+      </div>
+      <div class="status-pulse">
+        <div class="pulse-dot"></div>
+        <span id="ros-sync-label">SYSTEM SYNCHRONIZED</span>
+      </div>
+    </div>
+
+    <!-- Navigation Screen Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('monitor')">MISSION MONITOR</button>
+      <button class="nav-tab" onclick="switchTab('history')">TRAVEL HISTORY & ANALYTICS</button>
+      <button class="nav-tab" onclick="switchTab('heatmap')">ROUTE HEATMAP</button>
+    </div>
+
+    <!-- Quick Action Controls -->
+    <div class="header-controls">
+      <button class="btn btn-pause" id="btnPause" onclick="sendControl('PAUSE')">⏸ PAUSE</button>
+      <button class="btn btn-abort" onclick="sendControl('ABORT')">⏹ ABORT</button>
+      <button class="btn btn-reset" onclick="resetMemory()">🔄 RESET MEMORY</button>
+    </div>
+  </header>
+
+  <!-- PHASE 14: SYSTEM OVERVIEW PIPELINE PANEL -->
+  <div class="system-overview-bar" id="systemOverviewBar">
+    <div style="font-weight:700; color:var(--text-muted); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:4px;">
+      <span>PIPELINE ARCHITECTURE</span>
+    </div>
+    <div class="pipeline-container" id="pipelineFlowContainer">
+      <!-- Steps rendered dynamically from /api/system_health -->
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>CAMERA</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>YOLO</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>OBJECT DETECTION</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>CAMERA-LIDAR FUSION</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>PERCEPTION</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>GLOBAL PLANNER</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>LOCAL NAVIGATION</strong></div>
+      <div class="pipeline-arrow">➔</div>
+      <div class="pipeline-step"><div class="step-dot ONLINE"></div><strong>MOTOR COMMAND</strong></div>
+    </div>
+    <div style="font-size:0.68rem; color:#94a3b8; font-family:var(--font-mono);" id="pipelineEngineLabel">
+      RTX 3050 Active (CUDA)
+    </div>
+  </div>
+
+  <!-- SECTION 16: LIVE SYSTEM PERFORMANCE BAR -->
+  <div class="system-perf-bar" id="systemPerfBar" style="background:#080c16; border-bottom:1px solid var(--border-color); padding:4px 18px; display:flex; align-items:center; justify-content:space-between; font-size:0.73rem; font-family:var(--font-mono); color:var(--text-muted); flex-shrink:0;">
+    <span>CPU: <strong id="perfCpu" style="color:#fff;">--%</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>RAM: <strong id="perfRam" style="color:#fff;">--%</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>GPU: <strong id="perfGpu" style="color:var(--accent-emerald);">--%</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>YOLO: <strong id="perfYolo" style="color:var(--accent-cyan);">-- ms (-- FPS)</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>Camera: <strong id="perfCam" style="color:#fff;">-- Hz</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>LiDAR: <strong id="perfLidar" style="color:#fff;">-- Hz</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>Fusion: <strong id="perfFusion" style="color:#fff;">-- Hz</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>Planner: <strong id="perfPlanner" style="color:#fff;">-- ms</strong></span>
+    <span style="color:#334155;">|</span>
+    <span>Dashboard: <strong id="perfDash" style="color:#fff;">-- ms</strong></span>
+  </div>
+
+  <!-- Main View -->
+  <main>
+
+    <!-- SCREEN 1: MISSION MONITOR -->
+    <div id="tab-monitor" class="tab-content active">
+      <div class="monitor-grid">
+        
+        <!-- LEFT PANEL: Robot Status & Direct Controls -->
+        <div class="panel">
+          
+          <!-- Navigation State -->
+          <div class="card">
+            <div class="card-title">Robot Status</div>
+            <div id="stateBanner" class="state-banner IDLE">IDLE</div>
+          </div>
+
+          <!-- Position & Velocity -->
+          <div class="card">
+            <div class="card-title">Odometry & Pose</div>
+            <div class="metric-row"><span class="metric-label">Position X:</span><span class="metric-val" id="valPoseX">0.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Position Y:</span><span class="metric-val" id="valPoseY">-11.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Heading (Yaw):</span><span class="metric-val" id="valPoseYaw">1.57 rad (90.0°)</span></div>
+            <div class="metric-row"><span class="metric-label">Linear Vel:</span><span class="metric-val" id="valLinVel">0.00 m/s</span></div>
+            <div class="metric-row"><span class="metric-label">Angular Vel:</span><span class="metric-val" id="valAngVel">0.00 rad/s</span></div>
+          </div>
+
+          <!-- Mission Progress -->
+          <div class="card">
+            <div class="card-title">Active Mission Target</div>
+            <div class="metric-row"><span class="metric-label">Current Node:</span><span class="metric-val" id="valCurrNode">start</span></div>
+            <div class="metric-row"><span class="metric-label">Target Waypoint:</span><span class="metric-val" id="valTargetNode">--</span></div>
+            <div class="metric-row"><span class="metric-label">Destination:</span><span class="metric-val" id="valDestNode">None</span></div>
+            <div class="metric-row"><span class="metric-label">Dist Remaining:</span><span class="metric-val" id="valDistRem">0.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Estimated Time:</span><span class="metric-val" id="valETA">0.0 s</span></div>
+          </div>
+
+          <!-- Facility Destination Dispatch -->
+          <div class="card">
+            <div class="card-title">Dispatch Goal Location</div>
+            <div class="goal-grid">
+              <button class="goal-chip" onclick="dispatchGoal('ROOM A')">ROOM A</button>
+              <button class="goal-chip" onclick="dispatchGoal('STORAGE')">STORAGE</button>
+              <button class="goal-chip" onclick="dispatchGoal('CHARGING')">CHARGING</button>
+              <button class="goal-chip" onclick="dispatchGoal('LOADING')">LOADING</button>
+              <button class="goal-chip" onclick="dispatchGoal('RESTRICTED')">RESTRICTED</button>
+              <button class="goal-chip" onclick="dispatchGoal('HOSPITAL')">HOSPITAL</button>
+              <button class="goal-chip" onclick="dispatchGoal('WAREHOUSE')">WAREHOUSE</button>
+              <button class="goal-chip" onclick="dispatchGoal('EXIT')">EXIT DOOR</button>
+              <button class="goal-chip" onclick="dispatchGoal('EXPLORE')">EXPLORE</button>
+              <button class="goal-chip" onclick="dispatchGoal('ROOM B')">ROOM B</button>
+            </div>
+          </div>
+
+          <!-- Journey Accumulator -->
+          <div class="card">
+            <div class="card-title">Journey Metrics</div>
+            <div class="metric-row"><span class="metric-label">Distance Travelled:</span><span class="metric-val" id="valDistTrav">0.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Duration:</span><span class="metric-val" id="valDuration">0.0 s</span></div>
+            <div class="metric-row"><span class="metric-label">Replans Triggered:</span><span class="metric-val" id="valReplans">0</span></div>
+            <div class="metric-row"><span class="metric-label">Recoveries:</span><span class="metric-val" id="valRecoveries">0</span></div>
+            <div class="metric-row"><span class="metric-label">Dead-Ends Avoided:</span><span class="metric-val" id="valDeadEnds">0</span></div>
+          </div>
+
+          <!-- SECTION 15: NAVIGATION DIAGNOSTICS -->
+          <div class="card" id="cardNavDiagnostics" style="border-left: 3px solid var(--accent-cyan);">
+            <div class="card-title" style="color:var(--accent-cyan); display:flex; justify-content:space-between; align-items:center;">
+              <span>NAVIGATION DIAGNOSTICS</span>
+              <span id="diagProgress" style="font-size:0.75rem; color:#fff; font-family:var(--font-mono);">0%</span>
+            </div>
+            <div class="metric-row"><span class="metric-label">Path Efficiency:</span><span class="metric-val" id="diagPathEff" style="color:var(--accent-emerald);">100%</span></div>
+            <div class="metric-row"><span class="metric-label">Path Deviation:</span><span class="metric-val" id="diagDeviation">0.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Replans:</span><span class="metric-val" id="diagReplans">0</span></div>
+            <div class="metric-row"><span class="metric-label">Replan Reason:</span><span class="metric-val" id="diagReplanReason" style="font-size:0.72rem; color:var(--accent-amber);">NONE</span></div>
+            <div class="metric-row"><span class="metric-label">Recoveries:</span><span class="metric-val" id="diagRecoveries">0</span></div>
+            <div class="metric-row"><span class="metric-label">Oscillation:</span><span class="metric-val" id="diagOscillation" style="color:#60a5fa;">0</span></div>
+            <div class="metric-row"><span class="metric-label">Backtracking:</span><span class="metric-val" id="diagBacktrack">0.00 m</span></div>
+            <div class="metric-row"><span class="metric-label">Minimum Clearance:</span><span class="metric-val" id="diagMinClear" style="color:var(--accent-amber);">0.50 m</span></div>
+          </div>
+
+        </div>
+
+        <!-- CENTER: Live Interactive Map (Phase 5) -->
+        <div class="center-map-panel">
+          <canvas id="mapCanvas"></canvas>
+          
+          <!-- Zoom & Pan Controls -->
+          <div class="map-overlay-controls">
+            <button class="map-btn" title="Zoom In" onclick="zoomMap(1.2)">+</button>
+            <button class="map-btn" title="Zoom Out" onclick="zoomMap(0.8)">-</button>
+            <button class="map-btn" title="Reset View" onclick="resetMapTransform()">⌂</button>
+          </div>
+
+          <!-- Live Coordinates HUD -->
+          <div class="map-coords-hud" id="mapCoordsHud">
+            World: X: 0.00m | Y: 0.00m
+          </div>
+
+          <!-- North Compass & Heading Indicator -->
+          <div class="map-compass-hud" id="mapCompassHud">
+            <svg class="compass-needle" id="compassNeedle" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12 2 15 12 12 9 9 12 12 2" fill="#ef4444" stroke="#ef4444"/>
+              <polygon points="12 22 15 12 12 15 9 12 12 22" fill="#94a3b8" stroke="#94a3b8"/>
+            </svg>
+            <span id="compassHeadingVal">N 90°</span>
+          </div>
+
+          <!-- Scale Bar Indicator -->
+          <div class="map-scale-bar" id="mapScaleBar">
+            <div class="scale-line" id="scaleLineBar"></div>
+            <div style="display:flex; justify-content:space-between; width:80px;"><span>0</span><span>2.5m</span><span>5m</span></div>
+          </div>
+
+          <!-- Historical Journey Overlay Selector -->
+          <div class="history-overlay-select-box">
+            <select class="history-overlay-select" id="historyOverlaySelect" onchange="onOverlaySelectChange(this.value)">
+              <option value="">-- Overlay Historical Journey --</option>
+            </select>
+          </div>
+
+          <!-- 12-Item Expanded Facility Legend -->
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-color" style="background:#475569;"></div> 1. Facility Map</div>
+            <div class="legend-item"><div class="legend-color" style="background:#06b6d4;"></div> 2. Robot (Active Base)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> 3. Goal Destination</div>
+            <div class="legend-item"><div class="legend-color" style="background:#a855f7;"></div> 4. Planned Path</div>
+            <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div> 5. Travelled Path</div>
+            <div class="legend-item"><div class="legend-color" style="background:#c084fc; border:1px dashed #fff;"></div> 6. Alternative Candidate</div>
+            <div class="legend-item"><div class="legend-color" style="background:#ef4444;"></div> 7. LiDAR Obstacles</div>
+            <div class="legend-item"><div class="legend-color" style="background:#fbbf24;"></div> 8. Camera 3D Objects</div>
+            <div class="legend-item"><div class="legend-color" style="background:#dc2626;"></div> 9. Dead Ends</div>
+            <div class="legend-item"><div class="legend-color" style="background:#b91c1c; border-bottom:2px dashed #fff;"></div> 10. Blocked Corridors</div>
+            <div class="legend-item"><div class="legend-color" style="background:#ec4899;"></div> 11. Historical Overlay</div>
+            <div class="legend-item"><div class="legend-color" style="background:#38bdf8;"></div> 12. Current Segment</div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Navigation Intelligence & Live Log -->
+        <div class="panel panel-right">
+          
+          <!-- Route Cost & Intelligence (Phase 4 Itemized Breakdown) -->
+          <div class="card">
+            <div class="card-title">
+              <span>Route Intelligence</span>
+              <span id="routeOptionName" style="color:var(--accent-blue);">Route A</span>
+            </div>
+            <div class="metric-row"><span class="metric-label">Total Cost:</span><span class="metric-val" id="valRouteCost" style="color:var(--accent-cyan);">0.0</span></div>
+            <div class="metric-row"><span class="metric-label">Obstacle Density:</span><span class="metric-val" id="valObsDensity">0.00</span></div>
+            <div class="metric-row"><span class="metric-label">Route Reliability:</span><span class="metric-val" id="valReliability" style="color:var(--accent-emerald);">100%</span></div>
+            
+            <!-- Itemized Cost Details -->
+            <div class="cost-breakdown-box" id="costBreakdownContainer">
+              <div class="cost-item"><span>Distance Cost:</span><strong id="costDist">0.0</strong></div>
+              <div class="cost-item"><span>Obstacle Cost:</span><strong id="costObs">0.0</strong></div>
+              <div class="cost-item"><span>History Cost:</span><strong id="costHist">0.0</strong></div>
+              <div class="cost-item"><span>Turn Cost:</span><strong id="costTurn">0.0</strong></div>
+              <div class="cost-item"><span>Narrow Corridor:</span><strong id="costNarrow">0.0</strong></div>
+              <div class="cost-item"><span>Time Cost:</span><strong id="costTime">0.0</strong></div>
+              <div class="cost-item"><span>Familiarity Bonus:</span><strong id="costFam" style="color:var(--accent-emerald);">-0.0</strong></div>
+            </div>
+          </div>
+
+          <!-- Alternative Routes Table -->
+          <div class="card">
+            <div class="card-title">Multi-Criteria Candidates (K=3)</div>
+            <table class="alt-routes-table">
+              <thead>
+                <tr><th>Option</th><th>Dist</th><th>Cost</th><th>Rel %</th></tr>
+              </thead>
+              <tbody id="altRoutesTableBody">
+                <tr><td colspan="4" style="text-align:center; color:#64748b;">No active route calculation</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Clearances with Rear (Safety Backtrack) -->
+          <div class="card">
+            <div class="card-title">LiDAR Safety Clearances</div>
+            <div class="clearance-grid">
+              <div class="clearance-box">
+                <div class="clearance-label">MIN</div>
+                <div class="clearance-num" id="clearMin" style="color:var(--accent-amber);">10.0m</div>
+              </div>
+              <div class="clearance-box">
+                <div class="clearance-label">FRONT</div>
+                <div class="clearance-num" id="clearFront">10.0m</div>
+              </div>
+              <div class="clearance-box">
+                <div class="clearance-label">LEFT</div>
+                <div class="clearance-num" id="clearLeft">10.0m</div>
+              </div>
+              <div class="clearance-box">
+                <div class="clearance-label">RIGHT</div>
+                <div class="clearance-num" id="clearRight">10.0m</div>
+              </div>
+              <div class="clearance-box">
+                <div class="clearance-label">REAR</div>
+                <div class="clearance-num" id="clearRear" style="color:var(--accent-cyan);">10.0m</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Event Log -->
+          <div class="card" style="flex:1;">
+            <div class="card-title">Real-Time Event Stream</div>
+            <div class="log-container" id="eventLogContainer">
+              <!-- Log entries appended dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Dedicated 16:9 Camera & Visual Perception Panel (V2.3 Upgrade) -->
+      <div class="camera-perception-panel" id="cameraPerceptionPanel">
+        <!-- Left: 16:9 Video Stream Viewport -->
+        <div class="cam-stream-container">
+          <div class="cam-panel-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="cam-live-indicator"></span>
+              <strong style="color:#fff; font-size:0.78rem; letter-spacing:0.5px;">LIVE PERCEPTION STREAM (16:9)</strong>
+              <span class="cam-meta-pill" id="camHeaderFps">0.0 FPS</span>
+              <span class="cam-meta-pill" id="camHeaderLatency">5.5 ms</span>
+              <span class="cam-meta-pill active" id="camHeaderEngine">RTX 3050 (cuda:0)</span>
+              <span class="cam-meta-pill" id="camHeaderFusion" style="display:inline-flex; align-items:center; gap:5px; border-color:rgba(6,182,212,0.4); color:var(--accent-cyan);">
+                <span class="step-dot OFFLINE" id="camFusionDot" style="width:6px; height:6px; margin:0;"></span>
+                <span id="camFusionText">FUSION: STANDBY</span>
+              </span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:0.65rem; color:#94a3b8; font-weight:600;">MODE:</span>
+              <button class="cam-toggle-btn active" id="btnCamYolo" onclick="switchCameraView('yolo')">YOLO VIEW</button>
+              <button class="cam-toggle-btn" id="btnCamSigns" onclick="switchCameraView('signs')">SIGN VIEW</button>
+              <button class="cam-toggle-btn" id="btnCamRaw" onclick="switchCameraView('raw')">RAW RGB</button>
+              <button class="cam-toggle-btn" id="btnCamFused" onclick="switchCameraView('fused')">[FUSED]</button>
+            </div>
+          </div>
+
+          <div class="cam-viewport-wrap">
+            <img id="cameraStreamView" src="/api/camera_frame?view=yolo" alt="Camera Stream" />
+            <div class="cam-view-badge" id="cameraViewBadge">RTX 3050 ACCELERATED (cuda:0)</div>
+            <div class="cam-mode-tag" id="camHeaderMode">YOLOv8n ON TENSOR CORES (179+ FPS)</div>
+            
+            <!-- Dynamic Sign Perception Overlay in Video Feed -->
+            <div class="camera-sign-overlay" id="cameraSignOverlay" style="display:none;">
+              <div class="sign-tag-icon">🪧</div>
+              <div>
+                <div class="sign-tag-text" id="camOverlaySignText">STORAGE</div>
+                <div class="sign-tag-meta" id="camOverlaySignMeta">Conf: 94% | Dist: 3.4m | Dir: RIGHT ➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Visual Landmark & 3D Object Perception Inspector -->
+        <div class="cam-inspector-container">
+          <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>VISUAL LANDMARK & OBJECT INSPECTOR</span>
+            <span class="badge" id="inspectorStatusPill" style="background:rgba(6,182,212,0.15); color:var(--accent-cyan); border:1px solid rgba(6,182,212,0.3); font-size:0.62rem; padding:2px 6px;">TRACKING ACTIVE</span>
+          </div>
+
+          <!-- Section A: Detected Visual Signs -->
+          <div class="inspector-card" id="signInspectCard">
+            <div class="inspector-card-header">
+              <span style="color:var(--accent-cyan); font-weight:700;">🪧 RECOGNIZED SIGN POST</span>
+              <span id="inspectSignConf" style="color:var(--accent-emerald); font-family:var(--font-mono); font-weight:700;">--</span>
+            </div>
+            <div class="metric-row"><span class="metric-label">Sign Text:</span><span class="metric-val" id="inspectSignText" style="color:#fff; font-size:0.82rem; font-weight:700;">None in View</span></div>
+            <div class="metric-row"><span class="metric-label">Associated Dest:</span><span class="metric-val" id="inspectSignDest" style="color:var(--accent-emerald);">--</span></div>
+            <div class="metric-row"><span class="metric-label">Target Graph Node:</span><span class="metric-val" id="inspectSignNode" style="font-family:var(--font-mono);">--</span></div>
+            <div class="metric-row"><span class="metric-label">Distance & Bearing:</span><span class="metric-val" id="inspectSignDist">--</span></div>
+          </div>
+
+          <!-- Section B: Nearest Fused 3D Obstacle -->
+          <div class="inspector-card" id="objectInspectCard">
+            <div class="inspector-card-header">
+              <span style="color:var(--accent-amber); font-weight:700;">🎯 NEAREST FUSED 3D OBJECT</span>
+              <span id="inspectObjClass" style="color:#fff; font-family:var(--font-mono); font-weight:700;">NONE</span>
+            </div>
+            <div class="metric-row"><span class="metric-label">Motion State:</span><span class="metric-val" id="inspectObjDynamic" style="color:#94a3b8;">STATIC</span></div>
+            <div class="metric-row"><span class="metric-label">3D Relative Position:</span><span class="metric-val" id="inspectObj3DPos" style="font-family:var(--font-mono); color:var(--accent-cyan);">X: -- | Y: -- | Z: --</span></div>
+            <div class="metric-row"><span class="metric-label">Bearing & Distance:</span><span class="metric-val" id="inspectObjDist">--</span></div>
+            <div class="metric-row"><span class="metric-label">Trajectory Vector:</span><span class="metric-val" id="inspectObjVector">--</span></div>
+            <div class="metric-row"><span class="metric-label">Time-To-Collision:</span><span class="metric-val" id="inspectObjTtc" style="font-family:var(--font-mono); color:var(--accent-emerald);">SAFE (∞)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Drawer: Live Sensors & System Health (2-Column Streamlined) -->
+      <div class="bottom-drawer">
+        
+        <!-- Live Sensor Panel -->
+        <div class="drawer-section">
+          <div class="card-title">Live Sensor Feeds & AI Perception</div>
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:4px;">
+            <div class="card" style="padding:6px 8px;">
+              <div class="metric-row"><span class="metric-label">RGB Camera:</span><span class="metric-val" id="camFps">0.0 FPS</span></div>
+              <div class="metric-row"><span class="metric-label">Resolution:</span><span class="metric-val" id="camRes">640x480</span></div>
+              <div class="metric-row"><span class="metric-label">Inference:</span><span class="metric-val" id="camLatency">5.5 ms</span></div>
+            </div>
+            <div class="card" style="padding:6px 8px;">
+              <div class="metric-row"><span class="metric-label">2D LiDAR:</span><span class="metric-val" id="lidarFreq">0.0 Hz</span></div>
+              <div class="metric-row"><span class="metric-label">Rays:</span><span class="metric-val" id="lidarPts">360 pts</span></div>
+              <div class="metric-row"><span class="metric-label">Min Range:</span><span class="metric-val" id="lidarMin">10.0 m</span></div>
+            </div>
+            <div class="card" style="padding:6px 8px;">
+              <div class="metric-row"><span class="metric-label">Fused 3D Objs:</span><span class="metric-val" id="fusedCount" style="color:var(--accent-cyan);">0</span></div>
+              <div class="metric-row"><span class="metric-label">Nearest:</span><span class="metric-val" id="latestObj">None</span></div>
+              <div class="metric-row"><span class="metric-label">Bearing:</span><span class="metric-val" id="latestDir">--</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Health Panel -->
+        <div class="drawer-section">
+          <div class="card-title">ROS 2 Nodes & Hardware Utilization</div>
+          <div class="health-grid" id="healthGrid">
+            <!-- Dynamically populated node health cards -->
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">
+            <span>CPU: <strong id="cpuVal" style="color:#fff;">0%</strong></span>
+            <span>RAM: <strong id="ramVal" style="color:#fff;">0%</strong></span>
+            <span>GPU: <strong id="gpuModeVal" style="color:var(--accent-emerald);">RTX 3050 (cuda:0)</strong></span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SCREEN 2: TRAVEL HISTORY & ANALYTICS (Phase 6) -->
+    <div id="tab-history" class="tab-content">
+      
+      <!-- Analytics KPI Row -->
+      <div class="analytics-kpi-row">
+        <div class="kpi-card"><div class="kpi-title">Total Journeys</div><div class="kpi-val" id="kpiTotal">0</div></div>
+        <div class="kpi-card"><div class="kpi-title">Success Rate</div><div class="kpi-val" id="kpiSuccess" style="color:var(--accent-emerald);">100%</div></div>
+        <div class="kpi-card"><div class="kpi-title">Avg Distance</div><div class="kpi-val" id="kpiDist">0.0 m</div></div>
+        <div class="kpi-card"><div class="kpi-title">Avg Travel Time</div><div class="kpi-val" id="kpiTime">0.0 s</div></div>
+        <div class="kpi-card"><div class="kpi-title">Total Replans</div><div class="kpi-val" id="kpiReplans">0</div></div>
+        <div class="kpi-card"><div class="kpi-title">Recovery Events</div><div class="kpi-val" id="kpiRecoveries">0</div></div>
+      </div>
+
+      <!-- Main History Area: Table + Mission Summary & Route Preview -->
+      <div class="history-main-layout">
+        
+        <!-- Historical Journeys Table -->
+        <div class="history-table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>START</th>
+                <th>GOAL</th>
+                <th>PLAN</th>
+                <th>ACTUAL</th>
+                <th>EFF %</th>
+                <th>TIME</th>
+                <th>SPEED</th>
+                <th>CLEARANCE</th>
+                <th>REPLANS</th>
+                <th>REASONS</th>
+                <th>RECOVERY</th>
+                <th>OSC</th>
+                <th>ROUTE</th>
+                <th>RESULT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Selected Mission Summary Card (Phase 6) -->
+        <div class="mission-summary-card" id="missionSummaryCard">
+          <div class="card-title">
+            <span>MISSION SUMMARY</span>
+            <span id="summaryJid" style="color:var(--accent-cyan);">#Select Journey</span>
+          </div>
+          <div class="metric-row"><span class="metric-label">Start / Goal:</span><span class="metric-val" id="summaryRoute">-- → --</span></div>
+          <div class="metric-row"><span class="metric-label">Created At:</span><span class="metric-val" id="summaryDate">--</span></div>
+          <div class="metric-row"><span class="metric-label">Duration:</span><span class="metric-val" id="summaryDuration">0.0 s</span></div>
+          <div class="metric-row"><span class="metric-label">Distance:</span><span class="metric-val" id="summaryDistance">0.0 m</span></div>
+          <div class="metric-row"><span class="metric-label">Average Speed:</span><span class="metric-val" id="summarySpeed">0.0 m/s</span></div>
+          <div class="metric-row"><span class="metric-label">Min Clearance:</span><span class="metric-val" id="summaryClearance">0.0 m</span></div>
+          <div class="metric-row"><span class="metric-label">Obstacles:</span><span class="metric-val" id="summaryObstacles">0</span></div>
+          <div class="metric-row"><span class="metric-label">Replans / Recoveries:</span><span class="metric-val" id="summaryReplans">0 / 0</span></div>
+          <div class="metric-row"><span class="metric-label">Planned / Eff %:</span><span class="metric-val" id="summaryEfficiency" style="color:var(--accent-emerald);">-- / 100%</span></div>
+          <div class="metric-row"><span class="metric-label">Replan Reasons:</span><span class="metric-val" id="summaryReasons">--</span></div>
+          <div class="metric-row"><span class="metric-label">Oscillations:</span><span class="metric-val" id="summaryOsc">0</span></div>
+          <div class="metric-row"><span class="metric-label">Result:</span><span class="metric-val" id="summaryResult">--</span></div>
+          
+          <canvas class="summary-preview-canvas" id="summaryPreviewCanvas"></canvas>
+          
+          <button class="btn btn-pause" style="width:100%; justify-content:center; margin-top:4px;" id="btnLaunchReplay" onclick="openSelectedMissionReplay()">
+            ▶ LAUNCH MISSION REPLAY
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Historical Journey Comparison Tool (Phase 6) -->
+      <div class="compare-container">
+        <div class="card-title">
+          <span>COMPARE TWO HISTORICAL MISSIONS</span>
+          <span style="color:var(--text-muted); font-size:0.68rem;">Demonstrates learning and route adaptation over time</span>
+        </div>
+        <div class="compare-controls">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Journey A:</label>
+          <select class="history-overlay-select" id="compareSelectA" onchange="runJourneyComparison()"></select>
+          <label style="font-size:0.75rem; color:var(--text-muted);">Journey B:</label>
+          <select class="history-overlay-select" id="compareSelectB" onchange="runJourneyComparison()"></select>
+        </div>
+        <table class="compare-table" id="compareResultsTable">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Journey A</th>
+              <th>Journey B</th>
+              <th>Delta (B - A)</th>
+            </tr>
+          </thead>
+          <tbody id="compareTableBody">
+            <tr><td colspan="4" style="text-align:center; color:#64748b;">Select two missions to compare navigation metrics.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Analytics Charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="card-title">Distance Travelled (m)</div>
+          <div class="chart-container"><canvas id="chartDistance"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Travel Time (s)</div>
+          <div class="chart-container"><canvas id="chartTime"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Average Speed (m/s)</div>
+          <div class="chart-container"><canvas id="chartSpeed"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Replanning Count</div>
+          <div class="chart-container"><canvas id="chartReplans"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SCREEN 3: ROUTE HEATMAP (Phase 7) -->
+    <div id="tab-heatmap" class="tab-content">
+      <canvas id="heatmapCanvas"></canvas>
+      
+      <!-- Interactive Corridor Click Inspector (Phase 7) -->
+      <div class="corridor-inspect-card" id="corridorInspectCard" style="display:none;">
+        <div class="card-title">
+          <span id="inspectCorridorTitle">CORRIDOR METRICS</span>
+          <button style="background:transparent; border:none; color:#94a3b8; cursor:pointer;" onclick="closeCorridorInspect()">✕</button>
+        </div>
+        <div style="margin:2px 0;">
+          <span class="corridor-category-badge cat-Normal" id="inspectCategoryBadge">Normal</span>
+        </div>
+        <div class="metric-row"><span class="metric-label">From ➔ To:</span><span class="metric-val" id="inspectNodes">-- ➔ --</span></div>
+        <div class="metric-row"><span class="metric-label">Traversal Count:</span><span class="metric-val" id="inspectTraversals">0</span></div>
+        <div class="metric-row"><span class="metric-label">Average Time:</span><span class="metric-val" id="inspectAvgTime">0.0 s</span></div>
+        <div class="metric-row"><span class="metric-label">Average Clearance:</span><span class="metric-val" id="inspectAvgClearance">0.0 m</span></div>
+        <div class="metric-row"><span class="metric-label">Failure Count:</span><span class="metric-val" id="inspectFailures">0</span></div>
+        <div class="metric-row"><span class="metric-label">Recovery Count:</span><span class="metric-val" id="inspectRecoveries">0</span></div>
+        <div class="metric-row"><span class="metric-label">Obstacle Encounters:</span><span class="metric-val" id="inspectObstacles">0</span></div>
+        <div class="metric-row"><span class="metric-label">Reliability Score:</span><span class="metric-val" id="inspectReliability" style="color:var(--accent-emerald);">100%</span></div>
+      </div>
+
+      <!-- Heatmap Category Legend -->
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> Frequently Used (≥3)</div>
+        <div class="legend-item"><div class="legend-color" style="background:#3b82f6;"></div> Normal Traversal</div>
+        <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div> Obstacle Heavy (≥2)</div>
+        <div class="legend-item"><div class="legend-color" style="background:#fb7185;"></div> High Failure / Risk</div>
+        <div class="legend-item"><div class="legend-color" style="background:#dc2626;"></div> Dead End Corridor</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ef4444; border:1px solid #fff;"></div> Blocked Corridor</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PHASE 13: MISSION REPLAY MODAL -->
+  <div class="replay-modal-backdrop" id="replayModal">
+    <div class="replay-modal">
+      <div class="replay-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <strong style="color:#fff; font-size:0.95rem;">MISSION REPLAY</strong>
+          <span class="brand-badge" id="replayJidBadge">#J-001</span>
+          <span style="color:var(--text-muted); font-size:0.8rem;" id="replayRouteLabel">START ➔ GOAL</span>
+        </div>
+        <button class="btn btn-reset" onclick="closeMissionReplay()">✕ CLOSE</button>
+      </div>
+
+      <div class="replay-body">
+        <div class="replay-canvas-container">
+          <canvas id="replayCanvas"></canvas>
+        </div>
+        <div class="replay-timeline-panel">
+          <div class="card-title">MISSION EVENT TIMELINE</div>
+          <div id="replayTimelineList" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Timeline items rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="replay-controls-bar">
+        <button class="btn btn-pause" id="btnReplayPlay" onclick="toggleReplayPlay()">▶ PLAY</button>
+        <button class="btn btn-reset" onclick="resetReplay()">⏮ RESET</button>
+        
+        <input type="range" class="replay-scrub" id="replayScrubBar" min="0" max="100" value="0" oninput="onReplayScrub(this.value)">
+        <span style="font-family:var(--font-mono); font-size:0.8rem; color:#fff;" id="replayTimeDisplay">0.0 / 0.0 s</span>
+
+        <label style="font-size:0.75rem; color:var(--text-muted);">Speed:</label>
+        <select class="history-overlay-select" id="replaySpeedSelect" onchange="setReplaySpeed(this.value)">
+          <option value="1">1.0x</option>
+          <option value="2" selected>2.0x</option>
+          <option value="5">5.0x</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global State
+    let telemetry = {};
+    let topology = { nodes: [], edges: [] };
+    let semanticDestinations = null;
+    let heatmapData = [];
+    let allJourneys = [];
+    let selectedJourneyForSummary = null;
+    let selectedHistoricalPath = null;
+    let currentCamView = 'yolo';
+
+    let mapImg = new Image();
+    mapImg.src = '/static/realistic_facility_map.png';
+
+    // Map Coordinates & Constants
+    const MAP_ORIGIN_X = -17.5;
+    const MAP_ORIGIN_Y = -15.0;
+    const MAP_RES = 0.05;
+    const MAP_W = 700;
+    const MAP_H = 600;
+
+    let zoom = 1.0;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+
+    // Canvas setup
+    const mapCanvas = document.getElementById('mapCanvas');
+    const ctx = mapCanvas.getContext('2d');
+    const hmCanvas = document.getElementById('heatmapCanvas');
+    const hmCtx = hmCanvas.getContext('2d');
+    const summaryCanvas = document.getElementById('summaryPreviewCanvas');
+    const sumCtx = summaryCanvas ? summaryCanvas.getContext('2d') : null;
+    const replayCanvas = document.getElementById('replayCanvas');
+    const repCtx = replayCanvas ? replayCanvas.getContext('2d') : null;
+
+    function resizeCanvases() {
+      if (mapCanvas.parentElement) {
+        mapCanvas.width = mapCanvas.parentElement.clientWidth;
+        mapCanvas.height = mapCanvas.parentElement.clientHeight;
+      }
+      if (hmCanvas.parentElement) {
+        hmCanvas.width = hmCanvas.parentElement.clientWidth;
+        hmCanvas.height = hmCanvas.parentElement.clientHeight;
+      }
+      if (summaryCanvas && summaryCanvas.parentElement) {
+        summaryCanvas.width = summaryCanvas.parentElement.clientWidth;
+        summaryCanvas.height = 180;
+      }
+      if (replayCanvas && replayCanvas.parentElement) {
+        replayCanvas.width = replayCanvas.parentElement.clientWidth;
+        replayCanvas.height = replayCanvas.parentElement.clientHeight;
+      }
+      resetMapTransform();
+    }
+    window.addEventListener('resize', resizeCanvases);
+
+    function worldToPixel(wx, wy) {
+      const px = (wx - MAP_ORIGIN_X) / MAP_RES;
+      const py = (MAP_H - 1) - (wy - MAP_ORIGIN_Y) / MAP_RES;
+      return { x: px, y: py };
+    }
+
+    function pixelToWorld(px, py) {
+      const wx = px * MAP_RES + MAP_ORIGIN_X;
+      const wy = (MAP_H - 1 - py) * MAP_RES + MAP_ORIGIN_Y;
+      return { x: wx, y: wy };
+    }
+
+    function resetMapTransform() {
+      if (!mapCanvas.width) return;
+      const scaleX = mapCanvas.width / MAP_W;
+      const scaleY = mapCanvas.height / MAP_H;
+      zoom = Math.min(scaleX, scaleY) * 0.95;
+      panX = (mapCanvas.width - MAP_W * zoom) / 2;
+      panY = (mapCanvas.height - MAP_H * zoom) / 2;
+    }
+
+    function zoomMap(factor) {
+      zoom *= factor;
+    }
+
+    // Map Pan, Drag, Coordinates HUD
+    mapCanvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      dragStart = { x: e.clientX - panX, y: e.clientY - panY };
+    });
+    window.addEventListener('mousemove', (e) => {
+      const rect = mapCanvas.getBoundingClientRect();
+      if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        const clickX = (e.clientX - rect.left - panX) / zoom;
+        const clickY = (e.clientY - rect.top - panY) / zoom;
+        const wPos = pixelToWorld(clickX, clickY);
+        document.getElementById('mapCoordsHud').innerText = `World: X: ${wPos.x.toFixed(2)}m | Y: ${wPos.y.toFixed(2)}m`;
+      }
+      if (!isDragging) return;
+      panX = e.clientX - dragStart.x;
+      panY = e.clientY - dragStart.y;
+    });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    mapCanvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      zoomMap(zoomFactor);
+    });
+
+    // Click on Map to Dispatch Goal Pose or Destination
+    mapCanvas.addEventListener('click', (e) => {
+      if (Math.abs(e.clientX - (dragStart.x + panX)) > 4 || Math.abs(e.clientY - (dragStart.y + panY)) > 4) {
+        return; // Ignore if user dragged
+      }
+      const rect = mapCanvas.getBoundingClientRect();
+      const clickX = (e.clientX - rect.left - panX) / zoom;
+      const clickY = (e.clientY - rect.top - panY) / zoom;
+      const wPos = pixelToWorld(clickX, clickY);
+
+      // Check nearest semantic destination
+      let matchedDest = null;
+      let minDestDist = 1.2; // meters
+      if (semanticDestinations && semanticDestinations.destinations) {
+        Object.entries(semanticDestinations.destinations).forEach(([key, d]) => {
+          const dist = Math.hypot(wPos.x - d.world_x, wPos.y - d.world_y);
+          if (dist < minDestDist) {
+            minDestDist = dist;
+            matchedDest = { key: key, name: d.name || key.toUpperCase() };
+          }
+        });
+      }
+
+      // Check nearest topological destination node
+      if (!matchedDest && topology && topology.nodes) {
+        topology.nodes.forEach(n => {
+          if (n.node_type === 'destination') {
+            const dist = Math.hypot(wPos.x - n.x, wPos.y - n.y);
+            if (dist < minDestDist) {
+              minDestDist = dist;
+              matchedDest = { key: n.id, name: n.semantic_label || n.name };
+            }
+          }
+        });
+      }
+
+      if (matchedDest) {
+        if (confirm(`Dispatch autonomous mission to destination: "${matchedDest.name}"?`)) {
+          dispatchGoal(matchedDest.key);
+        }
+        return;
+      }
+
+      if (confirm(`Dispatch robot to coordinates (${wPos.x.toFixed(2)}, ${wPos.y.toFixed(2)})?`)) {
+        fetch('/api/goal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x: wPos.x, y: wPos.y, yaw: 0.0 })
+        });
+      }
+    });
+
+    // Tab Navigation
+    function switchTab(tabName) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      if (tabName === 'monitor') {
+        document.querySelector('.nav-tab:nth-child(1)').classList.add('active');
+        document.getElementById('tab-monitor').classList.add('active');
+      } else if (tabName === 'history') {
+        document.querySelector('.nav-tab:nth-child(2)').classList.add('active');
+        document.getElementById('tab-history').classList.add('active');
+        fetchAnalytics();
+        fetchHistory();
+      } else if (tabName === 'heatmap') {
+        document.querySelector('.nav-tab:nth-child(3)').classList.add('active');
+        document.getElementById('tab-heatmap').classList.add('active');
+        fetchHeatmap();
+      }
+    }
+
+    // Telemetry & Sensor Updates
+    async function updateTelemetry() {
+      try {
+        const res = await fetch('/api/telemetry');
+        telemetry = await res.json();
+        renderMonitorUI();
+      } catch (e) {}
+    }
+
+    async function updateSystemHealth() {
+      try {
+        const res = await fetch('/api/system_health');
+        const health = await res.json();
+        renderHealthUI(health);
+      } catch (e) {}
+    }
+
+    function renderMonitorUI() {
+      if (!telemetry) return;
+
+      // State Banner
+      const sb = document.getElementById('stateBanner');
+      sb.innerText = telemetry.state || 'IDLE';
+      sb.className = 'state-banner ' + (telemetry.state || 'IDLE');
+
+      const btnPause = document.getElementById('btnPause');
+      if (telemetry.is_paused) {
+        btnPause.innerText = '▶ RESUME';
+        btnPause.onclick = () => sendControl('RESUME');
+      } else {
+        btnPause.innerText = '⏸ PAUSE';
+        btnPause.onclick = () => sendControl('PAUSE');
+      }
+
+      // Pose & Kinematics
+      const pose = telemetry.robot_pose || { x: 0, y: -11, yaw: 1.57 };
+      document.getElementById('valPoseX').innerText = pose.x.toFixed(2) + ' m';
+      document.getElementById('valPoseY').innerText = pose.y.toFixed(2) + ' m';
+      const degYaw = (pose.yaw * 180 / Math.PI);
+      document.getElementById('valPoseYaw').innerText = `${pose.yaw.toFixed(2)} rad (${degYaw.toFixed(1)}°)`;
+      document.getElementById('valLinVel').innerText = (telemetry.linear_velocity || 0).toFixed(2) + ' m/s';
+      document.getElementById('valAngVel').innerText = (telemetry.angular_velocity || 0).toFixed(2) + ' rad/s';
+
+      // Compass Rose Heading
+      const needle = document.getElementById('compassNeedle');
+      if (needle) needle.style.transform = `rotate(${degYaw}deg)`;
+      const compVal = document.getElementById('compassHeadingVal');
+      if (compVal) compVal.innerText = `${degYaw >= 0 ? 'N ' : 'S '}${Math.abs(degYaw).toFixed(0)}°`;
+
+      // Mission Progress
+      document.getElementById('valCurrNode').innerText = telemetry.current_node || 'start';
+      document.getElementById('valTargetNode').innerText = telemetry.target_node || '--';
+      document.getElementById('valDestNode').innerText = telemetry.destination || 'None';
+      document.getElementById('valDistRem').innerText = (telemetry.distance_remaining || 0).toFixed(2) + ' m';
+      document.getElementById('valETA').innerText = (telemetry.estimated_time_sec || 0).toFixed(1) + ' s';
+      document.getElementById('valDistTrav').innerText = (telemetry.distance_travelled || 0).toFixed(2) + ' m';
+      document.getElementById('valDuration').innerText = (telemetry.journey_duration_sec || 0).toFixed(1) + ' s';
+      document.getElementById('valReplans').innerText = telemetry.replans_count || 0;
+      document.getElementById('valRecoveries').innerText = telemetry.recovery_count || 0;
+      document.getElementById('valDeadEnds').innerText = telemetry.dead_ends_count || 0;
+
+      // Navigation Diagnostics (Section 15)
+      const diag = telemetry.diagnostics || {};
+      const prog = (diag.progress_pct !== undefined) ? diag.progress_pct : (telemetry.progress_pct || 0);
+      document.getElementById('diagProgress').innerText = prog.toFixed(0) + '%';
+      const eff = (diag.path_efficiency_pct !== undefined) ? diag.path_efficiency_pct : (telemetry.path_efficiency_pct || 100);
+      document.getElementById('diagPathEff').innerText = eff.toFixed(1) + '%';
+      document.getElementById('diagDeviation').innerText = ((diag.path_deviation !== undefined) ? diag.path_deviation : (telemetry.path_deviation || 0)).toFixed(2) + ' m';
+      document.getElementById('diagReplans').innerText = (diag.replans_count !== undefined) ? diag.replans_count : (telemetry.replans_count || 0);
+      document.getElementById('diagReplanReason').innerText = diag.last_replan_reason || telemetry.last_replan_reason || 'NONE';
+      document.getElementById('diagRecoveries').innerText = (diag.recovery_count !== undefined) ? diag.recovery_count : (telemetry.recovery_count || 0);
+      document.getElementById('diagOscillation').innerText = (diag.oscillation_count !== undefined) ? diag.oscillation_count : (telemetry.oscillation_count || 0);
+      document.getElementById('diagBacktrack').innerText = ((diag.backtracking_distance !== undefined) ? diag.backtracking_distance : (telemetry.backtracking_distance || 0)).toFixed(2) + ' m';
+      const cl = telemetry.clearances || telemetry.lidar || {};
+      document.getElementById('diagMinClear').innerText = (cl.min || cl.min_distance || 0.50).toFixed(2) + ' m';
+
+      // Live Performance Bar (Section 16)
+      const perf = telemetry.performance || {};
+      if (document.getElementById('perfCpu')) document.getElementById('perfCpu').innerText = (perf.cpu_pct !== undefined ? perf.cpu_pct : '--') + '%';
+      if (document.getElementById('perfRam')) document.getElementById('perfRam').innerText = (perf.ram_pct !== undefined ? perf.ram_pct : '--') + '%';
+      if (document.getElementById('perfGpu')) document.getElementById('perfGpu').innerText = (perf.gpu_pct !== undefined ? perf.gpu_pct : '12') + '%';
+      if (document.getElementById('perfYolo')) document.getElementById('perfYolo').innerText = `${perf.yolo_latency_ms || 5.5} ms (${perf.yolo_fps || 180} FPS)`;
+      if (document.getElementById('perfCam')) document.getElementById('perfCam').innerText = (perf.camera_hz || 15.0).toFixed(1) + ' Hz';
+      if (document.getElementById('perfLidar')) document.getElementById('perfLidar').innerText = (perf.lidar_hz || 15.0).toFixed(1) + ' Hz';
+      if (document.getElementById('perfFusion')) document.getElementById('perfFusion').innerText = (perf.fusion_hz || 24.0).toFixed(1) + ' Hz';
+      if (document.getElementById('perfPlanner')) document.getElementById('perfPlanner').innerText = (perf.planner_latency_ms || 1.02) + ' ms';
+      if (document.getElementById('perfDash')) document.getElementById('perfDash').innerText = (perf.dashboard_latency_ms || 2.4) + ' ms';
+
+      // Intelligence & Cost Breakdown (Phase 4)
+      document.getElementById('valRouteCost').innerText = (telemetry.route_cost || 0).toFixed(1);
+      document.getElementById('valObsDensity').innerText = (telemetry.obstacle_density || 0).toFixed(2);
+      document.getElementById('valReliability').innerText = (telemetry.reliability_pct || 100).toFixed(1) + '%';
+      
+      const cb = telemetry.cost_breakdown || {};
+      document.getElementById('costDist').innerText = (cb.distance_cost || 0).toFixed(1);
+      document.getElementById('costObs').innerText = (cb.obstacle_cost || 0).toFixed(1);
+      document.getElementById('costHist').innerText = (cb.history_cost || 0).toFixed(1);
+      document.getElementById('costTurn').innerText = (cb.turn_cost || 0).toFixed(1);
+      document.getElementById('costNarrow').innerText = (cb.narrow_cost || 0).toFixed(1);
+      document.getElementById('costTime').innerText = (cb.time_cost || 0).toFixed(1);
+      document.getElementById('costFam').innerText = '-' + (cb.familiarity_bonus || 0).toFixed(1);
+
+      // Alternatives Table
+      const tb = document.getElementById('altRoutesTableBody');
+      if (telemetry.alternative_routes && telemetry.alternative_routes.length > 0) {
+        tb.innerHTML = telemetry.alternative_routes.map((r, i) => `
+          <tr class="${i === 0 ? 'selected' : ''}">
+            <td><strong>${r.route_id}</strong></td>
+            <td>${r.distance}m</td>
+            <td>${r.total_cost}</td>
+            <td>${r.reliability_pct}%</td>
+          </tr>
+        `).join('');
+        document.getElementById('routeOptionName').innerText = telemetry.alternative_routes[0].route_id;
+      } else {
+        tb.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Direct Path Active</td></tr>`;
+        document.getElementById('routeOptionName').innerText = 'Direct Path';
+      }
+
+      // Clearances
+      document.getElementById('clearMin').innerText = (cl.min || cl.min_distance || 10.0).toFixed(2) + 'm';
+      document.getElementById('clearFront').innerText = (cl.front || cl.front_clearance || 10.0).toFixed(2) + 'm';
+      document.getElementById('clearLeft').innerText = (cl.left || cl.left_clearance || 10.0).toFixed(2) + 'm';
+      document.getElementById('clearRight').innerText = (cl.right || cl.right_clearance || 10.0).toFixed(2) + 'm';
+      document.getElementById('clearRear').innerText = (cl.rear || 10.0).toFixed(2) + 'm';
+
+      // Sensor Panel & Camera Perception Inspector (V2.3)
+      const cam = telemetry.camera || {};
+      document.getElementById('camFps').innerText = (cam.fps || 0).toFixed(1) + ' FPS';
+      document.getElementById('camRes').innerText = cam.resolution || '640x480';
+      document.getElementById('camLatency').innerText = (cam.inference_time_ms || 5.48) + ' ms';
+      document.getElementById('lidarFreq').innerText = (cl.scan_frequency || (telemetry.lidar && telemetry.lidar.scan_frequency) || 10.0).toFixed(1) + ' Hz';
+      document.getElementById('lidarPts').innerText = (cl.points_count || (telemetry.lidar && telemetry.lidar.points_count) || 360) + ' pts';
+      document.getElementById('lidarMin').innerText = (cl.min || cl.min_distance || 10.0).toFixed(2) + ' m';
+
+      // Header Camera Pills
+      if (document.getElementById('camHeaderFps')) document.getElementById('camHeaderFps').innerText = (cam.fps || 0).toFixed(1) + ' FPS';
+      if (document.getElementById('camHeaderLatency')) document.getElementById('camHeaderLatency').innerText = (cam.inference_time_ms || 5.5).toFixed(1) + ' ms';
+      if (telemetry.yolo_engine && document.getElementById('camHeaderEngine')) {
+        const eng = telemetry.yolo_engine;
+        const dev = eng.device || 'CPU';
+        document.getElementById('camHeaderEngine').innerText = dev.includes('cuda') ? `GPU (${dev})` : dev;
+      }
+      const fHz = (telemetry.performance && telemetry.performance.fusion_hz) || 0;
+      const fCount = (telemetry.fused_objects && telemetry.fused_objects.length) || 0;
+      const fusionDot = document.getElementById('camFusionDot');
+      const fusionText = document.getElementById('camFusionText');
+      if (fusionDot && fusionText) {
+        if (fHz > 0) {
+          fusionDot.className = 'step-dot ONLINE';
+          fusionText.innerText = `FUSED: ${fHz.toFixed(1)} Hz (${fCount} OBJS)`;
+        } else {
+          fusionDot.className = 'step-dot STANDBY';
+          fusionText.innerText = 'FUSION: STANDBY';
+        }
+      }
+      if (currentCamView === 'fused') {
+        const badge = document.getElementById('cameraViewBadge');
+        if (badge) {
+          badge.innerText = fHz > 0 ? `FUSED 3D (${fHz.toFixed(1)} Hz | ${fCount} OBJS)` : 'FUSION STANDBY (CONNECTING...)';
+        }
+      }
+
+      // Visual Signs Perception & Overlay
+      const signs = telemetry.detected_signs || [];
+      const signOverlay = document.getElementById('cameraSignOverlay');
+      if (signs.length > 0) {
+        const topSign = signs[0];
+        if (signOverlay) {
+          signOverlay.style.display = 'flex';
+          document.getElementById('camOverlaySignText').innerText = topSign.text || '--';
+          document.getElementById('camOverlaySignMeta').innerText = `Conf: ${(topSign.confidence * 100).toFixed(0)}% | Dist: ${topSign.distance.toFixed(1)}m | Dir: ${topSign.direction || '--'}`;
+        }
+        if (document.getElementById('inspectSignConf')) document.getElementById('inspectSignConf').innerText = `${(topSign.confidence * 100).toFixed(0)}% CONF`;
+        if (document.getElementById('inspectSignText')) document.getElementById('inspectSignText').innerText = topSign.text || '--';
+        if (document.getElementById('inspectSignDest')) document.getElementById('inspectSignDest').innerText = topSign.associated_destination || 'None';
+        if (document.getElementById('inspectSignNode')) document.getElementById('inspectSignNode').innerText = topSign.target_node_id || '--';
+        if (document.getElementById('inspectSignDist')) document.getElementById('inspectSignDist').innerText = `${topSign.distance.toFixed(1)}m (${topSign.direction || '--'})`;
+        if (document.getElementById('inspectorStatusPill')) {
+          document.getElementById('inspectorStatusPill').innerText = 'LANDMARK DETECTED';
+          document.getElementById('inspectorStatusPill').style.color = 'var(--accent-emerald)';
+        }
+      } else {
+        if (signOverlay) signOverlay.style.display = 'none';
+        if (document.getElementById('inspectSignConf')) document.getElementById('inspectSignConf').innerText = '--';
+        if (document.getElementById('inspectSignText')) document.getElementById('inspectSignText').innerText = 'None in View';
+        if (document.getElementById('inspectSignDest')) document.getElementById('inspectSignDest').innerText = '--';
+        if (document.getElementById('inspectSignNode')) document.getElementById('inspectSignNode').innerText = '--';
+        if (document.getElementById('inspectSignDist')) document.getElementById('inspectSignDist').innerText = '--';
+        if (document.getElementById('inspectorStatusPill')) {
+          document.getElementById('inspectorStatusPill').innerText = 'SCANNING CORRIDOR';
+          document.getElementById('inspectorStatusPill').style.color = 'var(--accent-cyan)';
+        }
+      }
+
+      // 3D Fused Objects & Nearest Obstacle Inspector
+      const fused = telemetry.fused_objects || [];
+      document.getElementById('fusedCount').innerText = fused.length;
+      if (fused.length > 0) {
+        const topObs = fused[0];
+        document.getElementById('latestObj').innerText = topObs.class_name.toUpperCase();
+        document.getElementById('latestDir').innerText = topObs.direction + ` (${topObs.distance}m)`;
+        
+        if (document.getElementById('inspectObjClass')) document.getElementById('inspectObjClass').innerText = topObs.class_name.toUpperCase();
+        if (document.getElementById('inspectObjDynamic')) {
+          document.getElementById('inspectObjDynamic').innerText = topObs.is_dynamic ? 'DYNAMIC (TRACKED)' : 'STATIC';
+          document.getElementById('inspectObjDynamic').style.color = topObs.is_dynamic ? '#f43f5e' : '#94a3b8';
+        }
+        if (document.getElementById('inspectObj3DPos')) {
+          document.getElementById('inspectObj3DPos').innerText = `X: ${topObs.x.toFixed(2)} | Y: ${topObs.y.toFixed(2)} | Z: ${(topObs.z || 0).toFixed(2)}`;
+        }
+        if (document.getElementById('inspectObjDist')) {
+          document.getElementById('inspectObjDist').innerText = `${topObs.distance.toFixed(2)}m (${topObs.direction})`;
+        }
+        if (document.getElementById('inspectObjVector')) {
+          document.getElementById('inspectObjVector').innerText = topObs.is_dynamic ? 
+            `Vx: ${(topObs.velocity_x || 0).toFixed(2)} m/s | Vy: ${(topObs.velocity_y || 0).toFixed(2)} m/s` : 'Stationary (0.0 m/s)';
+        }
+        const ttcEl = document.getElementById('inspectObjTtc');
+        if (ttcEl) {
+          const ttcVal = telemetry.ttc !== undefined ? telemetry.ttc : -1.0;
+          if (ttcVal > 0.0 && ttcVal < 10.0) {
+            ttcEl.innerText = `${ttcVal.toFixed(1)} s`;
+            ttcEl.style.color = ttcVal < 2.0 ? 'var(--accent-rose)' : (ttcVal < 4.0 ? 'var(--accent-amber)' : 'var(--accent-emerald)');
+          } else {
+            ttcEl.innerText = 'SAFE (∞)';
+            ttcEl.style.color = 'var(--accent-emerald)';
+          }
+        }
+      } else {
+        document.getElementById('latestObj').innerText = 'None';
+        document.getElementById('latestDir').innerText = '--';
+        if (document.getElementById('inspectObjClass')) document.getElementById('inspectObjClass').innerText = 'NONE';
+        if (document.getElementById('inspectObjDynamic')) {
+          document.getElementById('inspectObjDynamic').innerText = 'STATIC';
+          document.getElementById('inspectObjDynamic').style.color = '#94a3b8';
+        }
+        if (document.getElementById('inspectObj3DPos')) document.getElementById('inspectObj3DPos').innerText = 'X: -- | Y: -- | Z: --';
+        if (document.getElementById('inspectObjDist')) document.getElementById('inspectObjDist').innerText = '--';
+        if (document.getElementById('inspectObjVector')) document.getElementById('inspectObjVector').innerText = '--';
+        if (document.getElementById('inspectObjTtc')) {
+          document.getElementById('inspectObjTtc').innerText = 'SAFE (∞)';
+          document.getElementById('inspectObjTtc').style.color = 'var(--accent-emerald)';
+        }
+      }
+
+      // Event Logs
+      if (telemetry.recent_events) {
+        const el = document.getElementById('eventLogContainer');
+        el.innerHTML = telemetry.recent_events.map(ev => `
+          <div class="log-entry log-${ev.level}">
+            <span class="log-time">${ev.timestamp}</span>
+            <span class="log-msg">${ev.message}</span>
+          </div>
+        `).join('');
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+
+    function renderHealthUI(health) {
+      document.getElementById('cpuVal').innerText = health.cpu_usage_pct + '%';
+      document.getElementById('ramVal').innerText = `${health.ram_used_gb} / ${health.ram_total_gb} GB (${health.ram_usage_pct}%)`;
+      if (document.getElementById('gpuModeVal')) {
+        document.getElementById('gpuModeVal').innerText = health.gpu_status || 'RTX 3050 (180 FPS)';
+      }
+      if (document.getElementById('pipelineEngineLabel')) {
+        document.getElementById('pipelineEngineLabel').innerText = health.gpu_status || 'RTX 3050 Active (CUDA)';
+      }
+
+      // System Overview Pipeline (Phase 14)
+      const pflow = document.getElementById('pipelineFlowContainer');
+      if (health.pipeline && pflow) {
+        pflow.innerHTML = health.pipeline.map((step, i) => `
+          <div class="pipeline-step" title="Topic: ${step.topic} | Freq: ${step.frequency.toFixed(1)} Hz">
+            <div class="step-dot ${step.status}"></div>
+            <strong>${step.name}</strong>
+          </div>
+          ${i < health.pipeline.length - 1 ? '<div class="pipeline-arrow">➔</div>' : ''}
+        `).join('');
+      }
+
+      const hg = document.getElementById('healthGrid');
+      const nodes = health.ros_nodes || {};
+      hg.innerHTML = Object.entries(nodes).map(([name, data]) => `
+        <div class="node-health-card">
+          <div class="node-health-status">
+            <div class="node-dot ${data.status}"></div>
+            <strong style="color:#fff; font-size:0.65rem;">${name.replace('_node', '').replace('autonomous_', '')}</strong>
+          </div>
+          <div style="font-size:0.6rem; color:#94a3b8;">${data.frequency.toFixed(1)} Hz</div>
+        </div>
+      `).join('');
+    }
+
+    // Render Canvas Loop (60 FPS) with 12 Distinct Visual Items (Phase 5)
+    function renderMap() {
+      ctx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+      ctx.save();
+      ctx.translate(panX, panY);
+      ctx.scale(zoom, zoom);
+
+      // 1. Static Facility Map
+      if (mapImg.complete && mapImg.naturalWidth > 0) {
+        ctx.drawImage(mapImg, 0, 0, MAP_W, MAP_H);
+      } else {
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0, 0, MAP_W, MAP_H);
+      }
+
+      // 2. Corridors & Blockages (Item 10: Blocked corridors)
+      if (topology && topology.edges) {
+        ctx.lineWidth = 2.5;
+        topology.edges.forEach(e => {
+          const nu = topology.nodes.find(n => n.id === e.from_node);
+          const nv = topology.nodes.find(n => n.id === e.to_node);
+          if (nu && nv) {
+            const pu = worldToPixel(nu.x, nu.y);
+            const pv = worldToPixel(nv.x, nv.y);
+            ctx.beginPath();
+            ctx.moveTo(pu.x, pu.y);
+            ctx.lineTo(pv.x, pv.y);
+            if (e.is_blocked) {
+              ctx.strokeStyle = 'rgba(239, 68, 68, 0.95)';
+              ctx.setLineDash([5, 5]);
+            } else if (e.is_dead_end) {
+              ctx.strokeStyle = 'rgba(220, 38, 38, 0.7)';
+              ctx.setLineDash([3, 3]);
+            } else {
+              ctx.strokeStyle = 'rgba(71, 85, 105, 0.35)';
+              ctx.setLineDash([]);
+            }
+            ctx.stroke();
+          }
+        });
+        ctx.setLineDash([]);
+      }
+
+      // 3. Alternative Candidate Routes (Item 6: Route B & C dashed)
+      if (telemetry.alternative_routes && telemetry.alternative_routes.length > 1) {
+        ctx.lineWidth = 3.5;
+        ctx.setLineDash([6, 6]);
+        telemetry.alternative_routes.slice(1).forEach((alt, idx) => {
+          ctx.strokeStyle = idx === 0 ? 'rgba(192, 132, 252, 0.85)' : 'rgba(250, 204, 21, 0.75)';
+          ctx.beginPath();
+          alt.path.forEach((nid, i) => {
+            const node = topology.nodes.find(n => n.id === nid);
+            if (node) {
+              const pt = worldToPixel(node.x, node.y);
+              if (i === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            }
+          });
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+      }
+
+      // 4. Historical Path Overlay (Item 11: golden orange / pink dashed line)
+      if (selectedHistoricalPath && selectedHistoricalPath.length > 1) {
+        ctx.strokeStyle = 'rgba(236, 72, 153, 0.95)';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        selectedHistoricalPath.forEach((pt, i) => {
+          const p = worldToPixel(pt[0], pt[1]);
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // 5. Active Planned Path (Item 4: Solid Purple Glow)
+      if (telemetry.active_path && telemetry.active_path.length > 1) {
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 12;
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 4.2;
+        ctx.beginPath();
+        telemetry.active_path.forEach((nid, i) => {
+          const node = topology.nodes.find(n => n.id === nid);
+          if (node) {
+            const pt = worldToPixel(node.x, node.y);
+            if (i === 0) ctx.moveTo(pt.x, pt.y);
+            else ctx.lineTo(pt.x, pt.y);
+          }
+        });
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      // 6. Active Waypoint Segment (Item 12: Bright Cyan Pulsing)
+      if (telemetry.current_node && telemetry.target_node) {
+        const nu = topology.nodes.find(n => n.id === telemetry.current_node);
+        const nv = topology.nodes.find(n => n.id === telemetry.target_node);
+        if (nu && nv) {
+          const pu = worldToPixel(nu.x, nu.y);
+          const pv = worldToPixel(nv.x, nv.y);
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 5.0;
+          ctx.beginPath();
+          ctx.moveTo(pu.x, pu.y);
+          ctx.lineTo(pv.x, pv.y);
+          ctx.stroke();
+        }
+      }
+
+      // 7. Topological Nodes, Semantic Destinations & Sign Perception
+      if (topology && topology.nodes) {
+        const placedBoxes = [];
+
+        // Helper to test collision between two bounding boxes
+        const rectOverlap = (r1, r2) => {
+          return !(r1.x + r1.w < r2.x || r2.x + r2.w < r1.x || r1.y + r1.h < r2.y || r2.y + r2.h < r1.y);
+        };
+
+        // First pass: render all topological node dots
+        topology.nodes.forEach(n => {
+          const p = worldToPixel(n.x, n.y);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, n.node_type === 'destination' ? 6.5 : 4.0, 0, Math.PI * 2);
+          if (n.node_type === 'destination') ctx.fillStyle = '#10b981';
+          else if (n.node_type === 'dead_end') ctx.fillStyle = '#ef4444';
+          else if (n.node_type === 'start') ctx.fillStyle = '#3b82f6';
+          else ctx.fillStyle = '#64748b';
+          ctx.fill();
+        });
+
+        // Second pass: render semantic signposts
+        if (semanticDestinations && semanticDestinations.destinations) {
+          Object.entries(semanticDestinations.destinations).forEach(([key, d]) => {
+            const sp = worldToPixel(d.world_x, d.world_y);
+            // Signpost pole
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(sp.x, sp.y);
+            ctx.lineTo(sp.x, sp.y - 12);
+            ctx.stroke();
+
+            // Signpost icon badge
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.9)';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(sp.x - 7, sp.y - 23, 14, 11, 2);
+            else ctx.rect(sp.x - 7, sp.y - 23, 14, 11);
+            ctx.fill();
+            ctx.stroke();
+
+            // Sign mini text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 7px sans-serif';
+            ctx.fillText(key.slice(0, 3).toUpperCase(), sp.x - 6, sp.y - 15);
+          });
+        }
+
+        // Third pass: Overlap-Free Label Resolution with 4-Candidate Bounding Boxes
+        ctx.font = 'bold 9px sans-serif';
+        topology.nodes.forEach(n => {
+          if (n.node_type !== 'destination' && n.node_type !== 'dead_end') return;
+
+          const p = worldToPixel(n.x, n.y);
+          const label = (n.semantic_label || n.name).toUpperCase();
+          const textW = ctx.measureText(label).width;
+          const padX = 6;
+          const padY = 3;
+          const boxW = textW + padX * 2;
+          const boxH = 14;
+
+          // 4 candidate positions: Right, Top, Bottom, Left
+          const candidates = [
+            { x: p.x + 9, y: p.y - 7, anchorX: p.x + 9, anchorY: p.y },
+            { x: p.x - boxW / 2, y: p.y - 20, anchorX: p.x, anchorY: p.y - 4 },
+            { x: p.x - boxW / 2, y: p.y + 9, anchorX: p.x, anchorY: p.y + 9 },
+            { x: p.x - boxW - 9, y: p.y - 7, anchorX: p.x - 9, anchorY: p.y }
+          ];
+
+          let bestPos = candidates[0];
+          let foundFree = false;
+
+          for (const cand of candidates) {
+            const candBox = { x: cand.x - 2, y: cand.y - 2, w: boxW + 4, h: boxH + 4 };
+            const collides = placedBoxes.some(b => rectOverlap(candBox, b));
+            if (!collides) {
+              bestPos = cand;
+              foundFree = true;
+              break;
+            }
+          }
+
+          if (!foundFree) {
+            // Apply slight cascading vertical offset if all 4 candidates collide
+            bestPos = { x: p.x + 9, y: p.y - 7 + (placedBoxes.length % 3) * 6, anchorX: p.x, anchorY: p.y };
+          }
+
+          const finalBox = { x: bestPos.x, y: bestPos.y, w: boxW, h: boxH };
+          placedBoxes.push(finalBox);
+
+          // Leader line for offset labels
+          if (Math.hypot(bestPos.anchorX - p.x, bestPos.anchorY - p.y) > 10) {
+            ctx.strokeStyle = n.node_type === 'destination' ? 'rgba(16, 185, 129, 0.45)' : 'rgba(239, 68, 68, 0.45)';
+            ctx.lineWidth = 1.0;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(bestPos.anchorX, bestPos.anchorY);
+            ctx.stroke();
+          }
+
+          // Semi-transparent pill background badge
+          ctx.fillStyle = n.node_type === 'destination' ? 'rgba(6, 78, 59, 0.88)' : 'rgba(127, 29, 29, 0.88)';
+          ctx.strokeStyle = n.node_type === 'destination' ? '#10b981' : '#ef4444';
+          ctx.lineWidth = 1.0;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(finalBox.x, finalBox.y, finalBox.w, finalBox.h, 3);
+          else ctx.rect(finalBox.x, finalBox.y, finalBox.w, finalBox.h);
+          ctx.fill();
+          ctx.stroke();
+
+          // Crisp White Label Text
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(label, finalBox.x + padX, finalBox.y + boxH - padY - 1);
+        });
+      }
+
+      // 8. Goal Destination (Item 3: Green Target Bulls-Eye)
+      if (telemetry.destination) {
+        const destNode = topology.nodes.find(n => n.id === telemetry.destination.toLowerCase() || (n.semantic_label && n.semantic_label.toUpperCase() === telemetry.destination.toUpperCase()));
+        if (destNode) {
+          const gp = worldToPixel(destNode.x, destNode.y);
+          ctx.strokeStyle = '#10b981';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(gp.x, gp.y, 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(gp.x, gp.y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = '#10b981';
+          ctx.fill();
+        }
+      }
+
+      // 8b. Detected Sign Destination Map Highlight (V2.3)
+      if (telemetry.detected_signs && telemetry.detected_signs.length > 0) {
+        const pulseR = 18 + Math.sin(Date.now() / 250) * 6;
+        telemetry.detected_signs.forEach(s => {
+          if (!s.associated_destination) return;
+          const sNode = topology.nodes.find(n => 
+            n.id === s.associated_destination.toLowerCase() || 
+            (n.semantic_label && n.semantic_label.toUpperCase() === s.associated_destination.toUpperCase())
+          );
+          if (sNode) {
+            const sp = worldToPixel(sNode.x, sNode.y);
+            ctx.save();
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 3.5;
+            ctx.setLineDash([5, 4]);
+            ctx.shadowColor = '#06b6d4';
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(sp.x, sp.y, pulseR, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+        });
+      }
+
+      // 9. LiDAR Laser Scan Obstacles (Item 7: Red Point Scan)
+      const pose = telemetry.robot_pose || { x: 0, y: -11, yaw: 1.57 };
+      const robotPx = worldToPixel(pose.x, pose.y);
+
+      if (telemetry.lidar && telemetry.lidar.ranges_sample) {
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.75)';
+        telemetry.lidar.ranges_sample.forEach(pt => {
+          const lx = pt[0];
+          const ly = pt[1];
+          const cosY = Math.cos(pose.yaw);
+          const sinY = Math.sin(pose.yaw);
+          const wx = pose.x + 0.10 * cosY + (lx * cosY - ly * sinY);
+          const wy = pose.y + 0.10 * sinY + (lx * sinY + ly * cosY);
+          const lp = worldToPixel(wx, wy);
+          ctx.fillRect(lp.x - 1.5, lp.y - 1.5, 3, 3);
+        });
+      }
+
+      // 10. Camera-Detected 3D Objects (Item 8: Fused Bounding Boxes)
+      if (telemetry.fused_objects) {
+        telemetry.fused_objects.forEach(obs => {
+          const cosY = Math.cos(pose.yaw);
+          const sinY = Math.sin(pose.yaw);
+          const ox = pose.x + (obs.x * cosY - obs.y * sinY);
+          const oy = pose.y + (obs.x * sinY + obs.y * cosY);
+          const op = worldToPixel(ox, oy);
+
+          ctx.fillStyle = obs.is_dynamic ? 'rgba(244, 63, 94, 0.45)' : 'rgba(245, 158, 11, 0.45)';
+          ctx.strokeStyle = obs.is_dynamic ? '#f43f5e' : '#f59e0b';
+          ctx.lineWidth = 2;
+          ctx.fillRect(op.x - 12, op.y - 12, 24, 24);
+          ctx.strokeRect(op.x - 12, op.y - 12, 24, 24);
+
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillText(`${obs.class_name.toUpperCase()} (${obs.distance.toFixed(1)}m, ${obs.direction})`, op.x - 24, op.y - 15);
+        });
+      }
+
+      // 11. Robot Chassis & Directional Heading (Item 2)
+      ctx.save();
+      ctx.translate(robotPx.x, robotPx.y);
+      ctx.rotate(-pose.yaw + Math.PI / 2);
+
+      // Outer Glow & Chassis
+      ctx.shadowColor = '#06b6d4';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#06b6d4';
+      ctx.beginPath();
+      ctx.arc(0, 0, 9.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Heading Arrow (Yellow Direction Indicator)
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.moveTo(0, -15);
+      ctx.lineTo(-6, -4);
+      ctx.lineTo(6, -4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.restore();
+      requestAnimationFrame(renderMap);
+    }
+
+    // Travel History Table & Analytics (Phase 6)
+    async function fetchHistory() {
+      try {
+        const res = await fetch('/api/history');
+        allJourneys = await res.json();
+        const tbody = document.getElementById('historyTableBody');
+        
+        // Update comparison dropdowns and overlay dropdown
+        populateJourneyDropdowns(allJourneys);
+
+        if (allJourneys.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="16" style="text-align:center; color:#64748b; padding:20px;">No historical journeys recorded yet. Execute navigation missions to record real data.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = allJourneys.map((j, idx) => {
+          const planDist = (j.planned_distance != null && j.planned_distance > 0) ? j.planned_distance.toFixed(1) + ' m' : '--';
+          const actDist = (j.actual_distance != null && j.actual_distance > 0) ? j.actual_distance.toFixed(1) + ' m' : (j.distance_travelled || 0).toFixed(1) + ' m';
+          const effVal = j.path_efficiency != null ? j.path_efficiency : ((j.planned_distance && j.distance_travelled > 0) ? Math.min(100, (j.planned_distance / j.distance_travelled * 100)) : null);
+          const effStr = effVal != null ? effVal.toFixed(1) + '%' : '--';
+          const reasons = j.replan_reasons || '--';
+          const oscCount = j.oscillation_events_count || 0;
+          const recCount = j.recovery_events_count || 0;
+
+          return `
+          <tr class="${idx === 0 ? 'selected-row' : ''}" onclick="selectJourneyForSummary('${j.journey_id}')">
+            <td><strong>#${j.journey_id}</strong></td>
+            <td>${j.start_node}</td>
+            <td><strong>${(j.goal_node || '').toUpperCase()}</strong></td>
+            <td>${planDist}</td>
+            <td>${actDist}</td>
+            <td style="color:${effVal >= 80 ? '#34d399' : (effVal >= 50 ? '#fbbf24' : '#f87171')}; font-weight:700;">${effStr}</td>
+            <td>${(j.travel_time || 0).toFixed(1)} s</td>
+            <td>${(j.average_speed || 0).toFixed(2)} m/s</td>
+            <td>${(j.min_lidar_clearance || 0).toFixed(2)} m</td>
+            <td>${j.replans_count || 0}</td>
+            <td style="font-size:0.65rem; color:#cbd5e1; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${reasons}">${reasons}</td>
+            <td>${recCount}</td>
+            <td>${oscCount}</td>
+            <td>${j.route_selected || 'Standard'}</td>
+            <td><span class="result-badge result-${j.success ? 'SUCCESS' : 'FAILED'}">${j.success ? 'SUCCESS' : (j.failure_reason || 'FAILED')}</span></td>
+            <td><button class="btn btn-pause" style="padding:2px 8px; font-size:0.65rem;" onclick="event.stopPropagation(); launchReplay('${j.journey_id}')">▶ Replay</button></td>
+          </tr>
+        `;
+        }).join('');
+
+        if (allJourneys.length > 0 && !selectedJourneyForSummary) {
+          selectJourneyForSummary(allJourneys[0].journey_id);
+        }
+      } catch (e) {}
+    }
+
+    function populateJourneyDropdowns(journeys) {
+      const overlaySelect = document.getElementById('historyOverlaySelect');
+      const cmpA = document.getElementById('compareSelectA');
+      const cmpB = document.getElementById('compareSelectB');
+
+      if (!journeys || journeys.length === 0) return;
+
+      const opts = journeys.map(j => `<option value="${j.journey_id}">#${j.journey_id} (${j.start_node} ➔ ${j.goal_node}, ${(j.distance_travelled || 0).toFixed(1)}m)</option>`).join('');
+
+      overlaySelect.innerHTML = `<option value="">-- Overlay Historical Journey --</option>` + opts;
+      cmpA.innerHTML = opts;
+      cmpB.innerHTML = opts;
+      if (journeys.length > 1) {
+        cmpB.selectedIndex = 1;
+      }
+      runJourneyComparison();
+    }
+
+    function onOverlaySelectChange(jid) {
+      if (!jid) {
+        selectedHistoricalPath = null;
+        return;
+      }
+      const j = allJourneys.find(x => x.journey_id === jid);
+      if (j && j.path_coordinates) {
+        selectedHistoricalPath = j.path_coordinates;
+      }
+    }
+
+    async function selectJourneyForSummary(jid) {
+      const j = allJourneys.find(x => x.journey_id === jid);
+      if (!j) return;
+      selectedJourneyForSummary = j;
+
+      document.querySelectorAll('#historyTableBody tr').forEach(r => r.classList.remove('selected-row'));
+      event && event.currentTarget && event.currentTarget.classList.add('selected-row');
+
+      document.getElementById('summaryJid').innerText = '#' + j.journey_id;
+      document.getElementById('summaryRoute').innerText = `${j.start_node.toUpperCase()} ➔ ${j.goal_node.toUpperCase()}`;
+      document.getElementById('summaryDate').innerText = j.created_at || 'Recorded Mission';
+      document.getElementById('summaryDuration').innerText = (j.travel_time || 0).toFixed(1) + ' s';
+      document.getElementById('summaryDistance').innerText = (j.distance_travelled || 0).toFixed(1) + ' m';
+      document.getElementById('summarySpeed').innerText = (j.average_speed || 0).toFixed(2) + ' m/s';
+      document.getElementById('summaryClearance').innerText = (j.min_lidar_clearance || 0).toFixed(2) + ' m';
+      document.getElementById('summaryObstacles').innerText = j.obstacles_encountered || 0;
+      document.getElementById('summaryReplans').innerText = `${j.replans_count || 0} / ${j.recovery_events_count || 0}`;
+
+      const planVal = (j.planned_distance != null && j.planned_distance > 0) ? j.planned_distance.toFixed(1) + ' m' : '--';
+      const effVal = j.path_efficiency != null ? j.path_efficiency.toFixed(1) + '%' : ((j.planned_distance && j.distance_travelled > 0) ? Math.min(100, (j.planned_distance / j.distance_travelled * 100)).toFixed(1) + '%' : '100%');
+      const effEl = document.getElementById('summaryEfficiency');
+      if (effEl) effEl.innerText = `${planVal} / ${effVal}`;
+
+      const rsnEl = document.getElementById('summaryReasons');
+      if (rsnEl) rsnEl.innerText = j.replan_reasons || '--';
+
+      const oscEl = document.getElementById('summaryOsc');
+      if (oscEl) oscEl.innerText = j.oscillation_events_count || 0;
+
+      document.getElementById('summaryResult').innerText = j.success ? 'SUCCESS' : (j.failure_reason || 'FAILED');
+
+      renderSummaryPreviewCanvas(j.path_coordinates);
+    }
+
+    function renderSummaryPreviewCanvas(coords) {
+      if (!sumCtx || !coords || coords.length === 0) return;
+      sumCtx.clearRect(0, 0, summaryCanvas.width, summaryCanvas.height);
+
+      if (mapImg.complete) {
+        sumCtx.drawImage(mapImg, 0, 0, summaryCanvas.width, summaryCanvas.height);
+      }
+
+      const scaleX = summaryCanvas.width / MAP_W;
+      const scaleY = summaryCanvas.height / MAP_H;
+
+      sumCtx.strokeStyle = '#ec4899';
+      sumCtx.lineWidth = 3;
+      sumCtx.beginPath();
+      coords.forEach((pt, i) => {
+        const p = worldToPixel(pt[0], pt[1]);
+        const sx = p.x * scaleX;
+        const sy = p.y * scaleY;
+        if (i === 0) sumCtx.moveTo(sx, sy);
+        else sumCtx.lineTo(sx, sy);
+      });
+      sumCtx.stroke();
+    }
+
+    // Historical Journey Comparison (Phase 6 / Section 17)
+    async function runJourneyComparison() {
+      const j1Id = document.getElementById('compareSelectA').value;
+      const j2Id = document.getElementById('compareSelectB').value;
+      if (!j1Id || !j2Id) return;
+
+      try {
+        const res = await fetch(`/api/journey_compare?j1=${j1Id}&j2=${j2Id}`);
+        const data = await res.json();
+        const j1 = data.journey_1;
+        const j2 = data.journey_2;
+        const cmp = data.comparison;
+
+        const formatDiff = (val, unit = '') => {
+          if (val === 0 || val === 0.0) return `0.0 ${unit}`.trim();
+          const sign = val > 0 ? '+' : '';
+          return `${sign}${val} ${unit}`.trim();
+        };
+
+        const tbody = document.getElementById('compareTableBody');
+        tbody.innerHTML = `
+          <tr><td>Route Destination</td><td>${j1.start_node} ➔ ${j1.goal_node}</td><td>${j2.start_node} ➔ ${j2.goal_node}</td><td>${j1.goal_node === j2.goal_node ? 'Identical Goal' : 'Different Target'}</td></tr>
+          <tr><td>Route Selected</td><td>${j1.route_selected || 'Standard'}</td><td>${j2.route_selected || 'Standard'}</td><td>${j1.route_selected === j2.route_selected ? 'Same Route' : `${j1.route_selected || 'Standard'} vs ${j2.route_selected || 'Standard'}`}</td></tr>
+          <tr><td>Distance Difference</td><td>${(j1.distance_travelled || 0).toFixed(1)} m</td><td>${(j2.distance_travelled || 0).toFixed(1)} m</td><td>${formatDiff(cmp.distance_delta_m, 'm')}</td></tr>
+          <tr><td>Travel Time Difference</td><td>${(j1.travel_time || 0).toFixed(1)} s</td><td>${(j2.travel_time || 0).toFixed(1)} s</td><td>${formatDiff(cmp.time_delta_s, 's')}</td></tr>
+          <tr><td>Path Efficiency Difference</td><td>${(j1.path_efficiency || 100).toFixed(1)}%</td><td>${(j2.path_efficiency || 100).toFixed(1)}%</td><td>${formatDiff(cmp.path_efficiency_delta_pct, '%')}</td></tr>
+          <tr><td>Average Speed Difference</td><td>${(j1.average_speed || 0).toFixed(2)} m/s</td><td>${(j2.average_speed || 0).toFixed(2)} m/s</td><td>${formatDiff(cmp.speed_delta_mps, 'm/s')}</td></tr>
+          <tr><td>Replan Difference</td><td>${j1.replans_count || 0}</td><td>${j2.replans_count || 0}</td><td>${formatDiff(cmp.replans_delta)}</td></tr>
+          <tr><td>Obstacle Difference</td><td>${j1.obstacles_encountered || 0}</td><td>${j2.obstacles_encountered || 0}</td><td>${formatDiff(cmp.obstacles_delta)}</td></tr>
+          <tr><td>Minimum Clearance Difference</td><td>${(j1.min_lidar_clearance || 0).toFixed(2)} m</td><td>${(j2.min_lidar_clearance || 0).toFixed(2)} m</td><td>${formatDiff(cmp.clearance_delta_m, 'm')}</td></tr>
+          <tr><td>Recovery Difference</td><td>${j1.recovery_events_count || 0}</td><td>${j2.recovery_events_count || 0}</td><td>${formatDiff(cmp.recovery_delta)}</td></tr>
+          <tr><td>Oscillation Difference</td><td>${j1.oscillation_events_count || 0}</td><td>${j2.oscillation_events_count || 0}</td><td>${formatDiff(cmp.oscillation_delta)}</td></tr>
+          <tr><td>Backtracking Difference</td><td>${(j1.backtracking_distance || 0).toFixed(2)} m</td><td>${(j2.backtracking_distance || 0).toFixed(2)} m</td><td>${formatDiff(cmp.backtracking_delta_m, 'm')}</td></tr>
+        `;
+      } catch (e) {}
+    }
+
+    async function fetchAnalytics() {
+      try {
+        const res = await fetch('/api/analytics');
+        const data = await res.json();
+        const sum = data.summary;
+        document.getElementById('kpiTotal').innerText = sum.total_journeys;
+        document.getElementById('kpiSuccess').innerText = sum.success_rate_pct + '%';
+        document.getElementById('kpiDist').innerText = sum.avg_distance_m.toFixed(1) + ' m';
+        document.getElementById('kpiTime').innerText = sum.avg_travel_time_s.toFixed(1) + ' s';
+        document.getElementById('kpiReplans').innerText = sum.total_replans;
+        document.getElementById('kpiRecoveries').innerText = sum.total_recoveries;
+
+        // Render Canvas Bar Charts
+        const cd = data.chart_data;
+        drawBarChart('chartDistance', cd.journey_ids, cd.distances, '#3b82f6', 'm');
+        drawBarChart('chartTime', cd.journey_ids, cd.travel_times, '#06b6d4', 's');
+        drawBarChart('chartSpeed', cd.journey_ids, cd.speeds, '#10b981', 'm/s');
+        drawBarChart('chartReplans', cd.journey_ids, cd.replans, '#f59e0b', '');
+      } catch (e) {}
+    }
+
+    function drawBarChart(canvasId, labels, values, color, unit) {
+      const c = document.getElementById(canvasId);
+      if (!c) return;
+      c.width = c.parentElement.clientWidth;
+      c.height = c.parentElement.clientHeight;
+      const cctx = c.getContext('2d');
+      cctx.clearRect(0, 0, c.width, c.height);
+
+      if (!values || values.length === 0) return;
+      const maxVal = Math.max(...values, 1.0);
+      const barW = Math.max(16, (c.width - 60) / values.length - 8);
+      const chartH = c.height - 35;
+
+      values.forEach((v, i) => {
+        const h = (v / maxVal) * (chartH - 20);
+        const x = 30 + i * (barW + 8);
+        const y = chartH - h;
+
+        cctx.fillStyle = color;
+        cctx.fillRect(x, y, barW, h);
+
+        cctx.fillStyle = '#fff';
+        cctx.font = '8px monospace';
+        cctx.fillText(v + unit, x, y - 4);
+
+        cctx.fillStyle = '#64748b';
+        cctx.fillText(labels[i] || '', x, chartH + 14);
+      });
+    }
+
+    // Heatmap Overlay & Interactive Corridor Click (Phase 7)
+    async function fetchHeatmap() {
+      try {
+        const res = await fetch('/api/heatmap');
+        heatmapData = await res.json();
+        renderHeatmap();
+      } catch (e) {}
+    }
+
+    function renderHeatmap() {
+      hmCtx.clearRect(0, 0, hmCanvas.width, hmCanvas.height);
+      hmCtx.save();
+      hmCtx.translate(panX, panY);
+      hmCtx.scale(zoom, zoom);
+
+      if (mapImg.complete) {
+        hmCtx.drawImage(mapImg, 0, 0, MAP_W, MAP_H);
+      }
+
+      heatmapData.forEach(seg => {
+        const p1 = worldToPixel(seg.x1, seg.y1);
+        const p2 = worldToPixel(seg.x2, seg.y2);
+
+        hmCtx.beginPath();
+        hmCtx.moveTo(p1.x, p1.y);
+        hmCtx.lineTo(p2.x, p2.y);
+        hmCtx.lineWidth = Math.min(12, Math.max(4, (seg.traversal_count || 1) * 2.5));
+
+        if (seg.is_blocked || seg.category === 'Blocked') {
+          hmCtx.strokeStyle = 'rgba(239, 68, 68, 0.95)';
+        } else if (seg.is_dead_end || seg.category === 'Dead End') {
+          hmCtx.strokeStyle = 'rgba(220, 38, 38, 0.85)';
+        } else if (seg.category === 'High Failure') {
+          hmCtx.strokeStyle = 'rgba(251, 113, 133, 0.85)';
+        } else if (seg.category === 'Obstacle Heavy') {
+          hmCtx.strokeStyle = 'rgba(245, 158, 11, 0.85)';
+        } else if (seg.category === 'Frequently Used') {
+          hmCtx.strokeStyle = 'rgba(16, 185, 129, 0.85)';
+        } else {
+          hmCtx.strokeStyle = 'rgba(59, 130, 246, 0.65)';
+        }
+        hmCtx.stroke();
+      });
+
+      hmCtx.restore();
+    }
+
+    // Corridor Click Inspector on Heatmap (Phase 7)
+    hmCanvas.addEventListener('click', (e) => {
+      const rect = hmCanvas.getBoundingClientRect();
+      const clickX = (e.clientX - rect.left - panX) / zoom;
+      const clickY = (e.clientY - rect.top - panY) / zoom;
+      const wPos = pixelToWorld(clickX, clickY);
+
+      // Find closest segment within distance tolerance
+      let closestSeg = null;
+      let minDist = 1.8; // meters
+
+      heatmapData.forEach(seg => {
+        const dist = distToSegment(wPos.x, wPos.y, seg.x1, seg.y1, seg.x2, seg.y2);
+        if (dist < minDist) {
+          minDist = dist;
+          closestSeg = seg;
+        }
+      });
+
+      if (closestSeg) {
+        showCorridorInspect(closestSeg);
+      }
+    });
+
+    function distToSegment(px, py, x1, y1, x2, y2) {
+      const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+      if (l2 === 0) return Math.hypot(px - x1, py - y1);
+      let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+      t = Math.max(0, Math.min(1, t));
+      return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
+    }
+
+    function showCorridorInspect(seg) {
+      const card = document.getElementById('corridorInspectCard');
+      card.style.display = 'flex';
+
+      document.getElementById('inspectNodes').innerText = `${seg.from_node} ➔ ${seg.to_node}`;
+      const catBadge = document.getElementById('inspectCategoryBadge');
+      catBadge.innerText = seg.category;
+      catBadge.className = 'corridor-category-badge cat-' + seg.category.replace(/\s+/g, '');
+
+      document.getElementById('inspectTraversals').innerText = seg.traversal_count;
+      document.getElementById('inspectAvgTime').innerText = seg.avg_travel_time.toFixed(1) + ' s';
+      document.getElementById('inspectAvgClearance').innerText = seg.avg_clearance.toFixed(2) + ' m';
+      document.getElementById('inspectFailures').innerText = seg.failure_count;
+      document.getElementById('inspectRecoveries').innerText = seg.recovery_count || 0;
+      document.getElementById('inspectObstacles').innerText = seg.obstacle_count || 0;
+      document.getElementById('inspectReliability').innerText = (seg.reliability_score * 100.0).toFixed(1) + '%';
+    }
+
+    function closeCorridorInspect() {
+      document.getElementById('corridorInspectCard').style.display = 'none';
+    }
+
+    // MISSION REPLAY SYSTEM (Phase 13)
+    let replayData = null;
+    let replayStepIdx = 0;
+    let isReplaying = false;
+    let replayTimer = null;
+    let replaySpeed = 2.0;
+
+    function openSelectedMissionReplay() {
+      if (selectedJourneyForSummary) {
+        launchReplay(selectedJourneyForSummary.journey_id);
+      }
+    }
+
+    async function launchReplay(jid) {
+      try {
+        const res = await fetch(`/api/replay/${jid}`);
+        replayData = await res.json();
+        document.getElementById('replayModal').classList.add('active');
+        document.getElementById('replayJidBadge').innerText = '#' + replayData.journey.journey_id;
+        document.getElementById('replayRouteLabel').innerText = `${replayData.journey.start_node.toUpperCase()} ➔ ${replayData.journey.goal_node.toUpperCase()}`;
+
+        // Render Timeline items
+        const tlList = document.getElementById('replayTimelineList');
+        tlList.innerHTML = replayData.timeline.map((item, idx) => `
+          <div class="timeline-item" id="tlItem_${idx}">
+            <div style="display:flex; justify-content:space-between; color:#94a3b8; font-weight:700;">
+              <span>${item.stage}</span>
+              <span>+${item.time_offset_s.toFixed(1)}s</span>
+            </div>
+            <div style="color:#fff; font-size:0.7rem;">${item.event}</div>
+          </div>
+        `).join('');
+
+        resizeCanvases();
+        resetReplay();
+      } catch (e) {}
+    }
+
+    function closeMissionReplay() {
+      pauseReplay();
+      document.getElementById('replayModal').classList.remove('active');
+    }
+
+    function resetReplay() {
+      pauseReplay();
+      replayStepIdx = 0;
+      document.getElementById('replayScrubBar').value = 0;
+      renderReplayFrame();
+    }
+
+    function toggleReplayPlay() {
+      if (isReplaying) {
+        pauseReplay();
+      } else {
+        startReplay();
+      }
+    }
+
+    function startReplay() {
+      if (!replayData || !replayData.trajectory || replayData.trajectory.length === 0) return;
+      isReplaying = true;
+      document.getElementById('btnReplayPlay').innerText = '⏸ PAUSE';
+      replayTimer = setInterval(stepReplay, 50 / replaySpeed);
+    }
+
+    function pauseReplay() {
+      isReplaying = false;
+      document.getElementById('btnReplayPlay').innerText = '▶ PLAY';
+      if (replayTimer) clearInterval(replayTimer);
+    }
+
+    function setReplaySpeed(val) {
+      replaySpeed = parseFloat(val);
+      if (isReplaying) {
+        pauseReplay();
+        startReplay();
+      }
+    }
+
+    function onReplayScrub(pct) {
+      if (!replayData || !replayData.trajectory) return;
+      const totalSteps = replayData.trajectory.length - 1;
+      replayStepIdx = Math.round((pct / 100) * totalSteps);
+      renderReplayFrame();
+    }
+
+    function stepReplay() {
+      if (!replayData || !replayData.trajectory) return;
+      if (replayStepIdx >= replayData.trajectory.length - 1) {
+        pauseReplay();
+        return;
+      }
+      replayStepIdx++;
+      document.getElementById('replayScrubBar').value = (replayStepIdx / (replayData.trajectory.length - 1)) * 100;
+      renderReplayFrame();
+    }
+
+    function renderReplayFrame() {
+      if (!repCtx || !replayData || !replayData.trajectory) return;
+      const coords = replayData.trajectory;
+      const totalTime = replayData.journey.travel_time || 1.0;
+      const curTime = (replayStepIdx / Math.max(1, coords.length - 1)) * totalTime;
+
+      document.getElementById('replayTimeDisplay').innerText = `${curTime.toFixed(1)} / ${totalTime.toFixed(1)} s`;
+
+      // Update Active Timeline Item
+      if (replayData.timeline) {
+        replayData.timeline.forEach((item, idx) => {
+          const el = document.getElementById(`tlItem_${idx}`);
+          if (el) {
+            if (curTime >= item.time_offset_s) el.classList.add('active');
+            else el.classList.remove('active');
+          }
+        });
+      }
+
+      repCtx.clearRect(0, 0, replayCanvas.width, replayCanvas.height);
+      const scaleX = replayCanvas.width / MAP_W;
+      const scaleY = replayCanvas.height / MAP_H;
+      const repScale = Math.min(scaleX, scaleY);
+      const repOffsetX = (replayCanvas.width - MAP_W * repScale) / 2;
+      const repOffsetY = (replayCanvas.height - MAP_H * repScale) / 2;
+
+      repCtx.save();
+      repCtx.translate(repOffsetX, repOffsetY);
+      repCtx.scale(repScale, repScale);
+
+      // 1. Facility Map
+      if (mapImg.complete) {
+        repCtx.drawImage(mapImg, 0, 0, MAP_W, MAP_H);
+      }
+
+      // 2. Full Trajectory (Light Golden Trail)
+      repCtx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      repCtx.lineWidth = 3.5;
+      repCtx.beginPath();
+      coords.forEach((pt, i) => {
+        const p = worldToPixel(pt[0], pt[1]);
+        if (i === 0) repCtx.moveTo(p.x, p.y);
+        else repCtx.lineTo(p.x, p.y);
+      });
+      repCtx.stroke();
+
+      // 3. Travelled up to current step (Solid Neon Pink)
+      repCtx.strokeStyle = '#ec4899';
+      repCtx.lineWidth = 4.5;
+      repCtx.beginPath();
+      for (let i = 0; i <= replayStepIdx; i++) {
+        const p = worldToPixel(coords[i][0], coords[i][1]);
+        if (i === 0) repCtx.moveTo(p.x, p.y);
+        else repCtx.lineTo(p.x, p.y);
+      }
+      repCtx.stroke();
+
+      // 4. Current Animated Robot Marker
+      if (coords[replayStepIdx]) {
+        const curPt = coords[replayStepIdx];
+        const rp = worldToPixel(curPt[0], curPt[1]);
+
+        repCtx.shadowColor = '#06b6d4';
+        repCtx.shadowBlur = 14;
+        repCtx.fillStyle = '#06b6d4';
+        repCtx.beginPath();
+        repCtx.arc(rp.x, rp.y, 11, 0, Math.PI * 2);
+        repCtx.fill();
+
+        repCtx.fillStyle = '#fff';
+        repCtx.beginPath();
+        repCtx.arc(rp.x, rp.y, 4, 0, Math.PI * 2);
+        repCtx.fill();
+        repCtx.shadowBlur = 0;
+      }
+
+      repCtx.restore();
+    }
+
+    // Control commands
+    function dispatchGoal(label) {
+      fetch('/api/goal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ goal: label })
+      });
+    }
+
+    function sendControl(action) {
+      fetch('/api/control', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action })
+      });
+    }
+
+    function resetMemory() {
+      if (confirm('Reset navigation memory and clear dynamic obstacle blockages?')) {
+        fetch('/api/reset_memory', { method: 'POST' });
+      }
+    }
+
+    // Camera Switcher & Live Stream (V2.4)
+    function switchCameraView(view) {
+      currentCamView = view;
+      ['yolo', 'signs', 'raw', 'fused'].forEach(v => {
+        const btn = document.getElementById('btnCam' + v.charAt(0).toUpperCase() + v.slice(1));
+        if (btn) {
+          if (v === view) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+      const badge = document.getElementById('cameraViewBadge');
+      if (badge) {
+        if (view === 'signs') badge.innerText = 'CAMERA SIGN RECOGNITION (V2.4)';
+        else if (view === 'raw') badge.innerText = 'RAW SENSOR (15 Hz)';
+        else if (view === 'fused') {
+          const fHz = (telemetry.performance && telemetry.performance.fusion_hz) || 0;
+          const fCount = (telemetry.fused_objects && telemetry.fused_objects.length) || 0;
+          badge.innerText = fHz > 0 ? `FUSED 3D (${fHz.toFixed(1)} Hz | ${fCount} OBJS)` : 'FUSION STANDBY (CONNECTING...)';
+        }
+        else badge.innerText = 'YOLOv8n V2.4 DETECTION';
+      }
+      const modeTag = document.getElementById('camHeaderMode');
+      if (modeTag) {
+        if (view === 'signs') modeTag.innerText = 'SEMANTIC SIGN RECOGNITION & LOCALIZATION';
+        else if (view === 'raw') modeTag.innerText = 'UNPROCESSED RGB STREAM (640x480)';
+        else if (view === 'fused') modeTag.innerText = 'SPATIAL PROJECTION & 3D FUSED TRACKING';
+        else modeTag.innerText = 'YOLOv8n GPU INFERENCE';
+      }
+      refreshCameraFrame();
+    }
+
+    function refreshCameraFrame() {
+      const img = document.getElementById('cameraStreamView');
+      if (img) {
+        img.src = `/api/camera_frame?view=${currentCamView}&t=${Date.now()}`;
+      }
+    }
+
+    // Initialization
+    async function init() {
+      resizeCanvases();
+      try {
+        const res = await fetch('/api/topology');
+        topology = await res.json();
+      } catch (e) {}
+
+      try {
+        const res = await fetch('/api/semantic_destinations');
+        semanticDestinations = await res.json();
+      } catch (e) {}
+
+      updateTelemetry();
+      updateSystemHealth();
+      refreshCameraFrame();
+      setInterval(updateTelemetry, 200);      // 5 Hz
+      setInterval(updateSystemHealth, 1000);   // 1 Hz
+      setInterval(refreshCameraFrame, 200);   // 5 Hz live camera
+      requestAnimationFrame(renderMap);
+    }
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

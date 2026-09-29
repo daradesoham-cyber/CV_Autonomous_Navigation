@@ -1,0 +1,437 @@
+[
+  {
+    "mission_id": 1,
+    "start": "ROOM A",
+    "goal": "STORAGE",
+    "result": "SUCCESS",
+    "time_sec": 55.9,
+    "distance_m": 8.77,
+    "min_clearance_m": 0.32,
+    "ttc_summary": "min 0.54s (10 yields)",
+    "ttc_min": 0.54,
+    "ttc_yield_count": 10,
+    "signs_detected": [
+      {
+        "text": "HOSPITAL",
+        "direction": "RIGHT",
+        "confidence": 0.57
+      },
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.52
+      },
+      {
+        "text": "ROOM A",
+        "direction": "STRAIGHT",
+        "confidence": 0.65
+      },
+      {
+        "text": "STORAGE",
+        "direction": "STRAIGHT",
+        "confidence": 0.8
+      },
+      {
+        "text": "CHARGING",
+        "direction": "LEFT",
+        "confidence": 0.47
+      },
+      {
+        "text": "LAB",
+        "direction": "LEFT",
+        "confidence": 0.61
+      }
+    ],
+    "sign_summary": "6 signs (HOSPITAL, OFFICE)",
+    "replans_count": 12,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NAV2_ABORT",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "12 replans (DYNAMIC_OBSTACLE, NAV2_ABORT)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "lab -> junction_8 -> lab_bypass_entry -> storage_approach -> storage",
+    "notes": "SUCCESS - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 2,
+    "start": "ROOM A",
+    "goal": "HOSPITAL",
+    "result": "TIMEOUT",
+    "time_sec": 180.2,
+    "distance_m": 7.21,
+    "min_clearance_m": 0.4,
+    "ttc_summary": "min 0.08s (54 yields)",
+    "ttc_min": 0.08,
+    "ttc_yield_count": 54,
+    "signs_detected": [
+      {
+        "text": "CHARGING",
+        "direction": "LEFT",
+        "confidence": 0.57
+      },
+      {
+        "text": "ROOM A",
+        "direction": "STRAIGHT",
+        "confidence": 0.54
+      },
+      {
+        "text": "STORAGE",
+        "direction": "STRAIGHT",
+        "confidence": 0.76
+      },
+      {
+        "text": "LAB",
+        "direction": "LEFT",
+        "confidence": 0.36
+      }
+    ],
+    "sign_summary": "4 signs (CHARGING, ROOM A)",
+    "replans_count": 44,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "44 replans (DYNAMIC_OBSTACLE, NO_PROGRESS)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "lab -> junction_8 -> lab_bypass_entry -> storage_approach -> junction_7 -> lab_corridor_entry (+8 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 3,
+    "start": "LOADING",
+    "goal": "CHARGING",
+    "result": "TIMEOUT",
+    "time_sec": 180.0,
+    "distance_m": 3.16,
+    "min_clearance_m": 0.19,
+    "ttc_summary": "min 0.66s (3 yields)",
+    "ttc_min": 0.66,
+    "ttc_yield_count": 3,
+    "signs_detected": [
+      {
+        "text": "ROOM A",
+        "direction": "STRAIGHT",
+        "confidence": 0.37
+      }
+    ],
+    "sign_summary": "1 signs (ROOM A)",
+    "replans_count": 33,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NAV2_ABORT",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "33 replans (DYNAMIC_OBSTACLE, NAV2_ABORT)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "loading -> wh_aisle_south -> wh_junction_6 -> east_bypass_2 -> east_bypass_1 -> junction_2 (+7 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 4,
+    "start": "WAREHOUSE",
+    "goal": "EXIT",
+    "result": "TIMEOUT",
+    "time_sec": 180.3,
+    "distance_m": 8.76,
+    "min_clearance_m": 0.77,
+    "ttc_summary": "min 0.26s (39 yields)",
+    "ttc_min": 0.26,
+    "ttc_yield_count": 39,
+    "signs_detected": [
+      {
+        "text": "ROOM A",
+        "direction": "STRAIGHT",
+        "confidence": 0.37
+      },
+      {
+        "text": "WAREHOUSE",
+        "direction": "RIGHT",
+        "confidence": 0.52
+      },
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.89
+      },
+      {
+        "text": "EXIT",
+        "direction": "LEFT",
+        "confidence": 0.44
+      }
+    ],
+    "sign_summary": "4 signs (ROOM A, WAREHOUSE)",
+    "replans_count": 46,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "46 replans (DYNAMIC_OBSTACLE, NO_PROGRESS)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "warehouse -> office_wh_bypass -> junction_5 -> office_corridor -> junction_4 -> central_spine_1 (+5 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 5,
+    "start": "STORAGE",
+    "goal": "OFFICE",
+    "result": "SUCCESS",
+    "time_sec": 178.3,
+    "distance_m": 25.45,
+    "min_clearance_m": 0.26,
+    "ttc_summary": "min 0.22s (40 yields)",
+    "ttc_min": 0.22,
+    "ttc_yield_count": 40,
+    "signs_detected": [
+      {
+        "text": "STORAGE",
+        "direction": "STRAIGHT",
+        "confidence": 0.94
+      },
+      {
+        "text": "LAB",
+        "direction": "LEFT",
+        "confidence": 0.43
+      },
+      {
+        "text": "WAREHOUSE",
+        "direction": "RIGHT",
+        "confidence": 0.43
+      },
+      {
+        "text": "CHARGING",
+        "direction": "LEFT",
+        "confidence": 0.39
+      },
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.99
+      }
+    ],
+    "sign_summary": "5 signs (STORAGE, LAB)",
+    "replans_count": 26,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "LOW_CLEARANCE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "26 replans (DYNAMIC_OBSTACLE, LOW_CLEARANCE)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "storage -> storage_approach -> junction_7 -> lab_corridor_entry -> junction_4 -> office_corridor (+2 nodes)",
+    "notes": "SUCCESS - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 6,
+    "start": "HOSPITAL",
+    "goal": "STORAGE",
+    "result": "TIMEOUT",
+    "time_sec": 180.3,
+    "distance_m": 7.29,
+    "min_clearance_m": 0.38,
+    "ttc_summary": "min 0.13s (17 yields)",
+    "ttc_min": 0.13,
+    "ttc_yield_count": 17,
+    "signs_detected": [
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.65
+      }
+    ],
+    "sign_summary": "1 signs (OFFICE)",
+    "replans_count": 40,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "40 replans (DYNAMIC_OBSTACLE, NO_PROGRESS)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "hospital -> hospital_ward_entry -> junction_2 -> east_bypass_1 -> east_bypass_2 -> wh_junction_6 (+6 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 7,
+    "start": "CHARGING",
+    "goal": "EXIT",
+    "result": "TIMEOUT",
+    "time_sec": 180.1,
+    "distance_m": 41.7,
+    "min_clearance_m": 0.48,
+    "ttc_summary": "min 0.44s (7 yields)",
+    "ttc_min": 0.44,
+    "ttc_yield_count": 7,
+    "signs_detected": [
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.65
+      },
+      {
+        "text": "STORAGE",
+        "direction": "RIGHT",
+        "confidence": 0.6
+      },
+      {
+        "text": "EXIT",
+        "direction": "STRAIGHT",
+        "confidence": 0.44
+      },
+      {
+        "text": "HOSPITAL",
+        "direction": "RIGHT",
+        "confidence": 0.55
+      }
+    ],
+    "sign_summary": "4 signs (OFFICE, STORAGE)",
+    "replans_count": 18,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NAV2_ABORT",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "18 replans (DYNAMIC_OBSTACLE, NAV2_ABORT)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "charging -> west_bypass_north -> west_bypass_south -> junction_3 -> exit_corridor -> exit",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 8,
+    "start": "WAREHOUSE",
+    "goal": "HOSPITAL",
+    "result": "TIMEOUT",
+    "time_sec": 180.2,
+    "distance_m": 8.81,
+    "min_clearance_m": 0.22,
+    "ttc_summary": "min 0.14s (48 yields)",
+    "ttc_min": 0.14,
+    "ttc_yield_count": 48,
+    "signs_detected": [
+      {
+        "text": "EXIT",
+        "direction": "LEFT",
+        "confidence": 0.9
+      }
+    ],
+    "sign_summary": "1 signs (EXIT)",
+    "replans_count": 46,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NAV2_ABORT",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "46 replans (DYNAMIC_OBSTACLE, NAV2_ABORT)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "warehouse -> wh_aisle_south -> wh_junction_6 -> east_bypass_2 -> east_bypass_1 -> junction_2 (+2 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 9,
+    "start": "ROOM B",
+    "goal": "STORAGE",
+    "result": "TIMEOUT",
+    "time_sec": 180.3,
+    "distance_m": 8.41,
+    "min_clearance_m": 0.31,
+    "ttc_summary": "min 0.08s (30 yields)",
+    "ttc_min": 0.08,
+    "ttc_yield_count": 30,
+    "signs_detected": [
+      {
+        "text": "EXIT",
+        "direction": "LEFT",
+        "confidence": 0.37
+      },
+      {
+        "text": "HOSPITAL",
+        "direction": "RIGHT",
+        "confidence": 0.69
+      }
+    ],
+    "sign_summary": "2 signs (EXIT, HOSPITAL)",
+    "replans_count": 45,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "45 replans (DYNAMIC_OBSTACLE, NO_PROGRESS)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "hospital -> hospital_ward_entry -> junction_2 -> corridor_east_1 -> junction_1 -> corridor_west_1 (+7 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  },
+  {
+    "mission_id": 10,
+    "start": "RECEPTION",
+    "goal": "ROOM A",
+    "result": "TIMEOUT",
+    "time_sec": 220.0,
+    "distance_m": 26.67,
+    "min_clearance_m": 0.44,
+    "ttc_summary": "min 0.12s (52 yields)",
+    "ttc_min": 0.12,
+    "ttc_yield_count": 52,
+    "signs_detected": [
+      {
+        "text": "HOSPITAL",
+        "direction": "RIGHT",
+        "confidence": 0.81
+      },
+      {
+        "text": "EXIT",
+        "direction": "LEFT",
+        "confidence": 0.61
+      },
+      {
+        "text": "OFFICE",
+        "direction": "STRAIGHT",
+        "confidence": 0.95
+      },
+      {
+        "text": "LAB",
+        "direction": "LEFT",
+        "confidence": 0.97
+      },
+      {
+        "text": "WAREHOUSE",
+        "direction": "RIGHT",
+        "confidence": 0.61
+      },
+      {
+        "text": "STORAGE",
+        "direction": "RIGHT",
+        "confidence": 0.39
+      }
+    ],
+    "sign_summary": "6 signs (HOSPITAL, EXIT)",
+    "replans_count": 43,
+    "replan_reasons": [
+      "DYNAMIC_OBSTACLE",
+      "NO_PROGRESS"
+    ],
+    "replan_summary": "43 replans (DYNAMIC_OBSTACLE, NO_PROGRESS)",
+    "stuck_count": 0,
+    "interventions": 0,
+    "collisions": 0,
+    "route_selected": "reception -> junction_1 -> corridor_west_1 -> junction_3 -> west_bypass_south -> west_bypass_north (+4 nodes)",
+    "notes": "TIMEOUT - Automated V2.4 CV navigation"
+  }
+]

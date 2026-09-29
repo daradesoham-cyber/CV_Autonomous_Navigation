@@ -25,7 +25,7 @@
   <joint name="camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="camera_link"/>
-    <origin xyz="0.22 0 0.12" rpy="0 0 0"/>
+    <origin xyz="0.22 0 0.35" rpy="0 -0.05 0"/>
   </joint>
 
   <!-- Camera Optical Link (Standard ROS / OpenCV frame: Z forward, X right, Y down) -->
@@ -47,7 +47,7 @@
       <gz_frame_id>camera_optical_link</gz_frame_id>
       <camera>
         <camera_info_topic>/camera/camera_info</camera_info_topic>
-        <horizontal_fov>1.089</horizontal_fov>
+        <horizontal_fov>1.15</horizontal_fov>
         <image>
           <width>640</width>
           <height>480</height>

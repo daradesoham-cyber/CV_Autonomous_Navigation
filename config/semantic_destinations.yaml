@@ -1,0 +1,240 @@
+# ==============================================================================
+# Semantic Destination Database for CV Autonomous Navigation V2.3
+# Defines verified semantic destinations with approach waypoints, physical bounds,
+# map coordinates, sign associations, and topological graph mappings.
+# ==============================================================================
+
+destinations:
+  storage:
+    destination_id: "storage"
+    name: "Storage Depot"
+    type: "warehouse_storage"
+    world_x: -6.50
+    world_y: 3.00
+    world_yaw: 1.5708
+    map_x: 220
+    map_y: 240
+    approach_direction: "NORTH"
+    preferred_entry_waypoint: "storage_approach"
+    exit_waypoint: "junction_7"
+    associated_signs:
+      - "STORAGE"
+      - "STORAGE ->"
+      - "<- STORAGE"
+    connected_graph_nodes:
+      - "junction_7"
+      - "storage_approach"
+
+  hospital:
+    destination_id: "hospital"
+    name: "Hospital Medical Ward"
+    type: "medical_ward"
+    world_x: 6.50
+    world_y: -9.50
+    world_yaw: -1.5708
+    map_x: 480
+    map_y: 490
+    approach_direction: "SOUTH"
+    preferred_entry_waypoint: "hospital_ward_entry"
+    exit_waypoint: "hospital_ward_entry"
+    associated_signs:
+      - "HOSPITAL"
+      - "HOSPITAL ->"
+      - "<- HOSPITAL"
+    connected_graph_nodes:
+      - "hospital_ward_entry"
+      - "junction_2"
+
+  room_a:
+    destination_id: "room_a"
+    name: "Room A - Robotics Research Lab"
+    type: "research_laboratory"
+    world_x: -7.00
+    world_y: 9.50
+    world_yaw: 1.5708
+    map_x: 210
+    map_y: 110
+    approach_direction: "NORTH"
+    preferred_entry_waypoint: "room_a_approach"
+    exit_waypoint: "junction_8"
+    associated_signs:
+      - "ROOM A"
+      - "LAB"
+      - "ROOM A ->"
+      - "<- ROOM A"
+    connected_graph_nodes:
+      - "junction_8"
+      - "room_a_approach"
+
+  room_b:
+    destination_id: "room_b"
+    name: "Room B - Medical Inspection Ward"
+    type: "inspection_ward"
+    world_x: 6.50
+    world_y: -9.50
+    world_yaw: -1.5708
+    map_x: 480
+    map_y: 490
+    approach_direction: "SOUTH"
+    preferred_entry_waypoint: "hospital_ward_entry"
+    exit_waypoint: "hospital_ward_entry"
+    associated_signs:
+      - "ROOM B"
+      - "HOSPITAL"
+      - "ROOM B ->"
+    connected_graph_nodes:
+      - "hospital_ward_entry"
+      - "junction_2"
+
+  warehouse:
+    destination_id: "warehouse"
+    name: "Industrial Warehouse Hub"
+    type: "warehouse_hub"
+    world_x: 8.00
+    world_y: 7.00
+    world_yaw: 1.5708
+    map_x: 510
+    map_y: 160
+    approach_direction: "NORTH"
+    preferred_entry_waypoint: "warehouse_approach"
+    exit_waypoint: "wh_junction_6"
+    associated_signs:
+      - "WAREHOUSE"
+      - "WAREHOUSE ->"
+      - "<- WAREHOUSE"
+    connected_graph_nodes:
+      - "wh_junction_6"
+      - "office_wh_bypass"
+      - "wh_aisle_north"
+
+  charging:
+    destination_id: "charging"
+    name: "AGV Automated Charging Station"
+    type: "charging_station"
+    world_x: -13.50
+    world_y: 2.00
+    world_yaw: 1.5708
+    map_x: 80
+    map_y: 260
+    approach_direction: "WEST"
+    preferred_entry_waypoint: "charging_approach"
+    exit_waypoint: "west_bypass_north"
+    associated_signs:
+      - "CHARGING"
+      - "CHARGING ->"
+      - "<- CHARGING"
+    connected_graph_nodes:
+      - "west_bypass_north"
+      - "charging_approach"
+
+  loading:
+    destination_id: "loading"
+    name: "Industrial Cargo Loading Bay"
+    type: "loading_bay"
+    world_x: 12.00
+    world_y: 2.00
+    world_yaw: 0.0
+    map_x: 590
+    map_y: 260
+    approach_direction: "EAST"
+    preferred_entry_waypoint: "loading_approach"
+    exit_waypoint: "wh_junction_6"
+    associated_signs:
+      - "LOADING"
+      - "LOADING ->"
+    connected_graph_nodes:
+      - "wh_junction_6"
+      - "loading_approach"
+
+  office:
+    destination_id: "office"
+    name: "Executive Office Suite"
+    type: "office_suite"
+    world_x: 0.00
+    world_y: 10.00
+    world_yaw: 1.5708
+    map_x: 350
+    map_y: 100
+    approach_direction: "NORTH"
+    preferred_entry_waypoint: "junction_5"
+    exit_waypoint: "junction_5"
+    associated_signs:
+      - "OFFICE"
+      - "OFFICE ->"
+      - "<- OFFICE"
+    connected_graph_nodes:
+      - "junction_5"
+
+  cafeteria:
+    destination_id: "cafeteria"
+    name: "Cafeteria Dining Hall"
+    type: "dining_hall"
+    world_x: -6.00
+    world_y: -9.50
+    world_yaw: -1.5708
+    map_x: 230
+    map_y: 490
+    approach_direction: "SOUTH"
+    preferred_entry_waypoint: "cafeteria_entry"
+    exit_waypoint: "cafeteria_entry"
+    associated_signs:
+      - "CAFETERIA"
+      - "CAFETERIA ->"
+      - "<- CAFETERIA"
+    connected_graph_nodes:
+      - "cafeteria_entry"
+      - "junction_3"
+
+  exit:
+    destination_id: "exit"
+    name: "Emergency Exit Door"
+    type: "emergency_exit"
+    world_x: -12.50
+    world_y: -9.00
+    world_yaw: -1.5708
+    map_x: 100
+    map_y: 480
+    approach_direction: "SOUTH"
+    preferred_entry_waypoint: "exit_corridor"
+    exit_waypoint: "exit_corridor"
+    associated_signs:
+      - "EXIT"
+      - "EMERGENCY EXIT"
+    connected_graph_nodes:
+      - "exit_corridor"
+      - "junction_3"
+
+  reception:
+    destination_id: "reception"
+    name: "Reception Desk & Waiting Area"
+    type: "reception"
+    world_x: 0.00
+    world_y: -8.60
+    world_yaw: 1.5708
+    map_x: 350
+    map_y: 472
+    approach_direction: "NORTH"
+    preferred_entry_waypoint: "start"
+    exit_waypoint: "junction_1"
+    associated_signs:
+      - "RECEPTION"
+    connected_graph_nodes:
+      - "start"
+      - "junction_1"
+
+  restricted:
+    destination_id: "restricted"
+    name: "Restricted Vault Zone"
+    type: "restricted_vault"
+    world_x: 12.50
+    world_y: -9.00
+    world_yaw: -1.5708
+    map_x: 600
+    map_y: 480
+    approach_direction: "SOUTH"
+    preferred_entry_waypoint: "triage"
+    exit_waypoint: "triage"
+    associated_signs:
+      - "RESTRICTED"
+    connected_graph_nodes:
+      - "triage"

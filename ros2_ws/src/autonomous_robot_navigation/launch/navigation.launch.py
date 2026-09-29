@@ -85,7 +85,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'use_sim_time': use_sim_time,
-            'db_path': os.path.join(pkg_nav, 'config', 'navigation_memory.db'),
+            'db_path': '/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_navigation/config/navigation_memory.db',
             'initial_x': initial_x,
             'initial_y': initial_y,
             'initial_yaw': initial_yaw
@@ -99,8 +99,23 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'use_sim_time': use_sim_time,
-            'db_path': os.path.join(pkg_nav, 'config', 'navigation_memory.db')
+            'db_path': '/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_navigation/config/navigation_memory.db'
         }]
+    )
+
+    dynamic_obstacles_node = Node(
+        package='autonomous_robot_navigation',
+        executable='dynamic_obstacles_node',
+        name='dynamic_obstacles_node',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}]
+    )
+
+    dashboard_backend_node = Node(
+        package='autonomous_robot_navigation',
+        executable='dashboard_backend',
+        name='dashboard_backend',
+        output='screen'
     )
 
     return LaunchDescription([
@@ -115,5 +130,7 @@ def generate_launch_description():
         bt_navigator,
         lifecycle_mgr_nav,
         decision_engine_node,
-        navigation_visualizer_node
+        navigation_visualizer_node,
+        dynamic_obstacles_node,
+        dashboard_backend_node
     ])

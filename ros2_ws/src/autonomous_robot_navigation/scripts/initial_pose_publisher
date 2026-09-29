@@ -72,9 +72,18 @@ class InitialPosePublisher(Node):
             px = msg.pose.pose.position.x
             py = msg.pose.pose.position.y
             self.get_logger().info(
-                f"[SUCCESS] AMCL confirmed localization at (x={px:.2f}, y={py:.2f})! Initial pose locked."
+                f"[SUCCESS] AMCL confirmed localization at (x={px:.2f}, y={py:.2f})! "
+                f"InitialPosePublisher shutting down — task complete."
             )
             self.timer.cancel()
+            # Schedule self-destruction on next spin cycle to avoid blocking callback
+            self._shutdown_timer = self.create_timer(0.5, self._do_shutdown)
+
+    def _do_shutdown(self):
+        """Called once 0.5s after AMCL confirmation to cleanly destroy this node."""
+        self._shutdown_timer.cancel()
+        self.get_logger().info("InitialPosePublisher: destroying node (AMCL confirmed).")
+        self.destroy_node()
 
     def _broadcast_pose(self):
         if self.amcl_confirmed or self.publish_count >= self.max_publishes:

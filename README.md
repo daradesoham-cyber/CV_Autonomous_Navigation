@@ -1,38 +1,51 @@
-# Vision-LiDAR Semantic Autonomous Navigation with Persistent Topological Memory
+# Vision-LiDAR Semantic Autonomous Navigation V2 with Persistent Memory & Web Dashboard
 
 [![ROS 2](https://img.shields.io/badge/ROS%202-Lyrical-blue.svg)](https://docs.ros.org)
 [![Gazebo Sim](https://img.shields.io/badge/Gazebo%20Sim-10.5.0-orange.svg)](https://gazebosim.org)
 [![Nav2](https://img.shields.io/badge/Nav2-Integrated-brightgreen.svg)](https://navigation.ros.org)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Custom%2096.2%25%20mAP50-yellow.svg)](https://ultralytics.com)
-[![CUDA](https://img.shields.io/badge/CUDA-13.0%20%2F%20RTX%203050-green.svg)](https://developer.nvidia.com/cuda-zone)
+[![Dashboard](https://img.shields.io/badge/Dashboard-Web%20Port%205050-cyan.svg)](http://127.0.0.1:5050)
+[![Version](https://img.shields.io/badge/Release-V2.0%20Advanced-purple.svg)](docs/ARCHITECTURE.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-An integrated autonomous mobile robotics system combining **multi-modal sensor fusion (RGB Camera + 2D LiDAR), visual directional sign perception, custom GPU-accelerated YOLOv8 object detection, persistent topological memory in SQLite, and dynamic obstacle replanning with dead-end avoidance**, deployed on **ROS 2 Lyrical** and **Gazebo Sim 10.5** (Ubuntu 26.04 LTS).
+An advanced autonomous mobile robotics system combining **multi-modal sensor fusion (RGB Camera + 2D LiDAR), visual directional sign perception, custom fine-tuned YOLOv8 object detection, persistent topological memory in SQLite, multi-criteria route cost planning with candidate alternative routes, dynamic obstacle replanning, dead-end intelligence, robust recovery behaviors, and a dedicated real-time web navigation dashboard**, deployed on **ROS 2 Lyrical** and **Gazebo Sim 10.5** (Ubuntu 26.04 LTS).
 
 > [!NOTE]
-> **Architecture Principle**: Classical metric costmaps, path planning, and trajectory execution are delegated strictly to **Nav2** (NavFn planner + Regulated Pure Pursuit controller). Higher-level semantic reasoning, directional signboard interpretation, persistent spatial memory, and topological corridor replanning are orchestrated by the custom **Decision Engine**.
+> **Architecture Principle**: Classical metric costmaps, path planning, and trajectory execution are delegated strictly to **Nav2** (NavFn planner + Regulated Pure Pursuit controller). Higher-level semantic reasoning, multi-criteria route optimization, candidate route alternatives, persistent spatial memory, and topological corridor replanning are orchestrated by the custom **Decision Engine V2**.
+
+---
+
+## Technical Documentation Guides
+
+* [V2.1_VALIDATION_REPORT.md](V2.1_VALIDATION_REPORT.md) — **Master End-to-End Real System Validation Report (100% Verified, Zero Mock Data).**
+* [V2_REALITY_AUDIT.md](V2_REALITY_AUDIT.md) — Pre-validation reality audit matrix and gap analysis.
+* [ARCHITECTURE.md](docs/ARCHITECTURE.md) — Comprehensive technical architecture, coordinate frames, nodes, and topic graphs.
+* [NAVIGATION.md](docs/NAVIGATION.md) — Multi-criteria route cost formula, YAML weights, candidate alternative routes, dead-end intelligence, and recovery behaviors.
+* [DASHBOARD.md](docs/DASHBOARD.md) — Standalone web navigation dashboard guide, screens 1/2/3, REST APIs, and live telemetry.
+* [TESTING.md](docs/TESTING.md) — Verification guide for the 10-stage V2 test suite, baseline scenarios, and demo mode.
+* [DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) — SQLite database schema, table definitions, relationships, and analytics queries.
 
 ---
 
 ## Table of Contents
 
 1. [Overview & Architecture Pipeline](#overview--architecture-pipeline)
-2. [Key Features](#key-features)
-3. [System Architecture Diagram](#system-architecture-diagram)
-4. [Hardware & Software Requirements](#hardware--software-requirements)
-5. [Project Structure](#project-structure)
-6. [Installation & Setup](#installation--setup)
-7. [Running the Project](#running-the-project)
-8. [Start and Goal Selection (User Workflow)](#start-and-goal-selection-user-workflow)
-9. [YOLOv8 Object Detection Pipeline](#yolov8-object-detection-pipeline)
-10. [Directional Sign Perception](#directional-sign-perception)
-11. [Camera-LiDAR Sensor Fusion](#camera-lidar-sensor-fusion)
-12. [Navigation Logic & Topological Memory](#navigation-logic--topological-memory)
-13. [Dynamic Obstacle Handling & Replanning](#dynamic-obstacle-handling--replanning)
-14. [Dead-End Avoidance](#dead-end-avoidance)
-15. [Experimental Results & Verification](#experimental-results--verification)
-16. [Troubleshooting Guide](#troubleshooting-guide)
-17. [Future Improvements](#future-improvements)
+2. [What's New in V2](#whats-new-in-v2)
+3. [Key Features](#key-features)
+4. [Dedicated Navigation Dashboard](#dedicated-navigation-dashboard)
+5. [Hardware & Software Requirements](#hardware--software-requirements)
+6. [Project Structure](#project-structure)
+7. [Installation & Setup](#installation--setup)
+8. [Running the Project](#running-the-project)
+9. [Start and Goal Selection (User Workflow)](#start-and-goal-selection-user-workflow)
+10. [YOLOv8 Object Detection Pipeline](#yolov8-object-detection-pipeline)
+11. [Directional Sign Perception](#directional-sign-perception)
+12. [Enhanced Camera-LiDAR Sensor Fusion](#enhanced-camera-lidar-sensor-fusion)
+13. [Multi-Criteria Route Planning & Memory](#multi-criteria-route-planning--memory)
+14. [Dynamic Obstacle Handling & Replanning](#dynamic-obstacle-handling--replanning)
+15. [Dead-End Intelligence & Recovery](#dead-end-intelligence--recovery)
+16. [Automated Verification & Demonstration](#automated-verification--demonstration)
+17. [Troubleshooting Guide](#troubleshooting-guide)
 18. [License & Attribution](#license--attribution)
 
 ---
@@ -75,18 +88,54 @@ Robot Motion Execution (Nav2 RPP Controller -> /cmd_vel -> Gazebo Diff-Drive)
 
 ---
 
+---
+
+## What's New in V2
+
+1. **Multi-Criteria Route Planning**:
+   - Implements a weighted route cost function:
+     $$\text{Cost} = w_{\text{dist}} \cdot D + w_{\text{obs}} \cdot \Omega + w_{\text{hist}} \cdot F + w_{\text{cong}} \cdot C + w_{\text{turn}} \cdot T + w_{\text{narrow}} \cdot N + w_{\text{time}} \cdot \tau$$
+   - Configurable via [`config/navigation_v2.yaml`](file:///home/soham-darade/CV_Autonomous_Navigation/config/navigation_v2.yaml).
+   - Generates and evaluates $K=3$ candidate alternative routes (`Route A`, `Route B`, `Route C`) with itemized cost breakdowns.
+
+2. **Upgraded Gazebo Simulation Environment**:
+   - $35\text{m} \times 30\text{m}$ high-fidelity warehouse facility (`realistic_facility_world.sdf`) with multi-corridor loops, storage racks, workstations, pallets, and Rooms A & B.
+   - **4 Dynamic Obstacles**: Autonomous warehouse carts, hospital trolleys, forklifts, and walking personnel powered by Gazebo velocity control systems and trajectory patrol publishers (`dynamic_obstacles_node.py`).
+   - 30 crisp PNG visual signs with room names and directional guidance.
+
+3. **Enhanced Camera + LiDAR Sensor Fusion**:
+   - Direct spatial association with camera-LiDAR parallax resolution across $[0.3\text{m}, 6.0\text{m}]$.
+   - Directional labeling: `Front-Center`, `Front-Right`, `Front-Left`, `Left`, `Right`.
+   - Metric 3D spatial coordinates $(x, y, z)$ in `base_link` frame.
+   - Real-time RViz 3D MarkerArray visualization on `/vision/fused_object_markers`.
+
+4. **Dedicated Standalone Web Dashboard (Port 5050)**:
+   - Built on Flask + vanilla ES6 canvas with zero external CDN dependencies.
+   - **Screen 1 (Mission Monitor)**: Real-time robot status, kinematics, 700x600 hardware-accelerated interactive map canvas with click-to-dispatch, route intelligence, candidate alternatives table, LiDAR clearances, and live scrolling event log.
+   - **Screen 2 (Travel History & Analytics)**: Historical journey table with clickable path inspection on the map, and interactive canvas charts (distance, travel time, speed, replanning count).
+   - **Screen 3 (Route Heatmap)**: Persistent corridor traversal frequency and congestion heatmap overlay.
+
+5. **Dead-End Intelligence & Robust Recovery**:
+   - Automatic dead-end detection, coordinate persistence in SQLite `dead_ends` table, $+10,000$ cost penalty, and safe reverse backtracking.
+   - Robust recovery state machine addressing stalled robot, low clearance, oscillation, and Nav2 goal aborts with audited events in `recovery_events`.
+
+6. **Persistent Journey Memory & Learning**:
+   - SQLite tables: `journeys`, `route_segments`, `dead_ends`, and `recovery_events`.
+   - Segment reliability scores updated automatically with moving averages after each trip.
+
+---
+
 ## Key Features
 
+- **Dedicated Web Navigation Dashboard**: Real-time control and monitoring interface on `http://127.0.0.1:5050` with live telemetry, sensor feeds, and travel history analytics.
+- **Candidate Alternative Routing**: K-shortest paths algorithm identifying multiple routes between facility origins and destinations, ordered by multi-criteria cost.
+- **Dynamic Obstacle Reactivity**: Detects and reacts dynamically to moving warehouse carts, forklifts, and personnel.
 - **Custom YOLOv8n Obstacle Detection**: Fine-tuned on Gazebo simulation assets across 8 classes (`person`, `chair`, `box`, `cone`, `pallet`, `shelf`, `hospital_bed`, `cart`), achieving **96.2% mAP@0.50** at ~30 FPS camera lock (**116.5 FPS** batch inference).
-- **GPU Acceleration**: Native NVIDIA Tensor / CUDA 13.0 acceleration on NVIDIA GeForce RTX 3050 Laptop GPU with low memory footprint (~173 MiB VRAM).
-- **Directional Signboard Perception**: Detects and decodes 15 distinct PBR corridor signs (`HOSPITAL`, `WAREHOUSE`, `OFFICE`, `LAB`, `STORAGE`, `CAFETERIA`, `EXIT` with directional arrows) with **100% accuracy** and $< 4\text{ ms}$ latency.
-- **LiDAR-Camera Range-Bearing Fusion**: Matches monocular bounding box azimuth cones with 2D LiDAR range beams to calculate metric 3D obstacle coordinates with $< 1.5\text{ cm}$ range error.
-- **Costmap Layer Ingestion**: Injects fused vision obstacles into Nav2's local costmap as a `sensor_msgs/PointCloud2` stream for proactive obstacle inflation and avoidance.
-- **Persistent Topological Relational Memory**: SQLite database storing 38 nodes, 80 directed edges, sign observations, and dynamic blockage history across process restarts.
-- **Sub-Millisecond Dynamic Replanning**: Instantaneous rerouting via Dijkstra/A* on edge blockage with automated Nav2 goal preemption.
-- **Cul-de-Sac Dead-End Avoidance**: Zero cul-de-sac incursions across all destination queries via algorithmic topological penalty weighting.
-- **Multi-Modal Start/Goal Workflow**: Flexible goal dispatching via high-level semantic ROS topics, CLI scripts with predefined waypoints, RViz interactive tools, or graphical GUI.
-- **High-Fidelity Simulation**: Realistic $32\text{ m} \times 26\text{ m}$ multi-wing indoor facility in Gazebo Sim 10.5 featuring realistic physics, lighting, and textures.
+- **Directional Signboard Perception**: Detects and decodes 30 distinct corridor signs (`ROOM A`, `ROOM B`, `STORAGE`, `CHARGING`, `LOADING`, `RESTRICTED`, `KEEP LEFT`, `KEEP RIGHT`, directional arrows) with **100% accuracy**.
+- **LiDAR-Camera Range-Bearing Fusion**: Matches monocular bounding box azimuth cones with 2D LiDAR range beams to calculate metric 3D obstacle coordinates with human-readable directional classification.
+- **Persistent Topological Relational Memory**: SQLite database storing 43 nodes, 90 directed edges, sign observations, historical journeys, route segment reliability, and dynamic blockage history across process restarts.
+- **Dead-End Intelligence & Backtracking**: Zero cul-de-sac entrapments through safe stops, coordinate logging, reverse backtracking, and dynamic re-routing.
+- **High-Fidelity Simulation**: Realistic $35\text{ m} \times 30\text{ m}$ multi-wing industrial warehouse facility in Gazebo Sim 10.5 featuring realistic physics, lighting, and textures.
 
 ---
 
@@ -278,37 +327,57 @@ cd ~/CV_Autonomous_Navigation
 
 ---
 
+---
+
 ## Running the Project
 
-### Standard Startup (Realistic Facility World)
+### 1. Full System Launch (Gazebo, Nav2, Dynamic Obstacles, Perception, Decision Engine, Dashboard, RViz)
 
-Run the unified startup script (automatically cleans up stale processes, checks dependencies, and launches Gazebo, Nav2, Perception, Decision Engine, and RViz):
-
-```bash
-./scripts/start_project.sh --world realistic_facility_world
-```
-
-Or launch via standard ROS 2 launch syntax:
+Launch the complete autonomous navigation stack in a single command:
 
 ```bash
 source /opt/ros/lyrical/setup.bash
 source ~/CV_Autonomous_Navigation/ros2_ws/install/setup.bash
 
-ros2 launch autonomous_robot_bringup bringup.launch.py world:=realistic
+ros2 launch autonomous_robot_bringup full_system.launch.py
 ```
 
-### Controlled Benchmark World (Maze World)
+### 2. Standalone Web Navigation Dashboard
+
+The dedicated robotics navigation dashboard runs on port 5050 and connects directly to live ROS 2 telemetry and persistent SQLite storage:
 
 ```bash
-./scripts/start_project.sh --world complex_world
+# In your terminal
+python3 scripts/run_dashboard.py
+
+# Open in any browser:
+http://127.0.0.1:5050
 ```
 
-### Graphical Mission Control Panel
+### 3. Automated V2 Verification Suite (10 Tests)
 
-In a separate terminal, launch the desktop control panel:
+Run the comprehensive 10-stage test suite validating dynamic obstacles, route costs, candidate alternatives, sensor fusion, dead-end backtracking, recovery, and dashboard APIs:
 
 ```bash
-python3 scripts/navigation_control.py
+python3 scripts/test_v2_scenarios.py
+```
+
+### 4. Interactive Mission Demonstration Mode
+
+Walk through the complete autonomous mission intelligence lifecycle step-by-step:
+
+```bash
+python3 scripts/demo_mode.py
+# Or fast execution:
+python3 scripts/demo_mode.py --fast
+```
+
+### 5. Baseline Experiments Suite
+
+Run the 5 baseline verification scenarios:
+
+```bash
+python3 scripts/run_all_experiments.py
 ```
 
 ---

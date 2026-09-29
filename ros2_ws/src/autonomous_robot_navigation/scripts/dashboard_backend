@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+import os
+import sys
+
+for p in [
+    '/opt/ros/lyrical/lib/python3.14/site-packages',
+    '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/site-packages',
+    '/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_navigation',
+    '/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/install/autonomous_robot_navigation/lib/python3.14/site-packages'
+]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from autonomous_robot_navigation.dashboard_backend import main
+
+if __name__ == '__main__':
+    main()
