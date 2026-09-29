@@ -90,9 +90,9 @@ locations:
     description: "Realistic Facility: Central South Crossway (Junction 1)"
 
   hospital:
-    x: 6.5
-    y: -9.5
-    yaw: -1.57
+    x: 6.0
+    y: -9.0
+    yaw: 1.57
     description: "Realistic Facility: Hospital Medical Ward (Destination)"
 
   triage:
@@ -122,7 +122,7 @@ locations:
   lab:
     x: -7.0
     y: 9.5
-    yaw: 1.57
+    yaw: -1.57
     description: "Realistic Facility: Research Laboratory (Destination)"
 
   storage:
@@ -140,13 +140,13 @@ locations:
   room_a:
     x: -7.0
     y: 9.5
-    yaw: 1.57
+    yaw: -1.57
     description: "Realistic Facility: Room A - Advanced Robotics Lab"
 
   room_b:
-    x: 6.5
-    y: -9.5
-    yaw: -1.57
+    x: 6.0
+    y: -9.0
+    yaw: 1.57
     description: "Realistic Facility: Room B - Medical Ward Inspection"
 
   charging:
@@ -158,7 +158,7 @@ locations:
   loading:
     x: 12.0
     y: 2.0
-    yaw: 0.0
+    yaw: 3.14
     description: "Realistic Facility: Industrial Cargo Loading & Unloading Zone"
 
   restricted:

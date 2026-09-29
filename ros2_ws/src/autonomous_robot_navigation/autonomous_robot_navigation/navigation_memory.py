@@ -981,6 +981,21 @@ class NavigationMemory:
                 'total_dead_ends': total_dead_ends
             }
 
+    def reset_transient_blockages(self) -> int:
+        """
+        V2.6 Phase 1: Clears all transient edge blockages in SQLite navigation memory.
+        Differentiates permanent topological structure (nodes, distance, dead-ends)
+        from temporary runtime obstacle blockages. Preserves traversal history,
+        obstacle logs, reliability scores, and route segment metrics.
+        Returns the number of unblocked edges.
+        """
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("UPDATE edges SET is_blocked = 0 WHERE is_blocked = 1")
+            unblocked_count = cur.rowcount
+            conn.commit()
+            return unblocked_count
+
     def reset_memory(self):
         """Reset dynamic memory while preserving topological structure."""
         with self._get_connection() as conn:

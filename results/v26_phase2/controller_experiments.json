@@ -1,0 +1,16 @@
+{
+  "test": "Reception_To_Office_Straight_Spine",
+  "duration_sec": 35.02,
+  "distance_travelled_m": 16.32,
+  "peak_linear_velocity_mps": 0.5,
+  "average_linear_velocity_mps": 0.472,
+  "desired_linear_velocity_mps": 0.5,
+  "speed_efficiency_pct": 94.4,
+  "time_breakdown_sec": {
+    "low_speed_under_0_25": 1.62,
+    "mid_speed_0_25_to_0_40": 0.97,
+    "high_speed_over_0_40": 32.34
+  },
+  "samples_count": 354,
+  "diagnostic_conclusion": "High speed sustained on straight corridor"
+}

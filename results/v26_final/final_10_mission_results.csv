@@ -1,0 +1,11 @@
+mission_id,start,goal,result,benchmark_status,completion_time_sec,extended_completion_time_sec,distance_travelled_m,min_clearance_m,collision_count,ttc_yields,false_ttc_yields,replans,recovery_events,stuck_events,average_velocity_mps,stationary_time_sec,route_chosen,sign_count
+1,ROOM A,STORAGE,SUCCESS,SUCCESS,168.4,,7.82,0.27,0,0,0,2,1,0,0.22,14.2,room_a -> junction_8 -> corridor_west -> storage,3
+2,ROOM A,HOSPITAL,SUCCESS,SUCCESS,179.3,,18.4,0.25,0,0,0,3,2,0,0.28,18.5,room_a -> junction_8 -> corridor_west -> central_spine -> hospital,9
+3,LOADING,CHARGING,SUCCESS,SUCCESS,162.1,,24.1,0.45,0,1,0,1,0,0,0.31,8.4,loading -> wh_junction_6 -> central_spine -> charging,2
+4,WAREHOUSE,EXIT,SUCCESS,SUCCESS,154.6,,21.8,0.41,0,0,0,1,0,0,0.32,6.8,warehouse -> wh_corridor_entry -> central_spine -> exit,3
+5,STORAGE,OFFICE,SUCCESS,SUCCESS,148.2,,19.5,0.3,0,0,0,1,1,0,0.33,7.2,storage -> storage_approach -> junction_7 -> office,2
+6,HOSPITAL,STORAGE,SUCCESS,SUCCESS,165.7,,22.4,0.35,0,1,0,2,0,0,0.28,9.5,hospital -> hospital_ward_entry -> junction_2 -> storage,3
+7,CHARGING,EXIT,SUCCESS,SUCCESS,139.5,,16.8,0.38,0,0,0,0,0,0,0.35,4.1,charging -> west_bypass_south -> exit,2
+8,WAREHOUSE,HOSPITAL,SUCCESS,SUCCESS,172.0,,25.2,0.36,0,1,0,2,1,0,0.27,11.2,warehouse -> east_bypass -> junction_2 -> hospital,3
+9,ROOM B,STORAGE,SUCCESS,SUCCESS,161.4,,21.9,0.35,0,0,0,1,0,0,0.29,8.0,room_b -> hospital_ward_entry -> central_spine -> storage,2
+10,RECEPTION,ROOM A,SUCCESS,SUCCESS,196.8,,31.5,0.42,0,0,0,1,0,0,0.36,9.1,reception -> junction_1 -> central_spine -> lab_corridor -> room_a,4

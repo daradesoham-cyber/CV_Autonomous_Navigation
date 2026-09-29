@@ -1,0 +1,27 @@
+{
+  "timestamp": 1790704993.1289735,
+  "robot_pose": {
+    "x": -0.02,
+    "y": -6.44,
+    "yaw": 1.57
+  },
+  "linear_velocity": 0.0,
+  "angular_velocity": 0.0,
+  "ttc_seconds": -1.0,
+  "lidar_min_clearance_m": 0.38,
+  "front_clearance_m": 0.38,
+  "fused_obstacles": [],
+  "detected_signs": [],
+  "yolo_status": {
+    "config_version": "2.5",
+    "cuda_available": true,
+    "device": "cuda:0",
+    "effective_detection_hz": 51.4,
+    "fps": 102.7,
+    "frame_skip": 2,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "inference_time_ms": 9.74,
+    "iou_threshold": 0.45,
+    "model_classes": 10
+  }
+}

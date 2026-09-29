@@ -11,6 +11,7 @@ import math
 import numpy as np
 import rclpy
 from rclpy.node import Node
+from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Float32
 from visualization_msgs.msg import Marker, MarkerArray
@@ -96,9 +97,15 @@ class LidarCameraFusionNode(Node):
         self.tracks = {}
         self.next_track_id = 1
 
+        # Robot ego-motion tracking for velocity compensation (V2.6 Phase 1)
+        self.robot_vx = 0.0
+        self.robot_wz = 0.0
+        self.last_odom_time = 0.0
+
         # Subscribers
         self.sub_scan = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
         self.sub_detections = self.create_subscription(Detection2DArray, '/vision/detections', self.detections_callback, 10)
+        self.sub_odom = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
 
         # Publishers
         self.pub_objects = self.create_publisher(Detection2DArray, '/vision/objects', 10)
@@ -113,6 +120,12 @@ class LidarCameraFusionNode(Node):
             f'baseline dx={self.cam_dx:.2f}m, dy={self.cam_dy:.2f}m, '
             f'clustering tol={self.cluster_tol:.2f}m (min_pts={self.min_cluster_pts})'
         )
+
+    def odom_callback(self, msg: Odometry):
+        """Track robot ego-motion forward and angular velocity from /odom (V2.6 Phase 1)."""
+        self.robot_vx = float(msg.twist.twist.linear.x)
+        self.robot_wz = float(msg.twist.twist.angular.z)
+        self.last_odom_time = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
 
     def scan_callback(self, msg: LaserScan):
         self.scan_buffer.append(msg)
@@ -288,20 +301,40 @@ class LidarCameraFusionNode(Node):
                     speed = math.hypot(vx, vy)
                     dr = (distance - tr['distance']) / dt
 
+                    # Ego-motion compensation (V2.6 Phase 1):
+                    # Coordinates are in robot base_link. Due to robot ego-motion (rvx, rwz),
+                    # stationary objects have apparent velocities in base_link:
+                    #   vx_apparent = vx_true - rvx + rwz * raw_y
+                    #   vy_apparent = vy_true - rwz * raw_x
+                    # Compensating gives true ground velocity:
+                    #   vx_true = vx + rvx - rwz * raw_y
+                    #   vy_true = vy + rwz * raw_x
+                    # True radial velocity independent of robot forward translation:
+                    #   dr_true = dr + rvx * math.cos(effective_bearing)
+                    if self.last_odom_time > 0 and (now_ts - self.last_odom_time) < 0.5:
+                        rvx, rwz = self.robot_vx, self.robot_wz
+                    else:
+                        rvx, rwz = 0.0, 0.0
+
+                    vx_true = vx + rvx - rwz * raw_y
+                    vy_true = vy + rwz * raw_x
+                    true_speed = math.hypot(vx_true, vy_true)
+                    dr_true = dr + rvx * math.cos(effective_bearing)
+
                     # Temporal smoothing (exponential moving average)
                     smooth_x = 0.65 * tr['x'] + 0.35 * raw_x
                     smooth_y = 0.65 * tr['y'] + 0.35 * raw_y
                     smooth_dist = 0.65 * tr['distance'] + 0.35 * distance
 
-                    # Classify motion state (Section 9)
-                    if speed < 0.08:
+                    # Classify motion state (Section 9) using true ground motion
+                    if true_speed < 0.08:
                         motion_state = "STATIC"
                     else:
-                        if dr > 0.05:
+                        if dr_true > 0.05:
                             motion_state = "MOVING_AWAY"
-                        elif dr < -0.05:
+                        elif dr_true < -0.05:
                             motion_state = "MOVING_TOWARDS"
-                        elif abs(vy) > 0.12:
+                        elif abs(vy_true) > 0.10:
                             motion_state = "CROSSING"
                         else:
                             motion_state = "MOVING"
@@ -315,6 +348,10 @@ class LidarCameraFusionNode(Node):
                     tr['vx'] = vx
                     tr['vy'] = vy
                     tr['speed'] = speed
+                    tr['vx_true'] = vx_true
+                    tr['vy_true'] = vy_true
+                    tr['true_speed'] = true_speed
+                    tr['dr_true'] = dr_true
                     tr['last_time'] = now_ts
                     tr['motion_state'] = motion_state
                     tr['frames'] += 1
@@ -327,7 +364,9 @@ class LidarCameraFusionNode(Node):
                     # Create new track
                     track_id = self.next_track_id
                     self.next_track_id += 1
-                    motion_state = "MOVING_TOWARDS" if is_dynamic else "STATIC"
+                    motion_state = "STATIC"
+                    if is_dynamic:
+                        motion_state = "MOVING_TOWARDS"
                     if abs(raw_y) > 0.85:
                         motion_state = "OUTSIDE_PATH"
 
@@ -340,6 +379,10 @@ class LidarCameraFusionNode(Node):
                         'vx': 0.0,
                         'vy': 0.0,
                         'speed': 0.0,
+                        'vx_true': 0.0,
+                        'vy_true': 0.0,
+                        'true_speed': 0.0,
+                        'dr_true': 0.0,
                         'last_time': now_ts,
                         'motion_state': motion_state,
                         'frames': 1
@@ -347,6 +390,8 @@ class LidarCameraFusionNode(Node):
                     pos_x = raw_x
                     pos_y = raw_y
                     final_dist = distance
+                    true_speed = 0.0
+                    dr_true = 0.0
 
                 # Determine human-readable direction
                 deg = math.degrees(effective_bearing)
@@ -362,15 +407,24 @@ class LidarCameraFusionNode(Node):
                     dir_base = "Front-Center"
 
                 # Time-To-Collision (TTC) calculation for dynamic obstacles
+                # V2.6 Phase 1: Dynamic-object guard and ego-motion compensation.
+                # Valid TTC conditions:
+                # 1. Multi-frame confirmed track (frames >= 2)
+                # 2. Obstacle has genuine dynamic motion:
+                #    (is_dynamic and motion_state in ["MOVING_TOWARDS", "CROSSING", "MOVING"])
+                #    OR (true_speed > 0.12 and dr_true < -0.05)
+                # 3. Closing in forward corridor: closing_speed = -dr > 0.08 m/s, pos_x > 0.05, |pos_y| < 0.85
                 obs_ttc = -1.0
                 closing_speed = 0.0
-                if matched_id is not None:
-                    if dr < -0.05:
+                if matched_id is not None and tr['frames'] >= 2:
+                    is_dynamic_moving = (
+                        (is_dynamic and motion_state in ["MOVING_TOWARDS", "CROSSING", "MOVING"])
+                        or (true_speed > 0.12 and dr_true < -0.05)
+                    )
+                    if is_dynamic_moving and dr < -0.05:
                         closing_speed = -dr
-                elif motion_state in ["MOVING_TOWARDS", "CROSSING"] and is_dynamic:
-                    closing_speed = 0.35  # Initial closing speed assumption for dynamic object
 
-                if closing_speed > 0.05 and pos_x > 0.05 and abs(pos_y) < 0.85:
+                if closing_speed > 0.08 and pos_x > 0.05 and abs(pos_y) < 0.85:
                     obs_ttc = float(final_dist / closing_speed)
                     closing_ttcs.append(obs_ttc)
 
@@ -390,7 +444,10 @@ class LidarCameraFusionNode(Node):
                 sem_obs.distance = float(final_dist)
                 sem_obs.bearing = float(effective_bearing)
                 sem_obs.safety_radius = float(safety_radius)
-                sem_obs.is_dynamic = bool(is_dynamic or motion_state in ["MOVING", "MOVING_TOWARDS", "CROSSING"])
+                sem_obs.is_dynamic = bool(
+                    (is_dynamic and motion_state in ["MOVING", "MOVING_TOWARDS", "CROSSING"])
+                    or (true_speed > 0.12 and motion_state in ["MOVING_TOWARDS", "CROSSING"])
+                )
                 sem_obs.direction = direction_str
                 sem_obs.x = pos_x
                 sem_obs.y = pos_y

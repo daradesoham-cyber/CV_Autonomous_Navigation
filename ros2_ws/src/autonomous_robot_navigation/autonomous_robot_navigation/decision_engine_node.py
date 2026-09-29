@@ -71,7 +71,7 @@ class OscillationDetector:
     Explicit oscillation detector tracking heading/velocity reversals and displacement (V2.2 Section 5).
     Detects LEFT <-> RIGHT or FORWARD <-> BACKWARD oscillations without progress.
     """
-    def __init__(self, time_window: float = 5.0, min_reversals: int = 4, max_displacement: float = 0.35):
+    def __init__(self, time_window: float = 5.0, min_reversals: int = 6, max_displacement: float = 0.25):
         self.time_window = time_window
         self.min_reversals = min_reversals
         self.max_displacement = max_displacement
@@ -92,7 +92,7 @@ class OscillationDetector:
             return False, 0, 0, ""
 
         duration = self.history[-1][0] - self.history[0][0]
-        if duration < 2.5:
+        if duration < 3.0:
             return False, 0, 0, ""
 
         # Measure net displacement
@@ -105,7 +105,7 @@ class OscillationDetector:
         last_ang_sign = 0
         for entry in self.history:
             w = entry[5]
-            if abs(w) > 0.12:
+            if abs(w) > 0.25:
                 sign = 1 if w > 0 else -1
                 if last_ang_sign != 0 and sign != last_ang_sign:
                     ang_reversals += 1
@@ -116,7 +116,7 @@ class OscillationDetector:
         last_lin_sign = 0
         for entry in self.history:
             v = entry[4]
-            if abs(v) > 0.04:
+            if abs(v) > 0.08:
                 sign = 1 if v > 0 else -1
                 if last_lin_sign != 0 and sign != last_lin_sign:
                     lin_reversals += 1
@@ -126,7 +126,7 @@ class OscillationDetector:
             if ang_reversals >= self.min_reversals:
                 msg = f"Angular oscillation detected: {ang_reversals} reversals in {duration:.1f}s (disp: {displacement:.2f}m)"
                 return True, ang_reversals, lin_reversals, msg
-            if lin_reversals >= 3:
+            if lin_reversals >= 4:
                 msg = f"Linear oscillation detected: {lin_reversals} reversals in {duration:.1f}s (disp: {displacement:.2f}m)"
                 return True, ang_reversals, lin_reversals, msg
 
@@ -165,7 +165,12 @@ class DecisionEngineNode(Node):
 
         # Navigation memory & topological graph
         self.memory = NavigationMemory(self.db_path)
+        # V2.6 Phase 1: Clear any stale transient blockages from prior sessions on startup
+        unblocked = self.memory.reset_transient_blockages()
+        if unblocked > 0:
+            self.get_logger().info(f"[NAVIGATION MEMORY] Reset {unblocked} transient blocked edges on startup.")
         self.graph: TopologicalGraph = self.memory.load_graph()
+        self.graph.reset_blockages()
 
         # Robot kinematic state
         self.robot_x = self.get_parameter('initial_x').get_parameter_value().double_value
@@ -235,8 +240,9 @@ class DecisionEngineNode(Node):
         self.last_progress_time: float = time.time()
         self.last_progress_pose = (self.robot_x, self.robot_y)
 
-        # Dynamic obstacle pause/yield handling
+        # Dynamic obstacle pause/yield handling (V2.6 Phase 1)
         self.dynamic_obstacle_pause_until: float = 0.0
+        self.ttc_yield_active: bool = False
 
         # Recovery tracking
         self.recovery_in_progress: bool = False
@@ -377,6 +383,9 @@ class DecisionEngineNode(Node):
             self.state = new_state
             self.mission_status = new_state
             self.pub_state.publish(String(data=new_state))
+            if new_state in ["IDLE", "GOAL_REACHED", "FAILED"]:
+                self.ttc_yield_active = False
+                self.dynamic_obstacle_pause_until = 0.0
             msg = log_message or f"State changed from {old_state} to {new_state}"
             self._emit_event(msg, "INFO")
             self.get_logger().info(f"[STATE] {old_state} -> {new_state}: {msg}")
@@ -652,17 +661,23 @@ class DecisionEngineNode(Node):
 
         # Threshold: 1.8 seconds (Nav2 fast-stop is 2.0s; stopping at 1.8s prevents abrupt costmap lockup)
         if 0.0 < ttc < 1.8:
-            if self.dynamic_obstacle_pause_until < now:
+            if not self.ttc_yield_active or now >= self.dynamic_obstacle_pause_until:
+                # Transition: NORMAL -> TTC YIELD
+                self.ttc_yield_active = True
                 self.ttc_events_count += 1
                 self.dynamic_obstacle_pause_until = now + 1.8
                 self._stop_robot()
                 self.get_logger().warning(
-                    f"[TTC SAFETY] Approaching obstacle collision in {ttc:.2f}s! Early yield triggered."
+                    f"[TTC SAFETY] Approaching dynamic obstacle collision in {ttc:.2f}s! Initiating safety yield (1.8s)."
                 )
                 self._emit_event(
                     f"TTC ALERT: Collision risk in {ttc:.2f}s! Pausing to yield to dynamic obstacle.",
                     "WARN"
                 )
+            else:
+                # Transition: TTC YIELD -> TTC remains unsafe -> continue safe waiting
+                self.dynamic_obstacle_pause_until = max(self.dynamic_obstacle_pause_until, now + 1.8)
+                self._stop_robot()
 
     def _obstacles_callback(self, msg: SemanticObstacleArray):
         """Processes dynamic obstacles with motion classification and smart replanning (Section 9)."""
@@ -863,7 +878,17 @@ class DecisionEngineNode(Node):
 
     def _start_mission_to_destination(self, dest_id: str):
         """Initializes state, evaluates candidate routes, and dispatches first waypoint."""
+        # V2.6 Phase 1: Clear transient runtime blockages before planning new mission.
+        # Permanent topology and learned segment metrics are preserved.
+        unblocked = self.memory.reset_transient_blockages()
         self.graph = self.memory.load_graph()
+        self.graph.reset_blockages()
+        if unblocked > 0:
+            self.get_logger().info(
+                f"[NAVIGATION MEMORY] Cleared {unblocked} transient edge blockages for new mission to '{dest_id}'."
+            )
+        self.ttc_yield_active = False
+        self.dynamic_obstacle_pause_until = 0.0
         nearest = self.graph.find_nearest_node(self.robot_x, self.robot_y)
         if nearest:
             self.current_node_id = nearest
@@ -938,7 +963,7 @@ class DecisionEngineNode(Node):
         target = unvisited[0]
         self._start_mission_to_destination(target)
 
-    def _dispatch_next_waypoint(self):
+    def _dispatch_next_waypoint(self, seamless: bool = False):
         """Dispatches next topological node to Nav2 via NavigateToPose action."""
         if self.is_paused:
             return
@@ -980,13 +1005,13 @@ class DecisionEngineNode(Node):
         goal_msg.pose.pose.orientation.z = math.sin(half_theta)
         goal_msg.pose.pose.orientation.w = math.cos(half_theta)
 
-        if self._goal_handle:
+        if not seamless and self._goal_handle:
             try:
                 self._goal_handle.cancel_goal_async()
             except Exception:
                 pass
             self._goal_handle = None
-            time.sleep(0.15)
+            time.sleep(0.10)
 
         send_future = self.nav_client.send_goal_async(goal_msg)
         send_future.add_done_callback(
@@ -1192,11 +1217,27 @@ class DecisionEngineNode(Node):
 
         # Check for stuck condition when actively navigating
         if self.state == "NAVIGATING" and not self.is_paused and not self.recovery_in_progress:
-            if (now - self.last_progress_time) > self.recovery_params['stuck_timeout']:
-                dist_moved = math.hypot(self.robot_x - self.last_progress_pose[0], self.robot_y - self.last_progress_pose[1])
-                if dist_moved < 0.10:
-                    self._emit_event(f"Robot stuck near ({self.robot_x:.2f}, {self.robot_y:.2f}) for > {self.recovery_params['stuck_timeout']}s!", "WARN")
-                    self._trigger_recovery(ReplanReason.NO_PROGRESS)
+            # V2.6 Phase 1: Suspend stuck timeout during intentional safety yields (TTC or dynamic obstacle pause)
+            if now < self.dynamic_obstacle_pause_until:
+                self._stop_robot()
+                self.last_progress_time = now
+                self.last_progress_pose = (self.robot_x, self.robot_y)
+            else:
+                # Transition: TTC YIELD -> TTC CLEAR -> NORMAL
+                if self.ttc_yield_active:
+                    self.ttc_yield_active = False
+                    self.dynamic_obstacle_pause_until = 0.0
+                    self.last_progress_time = now
+                    self.last_progress_pose = (self.robot_x, self.robot_y)
+                    self.get_logger().info("[TTC SAFETY] Dynamic obstacle cleared corridor. Resuming normal navigation.")
+                    self._emit_event("TTC CLEAR: Obstacle cleared corridor. Resuming navigation.", "INFO")
+
+                # Genuine stuck detection (mechanical stall, wall collision, etc.)
+                if (now - self.last_progress_time) > self.recovery_params['stuck_timeout']:
+                    dist_moved = math.hypot(self.robot_x - self.last_progress_pose[0], self.robot_y - self.last_progress_pose[1])
+                    if dist_moved < 0.10:
+                        self._emit_event(f"Robot stuck near ({self.robot_x:.2f}, {self.robot_y:.2f}) for > {self.recovery_params['stuck_timeout']}s!", "WARN")
+                        self._trigger_recovery(ReplanReason.NO_PROGRESS)
 
         # Check for destination arrival or waypoint arrival threshold
         if self.state == "NAVIGATING" and self.active_path and self.current_target_index < len(self.active_path):
@@ -1205,7 +1246,7 @@ class DecisionEngineNode(Node):
             is_final_goal = (self.current_target_index == len(self.active_path) - 1)
             if target_node:
                 dist_to_target = math.hypot(target_node.x - self.robot_x, target_node.y - self.robot_y)
-                arrival_dist = 0.70 if is_final_goal else 0.60
+                arrival_dist = 0.50 if is_final_goal else 0.75
                 if dist_to_target <= arrival_dist:
                     if is_final_goal:
                         self._stop_robot()
@@ -1219,15 +1260,12 @@ class DecisionEngineNode(Node):
                         self._set_state("GOAL_REACHED", f"Arrived at {self.current_goal_node_id}")
                         self._navigating_to_node = None
                     else:
-                        if self._goal_handle:
-                            self._goal_handle.cancel_goal_async()
-                            self._goal_handle = None
                         prev_node = self.active_path[self.current_target_index - 1] if self.current_target_index > 0 else self.current_node_id
                         self.memory.record_traversal(prev_node, target_nid, success=True)
                         self.current_node_id = target_nid
                         self.current_target_index += 1
                         self.last_progress_time = time.time()
-                        self._dispatch_next_waypoint()
+                        self._dispatch_next_waypoint(seamless=True)
 
         # Estimate distance remaining to goal
         dist_remaining = 0.0

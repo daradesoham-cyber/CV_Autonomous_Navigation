@@ -209,6 +209,11 @@ class TopologicalGraph:
             else:
                 edge.is_blocked = True
 
+    def reset_blockages(self):
+        """V2.6 Phase 1: Unblock all edges (e.g. when transient obstacles clear or starting a new mission)."""
+        for edge in self.edges.values():
+            edge.is_blocked = False
+
     def find_nearest_node(self, x: float, y: float) -> Optional[str]:
         """Find the ID of the node closest to metric position (x, y)."""
         best_id = None

@@ -1,0 +1,11 @@
+{
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "num_runs": 200,
+  "mean_latency_ms": 5.17,
+  "std_latency_ms": 0.45,
+  "p95_latency_ms": 5.62,
+  "p99_latency_ms": 6.68,
+  "throughput_fps": 193.6,
+  "vram_allocated_mb": 19.2,
+  "vram_reserved_mb": 60.0
+}

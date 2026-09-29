@@ -1,0 +1,48 @@
+[
+  {
+    "scenario": "Reception_To_Warehouse_Bypass",
+    "blocked_edge": [
+      "corridor_east_1",
+      "junction_2"
+    ],
+    "before": {
+      "route": [
+        "reception",
+        "junction_1",
+        "corridor_east_1",
+        "junction_2",
+        "east_bypass_1",
+        "east_bypass_2",
+        "wh_junction_6",
+        "wh_aisle_south",
+        "warehouse"
+      ],
+      "distance_m": 22.84,
+      "cost": 870.48
+    },
+    "after": {
+      "route": [
+        "reception",
+        "junction_1",
+        "central_spine_1",
+        "junction_4",
+        "office_corridor",
+        "junction_5",
+        "office_wh_bypass",
+        "warehouse"
+      ],
+      "distance_m": 23.6,
+      "cost": 873.32,
+      "detour_distance_m": 0.76
+    },
+    "runtime_verification": {
+      "replans_count": 0,
+      "ttc_yields": 0,
+      "min_clearance_m": 1.26,
+      "collisions": 0,
+      "classification": "PURPOSEFUL_REPLAN",
+      "replan_cascade_prevented": true
+    },
+    "verified": true
+  }
+]

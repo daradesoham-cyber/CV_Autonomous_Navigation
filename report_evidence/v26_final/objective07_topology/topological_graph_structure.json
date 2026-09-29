@@ -1,0 +1,74 @@
+{
+  "version": "2.6",
+  "facility_dimensions": "32m x 26m",
+  "total_nodes": 48,
+  "total_edges": 100,
+  "semantic_destinations_count": 11,
+  "destinations": {
+    "room_a": {
+      "x": -7.0,
+      "y": 9.5,
+      "yaw": 1.5708
+    },
+    "storage": {
+      "x": -6.5,
+      "y": 3.0,
+      "yaw": 1.5708
+    },
+    "hospital": {
+      "x": 6.5,
+      "y": -9.5,
+      "yaw": -1.5708
+    },
+    "loading": {
+      "x": 12.0,
+      "y": 2.0,
+      "yaw": 0.0
+    },
+    "charging": {
+      "x": -13.5,
+      "y": 2.0,
+      "yaw": 1.5708
+    },
+    "warehouse": {
+      "x": 8.0,
+      "y": 7.0,
+      "yaw": 1.5708
+    },
+    "exit": {
+      "x": -12.5,
+      "y": -9.0,
+      "yaw": -1.5708
+    },
+    "office": {
+      "x": 0.0,
+      "y": 10.0,
+      "yaw": 1.5708
+    },
+    "room_b": {
+      "x": 6.5,
+      "y": -9.5,
+      "yaw": -1.5708
+    },
+    "reception": {
+      "x": 0.0,
+      "y": -8.6,
+      "yaw": 1.5708
+    },
+    "utility_service": {
+      "x": -15.0,
+      "y": -4.5,
+      "yaw": 3.14159
+    }
+  },
+  "multi_criteria_cost_weights": {
+    "distance_weight": 1.0,
+    "obstacle_weight": 3.5,
+    "history_failure_weight": 5.0,
+    "congestion_weight": 2.0,
+    "turn_penalty_weight": 0.8,
+    "narrow_corridor_penalty": 2.5,
+    "travel_time_weight": 0.5
+  },
+  "alternative_routes_generated_per_query": "1 to 3 candidate detours"
+}

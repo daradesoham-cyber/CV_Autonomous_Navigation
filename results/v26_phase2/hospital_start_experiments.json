@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Baseline_Facing_South",
+    "start_pose": {
+      "x": 6.5,
+      "y": -9.5,
+      "yaw": -1.57,
+      "yaw_deg": -90.0
+    },
+    "goal": "STORAGE",
+    "test_duration_sec": 35.0,
+    "first_10s_behavior": {
+      "distance_m": 0.18,
+      "state": "NAVIGATING",
+      "recoveries": 1,
+      "replans": 3
+    },
+    "cleared_doorway": false,
+    "time_to_doorway_sec": -1.0,
+    "final_distance_travelled_m": 0.86,
+    "min_clearance_m": 0.37,
+    "total_recoveries": 3,
+    "total_replans": 8,
+    "total_ttc_yields": 4,
+    "collisions": 0,
+    "outcome": "TRAPPED_IN_WARD",
+    "samples_count": 123,
+    "description": "Baseline pose from V2.5 (yaw=-1.57, facing away from doorway)"
+  },
+  {
+    "name": "Candidate1_Facing_North",
+    "start_pose": {
+      "x": 6.5,
+      "y": -9.5,
+      "yaw": 1.57,
+      "yaw_deg": 90.0
+    },
+    "goal": "STORAGE",
+    "test_duration_sec": 35.0,
+    "first_10s_behavior": {
+      "distance_m": 0.0,
+      "state": "NAVIGATING",
+      "recoveries": 1,
+      "replans": 3
+    },
+    "cleared_doorway": false,
+    "time_to_doorway_sec": -1.0,
+    "final_distance_travelled_m": 0.34,
+    "min_clearance_m": 0.3,
+    "total_recoveries": 2,
+    "total_replans": 9,
+    "total_ttc_yields": 3,
+    "collisions": 0,
+    "outcome": "TRAPPED_IN_WARD",
+    "samples_count": 123,
+    "description": "Same (x, y) between beds, but oriented toward doorway (yaw=+1.57)"
+  },
+  {
+    "name": "Candidate2_Center_Aisle",
+    "start_pose": {
+      "x": 6.0,
+      "y": -9.0,
+      "yaw": 1.57,
+      "yaw_deg": 90.0
+    },
+    "goal": "STORAGE",
+    "test_duration_sec": 35.0,
+    "first_10s_behavior": {
+      "distance_m": 0.0,
+      "state": "NAVIGATING",
+      "recoveries": 0,
+      "replans": 3
+    },
+    "cleared_doorway": false,
+    "time_to_doorway_sec": -1.0,
+    "final_distance_travelled_m": 0.0,
+    "min_clearance_m": 0.41,
+    "total_recoveries": 0,
+    "total_replans": 9,
+    "total_ttc_yields": 2,
+    "collisions": 0,
+    "outcome": "TRAPPED_IN_WARD",
+    "samples_count": 121,
+    "description": "Shifted to ward center aisle (x=6.0, y=-9.0, yaw=+1.57)"
+  }
+]
