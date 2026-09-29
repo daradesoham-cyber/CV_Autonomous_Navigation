@@ -1775,16 +1775,26 @@
       const signOverlay = document.getElementById('cameraSignOverlay');
       if (signs.length > 0) {
         const topSign = signs[0];
+        const distNum = (topSign.distance !== undefined && topSign.distance !== null && !isNaN(topSign.distance))
+            ? Number(topSign.distance) : null;
+        const distStr = distNum !== null ? `${distNum.toFixed(1)}m` : '--';
+        const dirStr = topSign.direction || '--';
+        const confNum = (topSign.confidence !== undefined && topSign.confidence !== null && !isNaN(topSign.confidence))
+            ? Number(topSign.confidence) : 0.0;
+        const confPct = `${(confNum * 100).toFixed(0)}%`;
+
         if (signOverlay) {
           signOverlay.style.display = 'flex';
-          document.getElementById('camOverlaySignText').innerText = topSign.text || '--';
-          document.getElementById('camOverlaySignMeta').innerText = `Conf: ${(topSign.confidence * 100).toFixed(0)}% | Dist: ${topSign.distance.toFixed(1)}m | Dir: ${topSign.direction || '--'}`;
+          const overlayText = document.getElementById('camOverlaySignText');
+          if (overlayText) overlayText.innerText = topSign.text || '--';
+          const overlayMeta = document.getElementById('camOverlaySignMeta');
+          if (overlayMeta) overlayMeta.innerText = `Conf: ${confPct} | Dist: ${distStr} | Dir: ${dirStr}`;
         }
-        if (document.getElementById('inspectSignConf')) document.getElementById('inspectSignConf').innerText = `${(topSign.confidence * 100).toFixed(0)}% CONF`;
+        if (document.getElementById('inspectSignConf')) document.getElementById('inspectSignConf').innerText = `${confPct} CONF`;
         if (document.getElementById('inspectSignText')) document.getElementById('inspectSignText').innerText = topSign.text || '--';
         if (document.getElementById('inspectSignDest')) document.getElementById('inspectSignDest').innerText = topSign.associated_destination || 'None';
         if (document.getElementById('inspectSignNode')) document.getElementById('inspectSignNode').innerText = topSign.target_node_id || '--';
-        if (document.getElementById('inspectSignDist')) document.getElementById('inspectSignDist').innerText = `${topSign.distance.toFixed(1)}m (${topSign.direction || '--'})`;
+        if (document.getElementById('inspectSignDist')) document.getElementById('inspectSignDist').innerText = `${distStr} (${dirStr})`;
         if (document.getElementById('inspectorStatusPill')) {
           document.getElementById('inspectorStatusPill').innerText = 'LANDMARK DETECTED';
           document.getElementById('inspectorStatusPill').style.color = 'var(--accent-emerald)';

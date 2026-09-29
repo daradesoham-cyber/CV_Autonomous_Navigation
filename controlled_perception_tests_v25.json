@@ -1,0 +1,87 @@
+{
+  "Test_A_Empty_Hallway": {
+    "total_evaluated": 30,
+    "false_positives": 0,
+    "fp_rate_pct": 0.0,
+    "status": "PASS",
+    "details": []
+  },
+  "Test_B_Empty_Wall": {
+    "total_evaluated": 20,
+    "false_positives": 0,
+    "fp_rate_pct": 0.0,
+    "status": "PASS",
+    "details": []
+  },
+  "Test_C_Floor_Corner_Shadow": {
+    "total_evaluated": 15,
+    "false_positives": 0,
+    "fp_rate_pct": 0.0,
+    "status": "PASS",
+    "details": []
+  },
+  "Test_D_Hospital_Bed": {
+    "total_samples": 30,
+    "true_positives": 27,
+    "recall_pct": 90.0,
+    "mean_confidence": 0.977,
+    "status": "PASS"
+  },
+  "Test_E_Cart": {
+    "total_samples": 30,
+    "true_positives": 22,
+    "recall_pct": 73.3,
+    "mean_confidence": 0.964,
+    "status": "FAIL"
+  },
+  "Test_F_Forklift": {
+    "total_samples": 30,
+    "true_positives": 23,
+    "recall_pct": 76.7,
+    "mean_confidence": 0.932,
+    "status": "FAIL"
+  },
+  "Test_G_Person": {
+    "total_samples": 30,
+    "true_positives": 30,
+    "recall_pct": 100.0,
+    "mean_confidence": 0.955,
+    "status": "PASS"
+  },
+  "Test_H_Directional_Signs": {
+    "subsets": {
+      "near": {
+        "samples": 20,
+        "detected": 7,
+        "recall_pct": 35.0,
+        "mean_conf": 0.863
+      },
+      "medium": {
+        "samples": 20,
+        "detected": 13,
+        "recall_pct": 65.0,
+        "mean_conf": 0.972
+      },
+      "far": {
+        "samples": 20,
+        "detected": 14,
+        "recall_pct": 70.0,
+        "mean_conf": 0.953
+      },
+      "frontal": {
+        "samples": 20,
+        "detected": 13,
+        "recall_pct": 65.0,
+        "mean_conf": 0.955
+      },
+      "oblique": {
+        "samples": 20,
+        "detected": 11,
+        "recall_pct": 55.0,
+        "mean_conf": 0.959
+      }
+    },
+    "overall_recall_pct": 58.0,
+    "status": "FAIL"
+  }
+}

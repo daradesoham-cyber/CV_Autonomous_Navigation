@@ -1,0 +1,15 @@
+path: /home/soham-darade/CV_Autonomous_Navigation/datasets/v25_cv_dataset/eval_subsets/lighting_dim
+val: images
+nc: 10
+names:
+  0: person
+  1: cart
+  2: forklift
+  3: pallet
+  4: box
+  5: obstacle
+  6: door
+  7: charging_station
+  8: hospital_bed
+  9: directional_sign
+train: images

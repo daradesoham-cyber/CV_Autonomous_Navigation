@@ -37,7 +37,7 @@ def generate_launch_description():
             'slam': 'false',
             'navigation': 'true',
             'perception': 'true',
-            'model_path': '/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v24.pt',
+            'model_path': '/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v25.pt',
             'rviz': rviz,
             'headless': headless
         }.items()

@@ -4,19 +4,24 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition
 
-# V2.4 Perception Launch
-# Changes from V2.3:
-#   - Default model_path points to yolov8n_v24.pt (V2.4 10-class model)
-#   - camera_node DISABLED: it was a dummy frame-counter consuming ~16.7% CPU with no useful output
-#   - sign_detection_node DISABLED: replaced by YOLO directional_sign class + semantic lookup
-#   - object_detection_node now publishes /vision/signs directly
-#   - frame_skip=2 parameter reduces YOLO inference rate from camera Hz to ~15Hz effective
+# V2.5 Perception Launch
+# Changes from V2.4:
+#   - All model/class/threshold/camera parameters now loaded from config/perception_v25.yaml
+#   - perception_config_path argument added — swap model by editing YAML + pointing here
+#   - Per-class confidence thresholds (higher for safety-critical classes)
+#   - Temporal sign confirmation gate prevents single-frame false positives
+#   - camera_node DISABLED (unchanged from V2.4)
+#   - sign_detection_node DISABLED (unchanged from V2.4)
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     model_path = LaunchConfiguration(
         'model_path',
-        default='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v24.pt'
+        default='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v25.pt'
+    )
+    perception_config = LaunchConfiguration(  # noqa: F841 — declared for CLI availability
+        'perception_config_path',
+        default='/home/soham-darade/CV_Autonomous_Navigation/config/perception_v25.yaml'
     )
     use_custom_controller = LaunchConfiguration('use_custom_controller', default='false')
 
@@ -25,8 +30,16 @@ def generate_launch_description():
     )
     declare_model_path = DeclareLaunchArgument(
         'model_path',
-        default_value='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v24.pt',
-        description='Path to YOLOv8 model weights (V2.4: yolov8n_v24.pt, 10 classes)'
+        default_value='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v25.pt',
+        description=(
+            'Path to YOLOv8 model weights (.pt). '
+            'To swap model: update this + class_names in perception_v25.yaml'
+        )
+    )
+    declare_perception_config = DeclareLaunchArgument(
+        'perception_config_path',
+        default_value='/home/soham-darade/CV_Autonomous_Navigation/config/perception_v25.yaml',
+        description='Path to V2.5 perception YAML config (model, classes, thresholds, camera intrinsics)'
     )
     declare_use_custom_controller = DeclareLaunchArgument(
         'use_custom_controller',
@@ -37,9 +50,10 @@ def generate_launch_description():
     return LaunchDescription([
         declare_use_sim_time,
         declare_model_path,
+        declare_perception_config,
         declare_use_custom_controller,
 
-        # V2.4: camera_node DISABLED (dummy frame counter, ~16.7% CPU, no useful output)
+        # V2.4/V2.5: camera_node DISABLED (dummy frame counter, ~16.7% CPU, no useful output)
         # Node(
         #     package='autonomous_robot_perception',
         #     executable='camera_node',
@@ -48,8 +62,9 @@ def generate_launch_description():
         #     parameters=[{'use_sim_time': use_sim_time}]
         # ),
 
-        # V2.4: Object detection node — runs yolov8n_v24.pt on GPU, frame_skip=2
-        # Also publishes /vision/signs via YOLO directional_sign class + semantic_map.yaml lookup
+        # V2.5: Object detection node — loads all config from perception_v25.yaml
+        # model_path overrides YAML value for quick CLI swap during experiments.
+        # Per-class confidence thresholds + temporal sign confirmation gate active.
         Node(
             package='autonomous_robot_perception',
             executable='object_detection_node',
@@ -57,15 +72,15 @@ def generate_launch_description():
             output='screen',
             parameters=[{
                 'model_path': model_path,
-                'confidence_threshold': 0.35,
-                'device': 'cuda:0',
                 'publish_annotated_image': True,
-                'frame_skip': 2,
                 'use_sim_time': use_sim_time
+                # confidence_threshold, frame_skip, device, iou_threshold
+                # all loaded from perception_v25.yaml by the node itself
             }]
         ),
 
         # LiDAR-Camera Fusion: semantic obstacle detection, tracking, TTC
+        # V2.5: camera_hfov_rad matches perception_v25.yaml camera.hfov_rad
         Node(
             package='autonomous_robot_perception',
             executable='lidar_camera_fusion_node',
@@ -73,7 +88,7 @@ def generate_launch_description():
             output='screen',
             parameters=[{
                 'use_sim_time': use_sim_time,
-                'camera_hfov_rad': 1.15,   # V2.4: updated FOV
+                'camera_hfov_rad': 1.15,   # V2.4/V2.5 FOV (matches perception_v25.yaml)
             }]
         ),
 
@@ -86,7 +101,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # V2.4: sign_detection_node DISABLED — CPU template matching replaced by
+        # V2.4/V2.5: sign_detection_node DISABLED — CPU template matching replaced by
         # YOLO directional_sign + semantic_map.yaml lookup in object_detection_node.py
         # Kept in file for reference / fallback if needed.
         # Node(

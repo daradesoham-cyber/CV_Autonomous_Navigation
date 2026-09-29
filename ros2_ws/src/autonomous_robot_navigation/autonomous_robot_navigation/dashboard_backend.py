@@ -14,6 +14,7 @@ import math
 import uuid
 import threading
 from collections import deque
+from typing import Optional, Dict, Any
 
 # Ensure Python AI virtual environment and ROS packages are in sys.path
 venv_site = '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/site-packages'
@@ -106,6 +107,18 @@ class DashboardBridgeNode(Node):
         self.latest_annotated_frame = None
         self.latest_signs_frame = None
         self.latest_detected_signs = []
+        self._latest_signs_ts = 0.0
+
+        # Load semantic map for sign lookups
+        self.semantic_map = {}
+        sem_map_path = '/home/soham-darade/CV_Autonomous_Navigation/config/semantic_map.yaml'
+        if os.path.exists(sem_map_path):
+            try:
+                import yaml
+                with open(sem_map_path, 'r') as f:
+                    self.semantic_map = yaml.safe_load(f) or {}
+            except Exception as e:
+                self.get_logger().warn(f"Failed to load semantic map: {e}")
 
         # V2.4: Pre-encoded JPEG caches — encode once in ROS callback, serve bytes on HTTP request
         # This eliminates synchronous cv2.imencode() on the Flask request thread (~30.7% CPU saving)
@@ -372,14 +385,49 @@ class DashboardBridgeNode(Node):
 
     def _signs_data_cb(self, msg: SignDetectionArray):
         signs = []
+        now = time.time()
+        signs_db = self.semantic_map.get('signs', {})
+        rx = self.robot_pose.get('x', 0.0)
+        ry = self.robot_pose.get('y', 0.0)
+
         for s in msg.signs:
+            # Find best match in semantic map by text or destination
+            matched_sign = None
+            s_text_clean = s.text.strip().upper()
+            for s_id, s_data in signs_db.items():
+                if s_data.get('text', '').strip().upper() == s_text_clean:
+                    matched_sign = s_data
+                    break
+
+            # Calculate distance and destination metadata
+            dist = 2.0  # reasonable fallback
+            dest_name = s.text.title()
+            node_id = 'junction'
+            if matched_sign:
+                dest_name = matched_sign.get('destination', s.text).replace('_', ' ').title()
+                node_id = matched_sign.get('junction', 'junction')
+                wall = matched_sign.get('wall_attachment', {})
+                sx = wall.get('x') if isinstance(wall, dict) else None
+                sy = wall.get('y') if isinstance(wall, dict) else None
+                if sx is not None and sy is not None and (rx != 0.0 or ry != 0.0):
+                    dist = round(float(math.hypot(sx - rx, sy - ry)), 1)
+            else:
+                # Estimate distance from bbox height
+                h_px = max(10.0, float(s.y_max - s.y_min))
+                dist = round(float(max(0.5, min(8.0, 200.0 / h_px))), 1)
+
             signs.append({
                 'text': s.text,
                 'direction': s.direction,
                 'confidence': round(float(s.confidence), 2),
-                'bbox': [float(s.x_min), float(s.y_min), float(s.x_max), float(s.y_max)]
+                'distance': dist,
+                'associated_destination': dest_name,
+                'target_node_id': node_id,
+                'bbox': [float(s.x_min), float(s.y_min), float(s.x_max), float(s.y_max)],
+                'timestamp': now
             })
         self.latest_detected_signs = signs
+        self._latest_signs_ts = now
 
     def _state_cb(self, msg: String):
         self.mission_state = msg.data.strip()
@@ -627,6 +675,11 @@ def create_app(bridge: DashboardBridgeNode, db_path: str):
             'dashboard_latency_ms': dash_latency
         }
 
+        # Check sign staleness: clear if older than 2.0s
+        signs_out = bridge.latest_detected_signs
+        if (time.time() - getattr(bridge, '_latest_signs_ts', 0.0)) > 2.0:
+            signs_out = []
+
         return jsonify({
             'state': bridge.mission_state,
             'mission_status': bridge.mission_status,
@@ -652,7 +705,7 @@ def create_app(bridge: DashboardBridgeNode, db_path: str):
             'reliability_pct': bridge.reliability_pct,
             'cost_breakdown': bridge.cost_breakdown,
             'fused_objects': bridge.fused_objects,
-            'detected_signs': bridge.latest_detected_signs,
+            'detected_signs': signs_out,
             'lidar': bridge.lidar_stats,
             'camera': bridge.camera_stats,
             'recent_events': list(bridge.event_logs)[-25:],

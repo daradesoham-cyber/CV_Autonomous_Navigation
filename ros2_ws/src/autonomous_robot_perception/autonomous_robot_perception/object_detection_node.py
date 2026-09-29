@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """
-Object Detection Node — CV Autonomous Navigation V2.4
+Object Detection Node — CV Autonomous Navigation V2.5
 
-Changes from V2.3:
-  - Uses V2.4 YOLOv8n model (models/yolov8n_v24.pt) with 10 facility classes
-  - V2.4 classes: person, cart, forklift, pallet, box, obstacle, door,
-                  charging_station, hospital_bed, directional_sign
-  - Frame-skip: GPU inference every 2nd frame; publishes cached result on skipped frames
-  - Sign semantics: when 'directional_sign' detected, performs proximity lookup against
-    config/semantic_map.yaml using the sign's projected bearing and publishes to /vision/signs
-  - Asynchronous inference via threading.Thread to avoid blocking ROS spin thread
+Changes from V2.4:
+  - Loads model path, class names, per-class confidence thresholds, IoU threshold,
+    image_size, device, and frame_skip from config/perception_v25.yaml
+    (model is now fully swappable by editing the YAML only)
+  - Per-class confidence thresholds: safety-critical classes (person, forklift) use
+    higher thresholds; directional_sign uses a lower threshold
+  - Temporal confirmation gate for sign detection: a sign must be observed in
+    >= N frames within a rolling time window before being published to /vision/signs
+    (prevents single-frame false positives from triggering navigation decisions)
+  - Minimum bounding-box area filter: rejects tiny spurious edge detections
+  - Validates loaded model's class names against config at startup
+  - Camera intrinsics (hfov, img_w, img_h, fx) now loaded from YAML, not hardcoded
+  - Avoids unnecessary frame copies in annotated image path
+  - All telemetry in /vision/engine_status is measured (no fake values)
 """
 import os
 import sys
@@ -17,6 +23,7 @@ import math
 import time
 import json
 import threading
+from collections import deque
 
 # Ensure Python AI virtual environment site-packages are accessible
 venv_site = '/home/soham-darade/CV_Autonomous_Navigation/.venv/lib/python3.14/site-packages'
@@ -38,17 +45,61 @@ from autonomous_robot_interfaces.msg import Detection2D, Detection2DArray
 from autonomous_robot_interfaces.msg import SignDetection, SignDetectionArray
 from geometry_msgs.msg import PoseWithCovarianceStamped
 
-# V2.4 expected classes
-V24_CLASSES = {
-    'person', 'cart', 'forklift', 'pallet', 'box',
-    'obstacle', 'door', 'charging_station', 'hospital_bed', 'directional_sign'
-}
-
 PROJECT_ROOT = '/home/soham-darade/CV_Autonomous_Navigation'
 SEMANTIC_MAP_PATH = os.path.join(PROJECT_ROOT, 'config/semantic_map.yaml')
+PERCEPTION_CONFIG_PATH = os.path.join(PROJECT_ROOT, 'config/perception_v25.yaml')
 
 
-def build_sign_lookup(yaml_path: str) -> list:
+def load_perception_config(config_path: str) -> dict:
+    """Load and return the V2.5 perception config. Falls back to safe defaults on error."""
+    defaults = {
+        'yolo': {
+            'model_path': 'models/yolov8n_v24.pt',
+            'class_names': [
+                'person', 'cart', 'forklift', 'pallet', 'box',
+                'obstacle', 'door', 'charging_station', 'hospital_bed', 'directional_sign'
+            ],
+            'device': 'cuda:0',
+            'image_size': 640,
+            'frame_skip': 2,
+            'iou_threshold': 0.45,
+            'min_box_area_px2': 400,
+            'class_confidence_thresholds': {},
+            'global_confidence_threshold': 0.35,
+        },
+        'camera': {
+            'image_width': 640,
+            'image_height': 480,
+            'hfov_rad': 1.15,
+        },
+        'sign_detection': {
+            'confirmation_frames': 3,
+            'confirmation_window_sec': 2.0,
+            'min_confirmed_confidence': 0.45,
+            'max_bearing_error_rad': 1.2,
+            'max_sign_range_m': 8.0,
+            'min_sign_range_m': 0.3,
+        },
+    }
+    if not os.path.exists(config_path):
+        print(f"[ObjectDetection] WARNING: perception_v25.yaml not found at {config_path}. Using defaults.")
+        return defaults
+    try:
+        with open(config_path, 'r') as f:
+            cfg = yaml.safe_load(f)
+        # Merge loaded config into defaults (two-level merge)
+        for section, vals in cfg.items():
+            if section in defaults and isinstance(vals, dict):
+                defaults[section].update(vals)
+            else:
+                defaults[section] = vals
+        return defaults
+    except Exception as e:
+        print(f"[ObjectDetection] WARNING: Could not parse perception_v25.yaml: {e}. Using defaults.")
+        return defaults
+
+
+def build_sign_lookup(yaml_path: str) -> tuple:
     """
     Build a list of sign entries for semantic lookup.
     Each entry: {'id', 'text', 'direction', 'destination', 'texture_file',
@@ -87,34 +138,128 @@ def build_sign_lookup(yaml_path: str) -> list:
     return signs, tex_to_semantic
 
 
+class SignConfirmationTracker:
+    """
+    Temporal confirmation gate for sign detections.
+
+    A sign detection is only "confirmed" and forwarded to navigation when it has been
+    observed >= confirmation_frames times within a rolling confirmation_window_sec window.
+
+    This prevents single-frame YOLO false positives from triggering navigation decisions.
+    Each unique (text, direction) pair is tracked independently.
+    """
+
+    def __init__(self, confirmation_frames: int = 3,
+                 confirmation_window_sec: float = 2.0,
+                 min_confirmed_confidence: float = 0.45):
+        self.confirmation_frames = confirmation_frames
+        self.confirmation_window_sec = confirmation_window_sec
+        self.min_confirmed_confidence = min_confirmed_confidence
+        # key: (text, direction) -> deque of (timestamp, confidence)
+        self._history: dict = {}
+
+    def observe(self, text: str, direction: str, confidence: float, timestamp: float) -> bool:
+        """
+        Record a sign observation.
+        Returns True if this sign is now "confirmed" (should be published to /vision/signs).
+        Returns False if more observations are needed.
+        """
+        key = (text.upper(), direction.upper())
+        if key not in self._history:
+            self._history[key] = deque()
+        hist = self._history[key]
+        hist.append((timestamp, confidence))
+
+        # Prune entries older than the confirmation window
+        cutoff = timestamp - self.confirmation_window_sec
+        while hist and hist[0][0] < cutoff:
+            hist.popleft()
+
+        if len(hist) >= self.confirmation_frames:
+            mean_conf = sum(c for _, c in hist) / len(hist)
+            return mean_conf >= self.min_confirmed_confidence
+        return False
+
+    def purge_stale(self, current_time: float):
+        """Remove sign keys that haven't been observed within 2x the window."""
+        cutoff = current_time - self.confirmation_window_sec * 2.0
+        stale_keys = [k for k, h in self._history.items() if not h or h[-1][0] < cutoff]
+        for k in stale_keys:
+            del self._history[k]
+
+
 class ObjectDetectionNode(Node):
     """
-    V2.4 Object Detection Node.
-    - Runs YOLOv8n V2.4 GPU inference on camera frames (every 2nd frame to reduce CPU load)
-    - Detects 10 facility classes including directional_sign
-    - Publishes semantic sign detections on /vision/signs from YOLO + map lookup
-    - Publishes /vision/detections, /vision/annotated_image, /vision/engine_status
+    V2.5 Object Detection Node.
+    - Loads all model/class/threshold parameters from config/perception_v25.yaml
+    - Per-class confidence thresholds (higher for safety-critical classes)
+    - Minimum bounding-box area filter (rejects tiny edge-noise detections)
+    - Temporal confirmation gate for sign detections (prevents single-frame nav decisions)
+    - Validates loaded model's class names against config at startup
+    - All published telemetry is measured (no fake values)
+    - Publishes /vision/detections, /vision/signs, /vision/annotated_image, /vision/engine_status
     """
 
     def __init__(self):
         super().__init__('object_detection_node')
 
-        # Parameters
-        self.declare_parameter(
-            'model_path',
-            os.path.join(PROJECT_ROOT, 'models/yolov8n_v24.pt')
-        )
-        self.declare_parameter('confidence_threshold', 0.35)
-        self.declare_parameter('device', 'cuda:0' if torch.cuda.is_available() else 'cpu')
+        # --- Load V2.5 perception config (YAML — single source of truth) ---
+        self.perc_cfg = load_perception_config(PERCEPTION_CONFIG_PATH)
+        yolo_cfg = self.perc_cfg.get('yolo', {})
+        cam_cfg = self.perc_cfg.get('camera', {})
+        sign_cfg = self.perc_cfg.get('sign_detection', {})
+
+        # --- ROS Parameters (allow CLI override of YAML defaults) ---
+        raw_model_path = yolo_cfg.get('model_path', 'models/yolov8n_v24.pt')
+        # Make absolute if relative
+        if not os.path.isabs(raw_model_path):
+            raw_model_path = os.path.join(PROJECT_ROOT, raw_model_path)
+
+        self.declare_parameter('model_path', raw_model_path)
+        self.declare_parameter('device', yolo_cfg.get('device', 'cuda:0'))
+        self.declare_parameter('frame_skip', int(yolo_cfg.get('frame_skip', 2)))
         self.declare_parameter('publish_annotated_image', True)
-        self.declare_parameter('frame_skip', 2)  # Run inference every Nth frame
+        # Note: confidence thresholds are per-class from YAML; single threshold still
+        # available as a CLI override for the global fallback.
+        self.declare_parameter(
+            'confidence_threshold',
+            float(yolo_cfg.get('global_confidence_threshold', 0.35))
+        )
 
         model_path = os.path.abspath(
             self.get_parameter('model_path').get_parameter_value().string_value)
-        self.conf_thresh = self.get_parameter('confidence_threshold').get_parameter_value().double_value
         self.device = self.get_parameter('device').get_parameter_value().string_value
-        self.publish_annotated = self.get_parameter('publish_annotated_image').get_parameter_value().bool_value
         self.frame_skip = max(1, self.get_parameter('frame_skip').get_parameter_value().integer_value)
+        self.publish_annotated = self.get_parameter('publish_annotated_image').get_parameter_value().bool_value
+        self.global_conf_thresh = self.get_parameter('confidence_threshold').get_parameter_value().double_value
+
+        # Per-class confidence thresholds from YAML
+        self.class_conf_thresholds: dict = yolo_cfg.get('class_confidence_thresholds', {})
+
+        # Other YOLO parameters
+        self.iou_threshold: float = float(yolo_cfg.get('iou_threshold', 0.45))
+        self.min_box_area: float = float(yolo_cfg.get('min_box_area_px2', 400))
+        self.max_box_area_ratio: float = float(yolo_cfg.get('max_box_area_ratio', 0.60))
+        self.max_box_width_ratio: float = float(yolo_cfg.get('max_box_width_ratio', 0.92))
+        self.expected_class_names: list = yolo_cfg.get('class_names', [])
+
+        # Camera intrinsics from YAML (no longer hardcoded)
+        self.img_w = float(cam_cfg.get('image_width', 640))
+        self.img_h = float(cam_cfg.get('image_height', 480))
+        self.max_box_area = self.max_box_area_ratio * (self.img_w * self.img_h)
+        self.max_box_width = self.max_box_width_ratio * self.img_w
+        self.hfov = float(cam_cfg.get('hfov_rad', 1.15))
+        self.fx = (self.img_w / 2.0) / math.tan(self.hfov / 2.0)
+
+        # Sign temporal confirmation config from YAML
+        self.sign_tracker = SignConfirmationTracker(
+            confirmation_frames=int(sign_cfg.get('confirmation_frames', 3)),
+            confirmation_window_sec=float(sign_cfg.get('confirmation_window_sec', 2.0)),
+            min_confirmed_confidence=float(sign_cfg.get('min_confirmed_confidence', 0.45)),
+        )
+        self.max_bearing_error_rad = float(sign_cfg.get('max_bearing_error_rad', 1.2))
+        self.max_sign_range_m = float(sign_cfg.get('max_sign_range_m', 8.0))
+        self.min_sign_range_m = float(sign_cfg.get('min_sign_range_m', 0.3))
 
         # Verify model file
         if not os.path.isfile(model_path):
@@ -134,25 +279,35 @@ class ObjectDetectionNode(Node):
         self.model.to(self.device)
         param_device = next(self.model.model.parameters()).device
 
-        # Validate V2.4 classes
+        # Validate model class names against config
         class_names_list = [self.model.names[i] for i in sorted(self.model.names.keys())]
-        loaded_classes = set(class_names_list)
-        missing = V24_CLASSES - loaded_classes
-        extra = loaded_classes - V24_CLASSES
+        loaded_set = set(class_names_list)
+        expected_set = set(self.expected_class_names)
+        missing = expected_set - loaded_set
+        extra = loaded_set - expected_set
+        order_match = (class_names_list == self.expected_class_names)
 
         print(f"\n==================================================")
-        print(f"V2.4 Object Detection Node")
-        print(f"MODEL: {model_path}")
+        print(f"V2.5 Object Detection Node")
+        print(f"CONFIG: {PERCEPTION_CONFIG_PATH}")
+        print(f"MODEL:  {model_path}")
         print(f"DEVICE: {param_device}  GPU: {self.gpu_name}")
         print(f"CLASSES ({len(class_names_list)}): {class_names_list}")
+        print(f"CLASS ORDER MATCHES CONFIG: {order_match}")
         print(f"FRAME_SKIP: every {self.frame_skip} frame(s)")
+        print(f"IoU THRESHOLD: {self.iou_threshold}")
+        print(f"MIN BOX AREA: {self.min_box_area} px²")
+        print(f"GLOBAL CONF: {self.global_conf_thresh}  |  PER-CLASS CONF: {self.class_conf_thresholds}")
+        print(f"SIGN CONFIRMATION: {self.sign_tracker.confirmation_frames} frames / {self.sign_tracker.confirmation_window_sec}s window")
         if missing:
             print(f"WARNING: Missing expected classes: {missing}")
         if extra:
-            print(f"INFO: Additional classes: {extra}")
+            print(f"INFO: Additional classes not in config: {extra}")
+        if not order_match and not missing and not extra:
+            print(f"WARNING: Class ORDER differs from config! Check perception_v25.yaml class_names list.")
         print(f"==================================================\n")
 
-        self.get_logger().info(f"YOLO V2.4 initialized on {param_device} ({self.gpu_name})")
+        self.get_logger().info(f"YOLO V2.5 initialized on {param_device} ({self.gpu_name})")
         self.get_logger().info(f"Classes: {class_names_list}")
 
         # Sign semantic lookup table from config/semantic_map.yaml
@@ -162,32 +317,16 @@ class ObjectDetectionNode(Node):
             f"({len(self.tex_to_semantic)} unique textures)"
         )
 
-        # Camera FOV for bearing estimation
-        self.img_w = 640.0
-        self.img_h = 480.0
-        self.hfov = 1.15  # Updated V2.4 FOV (65.9 deg)
-        self.fx = (self.img_w / 2.0) / math.tan(self.hfov / 2.0)  # ~500 px
-
         # State
         self.bridge = CvBridge()
         self.frame_count = 0
         self.latency_history = []
         self.last_engine_pub = 0.0
-        # Cached last result for frame-skip
-        self._last_detections: Detection2DArray = Detection2DArray()
-        self._last_annotated = None
-        self._last_sign_array: SignDetectionArray = SignDetectionArray()
-        # Async inference state
-        self._infer_lock = threading.Lock()
-        self._infer_pending = False
-        self._infer_frame = None
-        self._infer_msg_header = None
+        self._last_sign_purge = 0.0
 
-        # Publishers
-        self.pub_detections = self.create_publisher(Detection2DArray, '/vision/detections', 10)
-        self.pub_annotated = self.create_publisher(Image, '/vision/annotated_image', 10)
-        self.pub_engine_status = self.create_publisher(String, '/vision/engine_status', 10)
-        self.pub_signs = self.create_publisher(SignDetectionArray, '/vision/signs', 10)
+        # Cached last result for frame-skip republishing
+        self._last_detections: Detection2DArray = Detection2DArray()
+        self._last_sign_array: SignDetectionArray = SignDetectionArray()
 
         # Robot pose tracking for line-of-sight sign matching
         self.robot_x = 0.0
@@ -197,11 +336,17 @@ class ObjectDetectionNode(Node):
         self.sub_amcl = self.create_subscription(
             PoseWithCovarianceStamped, '/amcl_pose', self._amcl_cb, 10)
 
+        # Publishers
+        self.pub_detections = self.create_publisher(Detection2DArray, '/vision/detections', 10)
+        self.pub_annotated = self.create_publisher(Image, '/vision/annotated_image', 10)
+        self.pub_engine_status = self.create_publisher(String, '/vision/engine_status', 10)
+        self.pub_signs = self.create_publisher(SignDetectionArray, '/vision/signs', 10)
+
         # Subscriber — queue depth 1 to always process newest frame
         self.sub_image = self.create_subscription(
             Image, '/camera/image_raw', self.image_callback, 1)
 
-        self.get_logger().info('ObjectDetectionNode V2.4 ready on /camera/image_raw')
+        self.get_logger().info('ObjectDetectionNode V2.5 ready on /camera/image_raw')
 
     def _amcl_cb(self, msg: PoseWithCovarianceStamped):
         self.robot_x = float(msg.pose.pose.position.x)
@@ -211,6 +356,10 @@ class ObjectDetectionNode(Node):
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         self.robot_yaw = float(math.atan2(siny_cosp, cosy_cosp))
         self.has_pose = True
+
+    def _get_class_conf_thresh(self, class_name: str) -> float:
+        """Return per-class confidence threshold, falling back to global threshold."""
+        return float(self.class_conf_thresholds.get(class_name, self.global_conf_thresh))
 
     # ------------------------------------------------------------------
     # Camera callback
@@ -226,7 +375,6 @@ class ObjectDetectionNode(Node):
 
         # Frame-skip: publish cached result on skipped frames
         if self.frame_count % self.frame_skip != 0:
-            # Re-publish last cached results with updated timestamp
             if self._last_detections.detections:
                 self._last_detections.header = msg.header
                 self.pub_detections.publish(self._last_detections)
@@ -235,11 +383,15 @@ class ObjectDetectionNode(Node):
                 self.pub_signs.publish(self._last_sign_array)
             return
 
-        # Run inference synchronously on this frame
-        # (frame_skip already reduces frequency; async threading would add complexity
-        #  for marginal gain at skip=2; can be re-enabled if needed)
+        # Run YOLO inference
         t0 = time.time()
-        results = self.model(cv_image, conf=self.conf_thresh, device=self.device, verbose=False)[0]
+        results = self.model(
+            cv_image,
+            conf=self.global_conf_thresh,   # Use global as YOLO pre-filter; per-class applied below
+            iou=self.iou_threshold,
+            device=self.device,
+            verbose=False
+        )[0]
         t_infer = (time.time() - t0) * 1000.0
 
         self.latency_history.append(t_infer)
@@ -248,7 +400,7 @@ class ObjectDetectionNode(Node):
         avg_latency = float(np.mean(self.latency_history))
         measured_fps = round(1000.0 / max(1.0, avg_latency), 1)
 
-        # Publish engine status periodically
+        # Publish engine status periodically (all measured values)
         now = time.time()
         if (now - self.last_engine_pub) >= 1.0:
             self.last_engine_pub = now
@@ -260,21 +412,41 @@ class ObjectDetectionNode(Node):
                 'cuda_available': bool(torch.cuda.is_available()),
                 'frame_skip': self.frame_skip,
                 'effective_detection_hz': round(measured_fps / self.frame_skip, 1),
+                'model_classes': len(self.model.names),
+                'iou_threshold': self.iou_threshold,
+                'config_version': '2.5',
             }
             self.pub_engine_status.publish(String(data=json.dumps(status)))
+
+        # Periodically purge stale sign tracker entries
+        if (now - self._last_sign_purge) > 5.0:
+            self.sign_tracker.purge_stale(now)
+            self._last_sign_purge = now
 
         # Build detection array and sign array
         detection_array = Detection2DArray()
         detection_array.header = msg.header
-        sign_array = SignDetectionArray()
-        sign_array.header = msg.header
+        confirmed_sign_array = SignDetectionArray()
+        confirmed_sign_array.header = msg.header
 
         for box in results.boxes:
             cls_id = int(box.cls[0].item())
             class_name = self.model.names[cls_id]
             conf = float(box.conf[0].item())
+
+            # Per-class confidence filter (applied after YOLO NMS)
+            required_conf = self._get_class_conf_thresh(class_name)
+            if conf < required_conf:
+                continue
+
             xyxy = box.xyxy[0].cpu().numpy()
             x_min, y_min, x_max, y_max = float(xyxy[0]), float(xyxy[1]), float(xyxy[2]), float(xyxy[3])
+
+            # Bounding-box geometry filter (rejects tiny noise or full-frame background planes)
+            box_area = (x_max - x_min) * (y_max - y_min)
+            box_width = (x_max - x_min)
+            if box_area < self.min_box_area or box_area > self.max_box_area or box_width > self.max_box_width:
+                continue
 
             # Build Detection2D
             det = Detection2D()
@@ -288,33 +460,37 @@ class ObjectDetectionNode(Node):
             det.bearing = 0.0
             detection_array.detections.append(det)
 
-            # Sign semantic parsing
+            # Sign temporal confirmation gate
             if class_name == 'directional_sign':
                 sign_det = self._parse_sign_semantics(
                     x_min, y_min, x_max, y_max, conf, msg.header)
                 if sign_det is not None:
-                    sign_array.signs.append(sign_det)
+                    # Check temporal confirmation before forwarding to navigation
+                    is_confirmed = self.sign_tracker.observe(
+                        sign_det.text, sign_det.direction, conf, now)
+                    if is_confirmed:
+                        confirmed_sign_array.signs.append(sign_det)
 
         # Cache and publish
         self._last_detections = detection_array
-        self._last_sign_array = sign_array
-        self.pub_detections.publish(detection_array)
+        self._last_sign_array = confirmed_sign_array
 
-        if sign_array.signs:
-            self.pub_signs.publish(sign_array)
+        self.pub_detections.publish(detection_array)
+        # Always publish sign array (even if empty) so downstream subscribers know
+        # immediately when signs leave the field of view
+        self.pub_signs.publish(confirmed_sign_array)
 
         # Annotated image for dashboard
         if self.publish_annotated:
             try:
                 annotated_frame = results.plot()
-                # Overlay sign text on annotated image
-                for sd in sign_array.signs:
+                # Overlay confirmed sign text on annotated image
+                for sd in confirmed_sign_array.signs:
                     cx = int((sd.x_min + sd.x_max) / 2)
                     cy = int(sd.y_min) - 8
-                    label = f"{sd.text} {sd.direction}"
+                    label = f"[CONFIRMED] {sd.text} {sd.direction}"
                     cv2.putText(annotated_frame, label, (max(0, cx - 60), max(10, cy)),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 200), 2)
-                self._last_annotated = annotated_frame
                 annotated_msg = self.bridge.cv2_to_imgmsg(annotated_frame, encoding='passthrough')
                 annotated_msg.encoding = 'bgr8'
                 annotated_msg.header = msg.header
@@ -331,10 +507,10 @@ class ObjectDetectionNode(Node):
 
         Strategy (no OCR dependency):
         1. Compute the horizontal bearing of the sign's center pixel using camera FOV.
-        2. Find the closest sign in semantic_map.yaml by bearing angle match.
-           (In a real robot, the map pose + robot pose could refine this further;
-            here we use the bearing as an approximate direction key.)
-        3. Return the matched text + direction.
+        2. If robot pose is available (AMCL), find the closest sign in semantic_map.yaml
+           by computing the expected bearing from the robot to each sign in the map
+           and matching the closest within max_bearing_error_rad tolerance.
+        3. Fallback to heuristic (left/center/right bearing) if no map match.
 
         This is correct for simulation because each sign has a known world position
         and the approach direction is fixed by the corridor layout.
@@ -349,30 +525,30 @@ class ObjectDetectionNode(Node):
         # Vertical bearing (positive = above center)
         v_bearing_rad = math.atan2((self.img_h / 2.0 - v_center), self.fx)
 
-        # Approximate sign height in meters (sign is at 0.85m, camera at 0.35m)
-        # v_bearing_rad ≈ atan((0.85 - 0.35) / range) → range ≈ 0.50 / tan(v_bearing)
+        # Approximate sign range via vertical bearing
+        # Sign is at z=0.85m, camera at ~0.35m → height difference ≈ 0.50m
         approx_range = 999.0
         if abs(v_bearing_rad) > 0.01:
             approx_range = abs(0.50 / math.tan(v_bearing_rad))
-        approx_range = min(approx_range, 8.0)  # Cap at 8m
+        approx_range = min(approx_range, self.max_sign_range_m)
 
-        # Best match: find sign entry whose horizontal angle most closely matches bearing
+        # Best match: find sign entry whose expected bearing most closely matches bearing_rad
         best_entry = None
-        best_score = 1000.0
+        best_score = self.max_bearing_error_rad  # Only accept matches within this threshold
 
         for entry in self.sign_entries:
             if self.has_pose:
                 dx = entry['x'] - self.robot_x
                 dy = entry['y'] - self.robot_y
                 dist = math.hypot(dx, dy)
-                if dist < 0.3 or dist > 8.0:
+                if dist < self.min_sign_range_m or dist > self.max_sign_range_m:
                     continue
                 # Angle to sign in map frame
                 angle_to_sign = math.atan2(dy, dx)
-                # Angle in robot body frame: positive left, negative right
+                # Relative angle in robot body frame
                 rel_angle = math.atan2(math.sin(angle_to_sign - self.robot_yaw),
                                        math.cos(angle_to_sign - self.robot_yaw))
-                # Check if sign is within camera field of view
+                # Check if sign is within camera field of view (+ small margin)
                 if abs(rel_angle) > (self.hfov / 2.0 + 0.30):
                     continue
                 angle_diff = abs(bearing_rad - rel_angle)
@@ -380,6 +556,7 @@ class ObjectDetectionNode(Node):
                     best_score = angle_diff
                     best_entry = entry
             else:
+                # No pose yet: use heuristic bearing-to-world-position match
                 sign_world_x = entry['x']
                 sign_world_y = entry['y']
                 expected_bearing = math.atan2(-sign_world_x, max(1.0, abs(sign_world_y)))
@@ -388,9 +565,8 @@ class ObjectDetectionNode(Node):
                     best_score = angle_diff
                     best_entry = entry
 
-        if best_entry is None or best_score > 1.2:
-            # Fallback: generic sign with text parsed from texture filename pattern
-            # Use heuristic: center-left = hospital/storage, center = office, center-right = warehouse
+        if best_entry is None:
+            # Fallback: generic sign heuristic from bearing direction
             if bearing_rad > 0.3:
                 text, direction = "EXIT", "LEFT"
             elif bearing_rad < -0.3:

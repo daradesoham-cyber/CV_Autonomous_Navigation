@@ -135,8 +135,8 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz', default_value='true'),
         DeclareLaunchArgument(
             'model_path',
-            default_value='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v24.pt',
-            description='Path to custom YOLOv8 model weights (V2.4: yolov8n_v24.pt)'
+            default_value='/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v25.pt',
+            description='Path to custom YOLOv8 model weights (V2.5: yolov8n_v25.pt)'
         ),
         DeclareLaunchArgument(
             'use_custom_controller',

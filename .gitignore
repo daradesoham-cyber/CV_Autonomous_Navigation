@@ -49,6 +49,7 @@ models/yolov8n/
 models/custom_yolov8n/weights/last.pt
 /weights/
 /yolov8n.pt
+/yolov8s.pt
 results/*.mp4
 results/*.avi
 

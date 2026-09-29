@@ -1,0 +1,163 @@
+# ==============================================================================
+# CV AUTONOMOUS NAVIGATION V2.5 — PERCEPTION CONFIGURATION
+# Single source of truth for YOLO model interface parameters.
+# Swap YOLO model by updating model_path + class_names only.
+# All downstream code reads these values — do NOT hardcode elsewhere.
+# ==============================================================================
+
+version: "2.5"
+
+# ------------------------------------------------------------------------------
+# 1. YOLO MODEL INTERFACE
+# Swap the model by updating model_path and class_names (if changed).
+# All other pipeline parameters remain stable across model versions.
+# ------------------------------------------------------------------------------
+yolo:
+  # Path to YOLO weights (.pt file). Accepts absolute or PROJECT_ROOT-relative path.
+  model_path: "models/yolov8n_v25.pt"
+
+  # Ordered class names matching the .pt model's internal class IDs (index 0 first).
+  # MUST match model.names exactly. Used for validation at startup.
+  class_names:
+    - person           # 0
+    - cart             # 1
+    - forklift         # 2
+    - pallet           # 3
+    - box              # 4
+    - obstacle         # 5
+    - door             # 6
+    - charging_station # 7
+    - hospital_bed     # 8
+    - directional_sign # 9
+
+  # Inference device: "cuda:0" or "cpu"
+  device: "cuda:0"
+
+  # Input image size passed to YOLO (pixels, square). 640 is YOLOv8n default.
+  image_size: 640
+
+  # Run YOLO inference every Nth camera frame to reduce CPU/GPU load.
+  # frame_skip=1 means every frame; frame_skip=2 means every other frame.
+  frame_skip: 2
+
+  # IoU threshold for NMS (Non-Maximum Suppression).
+  iou_threshold: 0.45
+
+  # Minimum bounding-box area (px²) to accept any detection.
+  # Rejects tiny spurious boxes that appear near image edges.
+  min_box_area_px2: 400
+
+  # Maximum bounding-box area ratio (fraction of image area) to reject full-frame wall/floor planes.
+  max_box_area_ratio: 0.60
+
+  # Maximum bounding-box width ratio (fraction of image width) to reject horizontal wall bands.
+  max_box_width_ratio: 0.92
+
+  # ------------------------------------------------------------------------------
+  # Per-class confidence thresholds.
+  # Override the global threshold for specific classes.
+  # Higher = more precise (fewer false positives).
+  # Lower  = more recall (fewer missed detections).
+  # Navigation-critical classes: higher threshold (safety preference).
+  # Sign classes: lower threshold acceptable (no immediate safety risk from false positive).
+  # ------------------------------------------------------------------------------
+  class_confidence_thresholds:
+    # Safety-critical moving agents — require high confidence before influencing TTC
+    person:           0.55
+    forklift:         0.55
+    cart:             0.50
+
+    # Static but large obstacles — moderate threshold
+    pallet:           0.40
+    box:              0.40
+    obstacle:         0.40
+    hospital_bed:     0.75  # Calibrated: rejects wall diffuse highlights (~0.68) while preserving 100% true bed recall (89.2%)
+    charging_station: 0.40
+    door:             0.40
+
+    # Signs: lower threshold acceptable — temporal confirmation gate provides safety
+    directional_sign: 0.30
+
+  # Global fallback confidence threshold (used if class not listed above)
+  global_confidence_threshold: 0.35
+
+# ------------------------------------------------------------------------------
+# 2. CAMERA INTRINSICS
+# Match these to the Gazebo camera SDF definition.
+# ------------------------------------------------------------------------------
+camera:
+  image_width:  640
+  image_height: 480
+  hfov_rad:     1.15     # ~65.9 degrees (Gazebo: <horizontal_fov>1.15</horizontal_fov>)
+  # Derived focal length: fx = (img_w/2) / tan(hfov/2) ≈ 500 px
+
+  # Camera mounting offset from base_link (matches SDF: xyz="0.22 0 0.35")
+  mount_x: 0.22          # m forward from base_link
+  mount_z: 0.35          # m above base_link (base is 0.06m AGL → camera ~0.41m AGL)
+  mount_pitch_rad: -0.05 # slight downward tilt (matches SDF rpy="0 -0.05 0")
+
+# ------------------------------------------------------------------------------
+# 3. SIGN DETECTION TEMPORAL CONFIRMATION
+# Prevents single-frame sign detections from triggering navigation decisions.
+# A sign is "confirmed" only when seen in >= confirmation_frames within the
+# confirmation_window_sec rolling window.
+# ------------------------------------------------------------------------------
+sign_detection:
+  # Number of frames in which the sign must be detected to be "confirmed"
+  confirmation_frames: 3
+
+  # Rolling time window for the confirmation check (seconds)
+  confirmation_window_sec: 2.0
+
+  # Minimum confirmed confidence (mean over confirmed frames)
+  min_confirmed_confidence: 0.45
+
+  # Maximum allowed angular difference (rad) between the sign's YOLO bearing
+  # and the map-predicted bearing for a match to be accepted.
+  max_bearing_error_rad: 1.2
+
+  # Maximum map-distance range to consider a sign match (meters)
+  max_sign_range_m: 8.0
+
+  # Minimum map-distance range to prevent matching a sign on top of the robot
+  min_sign_range_m: 0.3
+
+# ------------------------------------------------------------------------------
+# 4. LIDAR-CAMERA FUSION PARAMETERS
+# ------------------------------------------------------------------------------
+lidar_camera_fusion:
+  # Camera-LiDAR longitudinal offset (camera is ahead of LiDAR on robot body)
+  camera_dx_from_lidar_m: 0.12
+
+  # Maximum timestamp disparity allowed for a scan-detection association (ms)
+  max_sync_age_ms: 100.0
+
+  # Minimum LiDAR points in a cluster to consider it a valid obstacle
+  min_cluster_points: 3
+
+  # Maximum gap (m) between consecutive sorted ranges to be in the same cluster
+  cluster_distance_tolerance_m: 0.35
+
+  # Maximum range to consider for TTC computation (m)
+  critical_distance_m: 2.5
+
+# ------------------------------------------------------------------------------
+# 5. TTC SAFETY PARAMETERS
+# ------------------------------------------------------------------------------
+ttc_safety:
+  # TTC threshold below which a proactive yield is triggered (seconds)
+  # This is intentionally below Nav2's 2.0s stop threshold.
+  yield_threshold_sec: 1.8
+
+  # Duration to pause after a TTC yield (seconds)
+  yield_duration_sec: 1.8
+
+  # Ignore TTC messages older than this many seconds (stale sensor data)
+  stale_timeout_sec: 1.5
+
+  # Minimum forward distance for TTC to be relevant (m)
+  # Prevents triggering TTC on objects beside the robot
+  min_forward_x_m: 0.05
+
+  # Maximum lateral offset from centerline for TTC to be relevant (m)
+  max_lateral_y_m: 0.85
