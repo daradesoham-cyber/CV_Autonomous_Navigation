@@ -134,8 +134,8 @@ def main():
             'min_dist': round(min_dist, 3)
         })
 
-        # Check doorway crossing (door is at y = -6.0)
-        if py > -5.8 and not doorway_traversed:
+        # Check doorway crossing (door is at y = -7.0)
+        if py > -6.8 and not doorway_traversed:
             doorway_traversed = True
             passed_doorway_time = time.time() - start_time
             print(f"  [SUCCESS] Doorway traversed at t={passed_doorway_time:.2f}s! Robot at y={py:.2f}")

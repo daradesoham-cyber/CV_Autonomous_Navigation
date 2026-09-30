@@ -40,8 +40,9 @@ WALLS = [
     ("wall_east", 16.0, 0.0, 0.2, 26.0),
 
     # --- Interior Room Partitions ---
-    # Entrance / Reception Dividers (Y = -7.0, opening in [-1.8, 1.8] for main corridor, and [-7.0, -5.4] for Cafeteria)
-    ("wall_rec_div_w1", -11.1, -7.0, 8.2, 0.2),
+    # Entrance / Reception Dividers (Y = -7.0, opening in [-1.8, 1.8] for main corridor, [-7.0, -5.4] for Cafeteria, and [-13.25, -11.75] for Emergency Exit)
+    ("wall_rec_div_w1_a", -14.225, -7.0, 1.95, 0.2),
+    ("wall_rec_div_w1_b", -9.375, -7.0, 4.75, 0.2),
     ("wall_rec_div_w2", -3.6, -7.0, 3.6, 0.2),
     # Hospital Wing North Wall with realistic 1.50m wide doorway at X in [5.25, 6.75]
     ("wall_rec_div_e1", 3.525, -7.0, 3.45, 0.2),
@@ -75,9 +76,11 @@ WALLS = [
     ("wall_utility_e", -14.4, -4.5, 0.2, 3.0),
 
     # --- Central Crossway & North Spine (Y = +1.0 to +7.0) ---
-    # Cross connector at Y = 1.0 (opening X in [-1.8, 1.8])
-    ("wall_cross_w", -7.0, 1.0, 10.4, 0.2),
-    ("wall_cross_e", 7.0, 1.0, 10.4, 0.2),
+    # Cross connector dividing walls with open corridors connecting Junction 4 to Warehouse and Storage
+    # West corridor into Storage open X in [-6.5, -1.8]; wall covers X in [-12.2, -6.5]
+    ("wall_cross_w", -9.35, 1.0, 5.7, 0.2),
+    # East corridor into Warehouse: crossway connects X in [1.8, 7.0]; wall covers corner X in [7.0, 8.5]
+    ("wall_cross_e", 7.75, 1.0, 1.5, 0.2),
 
     # Office Wing (North-Central: X in [-3.5, 3.5], Y in [4.0, 12.5])
     ("wall_office_w", -3.5, 8.5, 0.2, 7.0),
@@ -113,7 +116,7 @@ PILLARS = [
     ("pillar_center_1", -1.8, 3.5, 0.5, 0.5),
     ("pillar_center_2", 1.8, 3.5, 0.5, 0.5),
     ("pillar_wh_1", 9.0, 6.5, 0.6, 0.6),
-    ("pillar_lab_1", -7.0, 8.5, 0.5, 0.5),
+    ("pillar_lab_1", -7.5, 8.5, 0.5, 0.5),
 ]
 
 import yaml
@@ -153,15 +156,15 @@ FURNITURE = [
     ("waiting_bench_w", -3.2, -10.0, 0.25, 0, 0, 0, 1.6, 0.6, 0.5, (0.15, 0.15, 0.15)),
     ("waiting_bench_e", 2.5, -9.5, 0.25, 0, 0, 0, 1.6, 0.6, 0.5, (0.15, 0.15, 0.15)),
 
-    # Hospital Ward Beds (x=6.5, y=-8.0 and -10.5)
-    ("hospital_bed_1", 6.5, -8.0, 0.35, 0, 0, 0, 2.0, 1.0, 0.7, (0.85, 0.88, 0.9)),
-    ("hospital_bed_2", 6.5, -10.5, 0.35, 0, 0, 0, 2.0, 1.0, 0.7, (0.85, 0.88, 0.9)),
-    # Bedside Tables
-    ("bedside_table_1", 8.0, -8.0, 0.35, 0, 0, 0, 0.5, 0.5, 0.7, (0.9, 0.9, 0.9)),
-    ("bedside_table_2", 8.0, -10.5, 0.35, 0, 0, 0, 0.5, 0.5, 0.7, (0.9, 0.9, 0.9)),
+    # Hospital Ward Beds (x=7.5, y=-8.8 and -11.0) — cleared north doorway (Y=-7.0, X in [5.25, 6.75])
+    ("hospital_bed_1", 7.5, -8.8, 0.35, 0, 0, 0, 2.0, 1.0, 0.7, (0.85, 0.88, 0.9)),
+    ("hospital_bed_2", 7.5, -11.0, 0.35, 0, 0, 0, 2.0, 1.0, 0.7, (0.85, 0.88, 0.9)),
+    # Bedside Tables along east dividing wall
+    ("bedside_table_1", 8.9, -8.8, 0.35, 0, 0, 0, 0.5, 0.5, 0.7, (0.9, 0.9, 0.9)),
+    ("bedside_table_2", 8.9, -11.0, 0.35, 0, 0, 0, 0.5, 0.5, 0.7, (0.9, 0.9, 0.9)),
 
-    # Warehouse Shelves / Racks (Rows at x=11.5, 13.5)
-    ("wh_rack_1", 11.5, 2.5, 1.0, 0, 0, 0, 0.8, 2.4, 2.0, (0.2, 0.4, 0.7)),
+    # Warehouse Shelves / Racks (Rows at x=11.5, 13.5; wh_rack_1 sized 1.6m centered at y=3.1 to open south loading access lane)
+    ("wh_rack_1", 11.5, 3.1, 1.0, 0, 0, 0, 0.8, 1.6, 2.0, (0.2, 0.4, 0.7)),
     ("wh_rack_2", 11.5, 7.0, 1.0, 0, 0, 0, 0.8, 2.4, 2.0, (0.2, 0.4, 0.7)),
     ("wh_rack_3", 11.5, 11.0, 1.0, 0, 0, 0, 0.8, 2.4, 2.0, (0.2, 0.4, 0.7)),
     ("wh_rack_4", 14.0, 2.5, 1.0, 0, 0, 0, 0.8, 2.4, 2.0, (0.2, 0.4, 0.7)),
@@ -171,8 +174,8 @@ FURNITURE = [
     ("wh_pallets", 8.0, 11.5, 0.4, 0, 0, 0, 1.2, 1.2, 0.8, (0.6, 0.45, 0.2)),
     # Loading Zone Pallet Stack
     ("loading_pallet_stack", 13.5, 3.5, 0.4, 0, 0, 0, 1.2, 1.2, 0.8, (0.65, 0.5, 0.25)),
-    # Workstation in Warehouse
-    ("wh_workstation_1", 8.0, 1.5, 0.45, 0, 0, 0, 2.0, 0.9, 0.9, (0.3, 0.35, 0.4)),
+    # Workstation in Warehouse along office partition wall
+    ("wh_workstation_1", 5.0, 3.5, 0.45, 0, 0, 0, 2.0, 0.9, 0.9, (0.3, 0.35, 0.4)),
 
     # Executive Office Desks & Chairs (x=-1.5 and +1.5, y=11.0)
     ("office_desk_1", -1.5, 11.0, 0.38, 0, 0, 0, 1.5, 0.8, 0.75, (0.35, 0.25, 0.15)),
@@ -180,9 +183,9 @@ FURNITURE = [
     ("office_chair_1", -1.5, 11.8, 0.45, 0, 0, 0, 0.6, 0.6, 0.9, (0.1, 0.1, 0.1)),
     ("office_chair_2", 1.5, 11.8, 0.45, 0, 0, 0, 0.6, 0.6, 0.9, (0.1, 0.1, 0.1)),
 
-    # Research Lab Benches (x=-7.0, y=7.0 and 10.0)
-    ("lab_bench_1", -7.0, 7.0, 0.45, 0, 0, 0, 2.2, 0.8, 0.9, (0.75, 0.75, 0.78)),
-    ("lab_bench_2", -7.0, 11.0, 0.45, 0, 0, 0, 2.2, 0.8, 0.9, (0.75, 0.75, 0.78)),
+    # Research Lab Benches (shifted to x=-7.6 to open north-south transit corridor X: [-6.5, -3.5])
+    ("lab_bench_1", -7.6, 7.0, 0.45, 0, 0, 0, 2.2, 0.8, 0.9, (0.75, 0.75, 0.78)),
+    ("lab_bench_2", -7.6, 11.0, 0.45, 0, 0, 0, 2.2, 0.8, 0.9, (0.75, 0.75, 0.78)),
 
     # Room A Assembly Bench along west lab wall
     ("room_a_assembly_bench", -9.8, 9.5, 0.45, 0, 0, 0, 1.0, 2.4, 0.9, (0.4, 0.5, 0.6)),
@@ -414,9 +417,9 @@ def generate_sdf():
     sdf.append("      </plugin>")
     sdf.append("    </model>")
     sdf.append("")
-    sdf.append("    <!-- Dynamic Moving Obstacle 2: Hospital Trolley -->")
+    sdf.append("    <!-- Dynamic Moving Obstacle 2: Hospital Trolley (Patrols medical corridor along Y=-5.0) -->")
     sdf.append("    <model name='dynamic_hospital_trolley'>")
-    sdf.append("      <pose>6.0 -6.5 0.35 0 0 0</pose>")
+    sdf.append("      <pose>6.0 -5.0 0.35 0 0 0</pose>")
     sdf.append("      <link name='trolley_link'>")
     sdf.append("        <inertial>")
     sdf.append("          <mass>18.0</mass>")
