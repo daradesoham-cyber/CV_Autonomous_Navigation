@@ -30,13 +30,13 @@ OUT_CSV = os.path.join(PROJECT_ROOT, "results/v26_final/v26_mission_validation_r
 LOCATIONS = {
     'room_a': {'x': -7.0, 'y': 9.5, 'yaw': -1.57, 'label': 'ROOM A'},
     'storage': {'x': -6.5, 'y': 3.0, 'yaw': 1.57, 'label': 'STORAGE'},
-    'hospital': {'x': 5.0, 'y': -8.5, 'yaw': 1.57, 'label': 'HOSPITAL'},
-    'loading': {'x': 12.0, 'y': 2.0, 'yaw': 3.14, 'label': 'LOADING'},
+    'hospital': {'x': 5.0, 'y': -9.0, 'yaw': 1.57, 'label': 'HOSPITAL'},
+    'loading': {'x': 12.8, 'y': 2.0, 'yaw': 3.14, 'label': 'LOADING'},
     'charging': {'x': -13.5, 'y': 2.0, 'yaw': 1.57, 'label': 'CHARGING'},
     'warehouse': {'x': 8.0, 'y': 7.0, 'yaw': 1.57, 'label': 'WAREHOUSE'},
     'exit': {'x': -12.5, 'y': -9.0, 'yaw': -1.57, 'label': 'EXIT'},
     'office': {'x': 0.0, 'y': 10.0, 'yaw': 1.57, 'label': 'OFFICE'},
-    'room_b': {'x': 5.0, 'y': -8.5, 'yaw': 1.57, 'label': 'ROOM B'},
+    'room_b': {'x': 5.0, 'y': -9.0, 'yaw': 1.57, 'label': 'ROOM B'},
     'reception': {'x': 0.0, 'y': -8.6, 'yaw': 1.57, 'label': 'RECEPTION'},
 }
 

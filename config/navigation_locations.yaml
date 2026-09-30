@@ -91,7 +91,7 @@ locations:
 
   hospital:
     x: 5.0
-    y: -8.5
+    y: -9.0
     yaw: 1.57
     description: "Realistic Facility: Hospital Medical Ward (Destination)"
 
@@ -145,7 +145,7 @@ locations:
 
   room_b:
     x: 5.0
-    y: -8.5
+    y: -9.0
     yaw: 1.57
     description: "Realistic Facility: Room B - Medical Ward Inspection"
 
@@ -156,7 +156,7 @@ locations:
     description: "Realistic Facility: AGV Automated Charging Station"
 
   loading:
-    x: 12.0
+    x: 12.8
     y: 2.0
     yaw: 3.14
     description: "Realistic Facility: Industrial Cargo Loading & Unloading Zone"
