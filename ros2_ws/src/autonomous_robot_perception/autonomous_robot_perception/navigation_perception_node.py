@@ -70,19 +70,26 @@ class NavigationPerceptionNode(Node):
                 continue
 
             # Obstacle center in base_link coordinates (x forward, y left)
-            cx = obs.distance * math.cos(obs.bearing)
-            cy = obs.distance * math.sin(obs.bearing)
             r = obs.safety_radius
+            center_dist = obs.distance + r
+            cx = center_dist * math.cos(obs.bearing)
+            cy = center_dist * math.sin(obs.bearing)
 
             # Generate circular obstacle ring + center points
             angles = np.linspace(0, 2 * math.pi, self.pts_per_ring, endpoint=False)
             for a in angles:
                 px = cx + r * math.cos(a)
                 py = cy + r * math.sin(a)
-                new_points.append([float(px), float(py), 0.20])
+                # Ensure no obstacle point ever falls inside robot footprint buffer (0.30m)
+                if math.hypot(px, py) >= 0.30:
+                    new_points.append([float(px), float(py), 0.20])
                 # Add inner ring for dense lethal marking
-                new_points.append([float(cx + 0.5 * r * math.cos(a)), float(cy + 0.5 * r * math.sin(a)), 0.20])
-            new_points.append([float(cx), float(cy), 0.20])
+                ipx = cx + 0.5 * r * math.cos(a)
+                ipy = cy + 0.5 * r * math.sin(a)
+                if math.hypot(ipx, ipy) >= 0.30:
+                    new_points.append([float(ipx), float(ipy), 0.20])
+            if math.hypot(cx, cy) >= 0.30:
+                new_points.append([float(cx), float(cy), 0.20])
 
             status_alerts.append(
                 f"{'DYNAMIC' if obs.is_dynamic else 'STATIC'} {obs.class_name.upper()} at {obs.distance:.2f}m (R={r:.2f}m)"

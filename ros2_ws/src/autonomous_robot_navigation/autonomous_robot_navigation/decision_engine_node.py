@@ -269,6 +269,12 @@ class DecisionEngineNode(Node):
             self._amcl_pose_callback,
             10
         )
+        self.sub_initialpose = self.create_subscription(
+            PoseWithCovarianceStamped,
+            '/initialpose',
+            self._initialpose_callback,
+            10
+        )
         self.sub_odom = self.create_subscription(
             Odometry,
             '/odom',
@@ -404,6 +410,21 @@ class DecisionEngineNode(Node):
     def _odom_callback(self, msg: Odometry):
         self.linear_velocity = float(msg.twist.twist.linear.x)
         self.angular_velocity = float(msg.twist.twist.angular.z)
+
+    def _initialpose_callback(self, msg: PoseWithCovarianceStamped):
+        """Handle manual or benchmark initial pose reset."""
+        new_x = msg.pose.pose.position.x
+        new_y = msg.pose.pose.position.y
+        q = msg.pose.pose.orientation
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        new_yaw = math.atan2(siny_cosp, cosy_cosp)
+        self.robot_x = new_x
+        self.robot_y = new_y
+        self.robot_yaw = new_yaw
+        self.last_pose_sampled = (new_x, new_y)
+        self.last_pose_time = time.time()
+        self.get_logger().info(f"Updated robot pose from /initialpose to ({new_x:.2f}, {new_y:.2f}, yaw={new_yaw:.2f})")
 
     def _amcl_pose_callback(self, msg: PoseWithCovarianceStamped):
         """AMCL pose update with particle teleport jump filtering (Section 4 & 5)."""

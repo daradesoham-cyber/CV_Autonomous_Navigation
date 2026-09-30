@@ -34,7 +34,7 @@ SEMANTIC_SAFETY_CONFIG = {
     'obstacle': {'radius': 0.50, 'is_dynamic': False},
     'door': {'radius': 0.70, 'is_dynamic': False},
     'charging_station': {'radius': 0.65, 'is_dynamic': False},
-    'hospital_bed': {'radius': 0.85, 'is_dynamic': False},
+    'hospital_bed': {'radius': 0.50, 'is_dynamic': False},
     'directional_sign': {'radius': 0.05, 'is_dynamic': False},  # sign: not a physical obstacle
     # V2.3 legacy class names (kept for backward compatibility)
     'chair': {'radius': 0.55, 'is_dynamic': False},
@@ -44,7 +44,7 @@ SEMANTIC_SAFETY_CONFIG = {
     'traffic cone': {'radius': 0.50, 'is_dynamic': False},
     'cone': {'radius': 0.50, 'is_dynamic': False},
     'shelf': {'radius': 0.60, 'is_dynamic': False},
-    'bed': {'radius': 0.85, 'is_dynamic': False},
+    'bed': {'radius': 0.50, 'is_dynamic': False},
 }
 DEFAULT_CONFIG = {'radius': 0.50, 'is_dynamic': False}
 

@@ -64,7 +64,8 @@ def generate_launch_description():
         parameters=[{
             'use_sim_time': use_sim_time,
             'autostart': True,
-            'node_names': ['map_server', 'amcl']
+            'node_names': ['map_server', 'amcl'],
+            'bond_timeout': 10.0
         }]
     )
 

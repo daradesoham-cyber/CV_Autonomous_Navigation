@@ -125,7 +125,7 @@ class Nav2GoalSender(Node):
             self.get_logger().info('SUCCESS: Goal reached successfully!')
             self.success = True
         else:
-            self.get_logger().warn(f'Navigation finished with status: {status}')
+            self.get_logger().warning(f'Navigation finished with status: {status}')
             self.success = False
 
 def main():

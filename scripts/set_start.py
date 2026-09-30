@@ -56,7 +56,7 @@ class InitialPosePublisher(Node):
 
         msg = PoseWithCovarianceStamped()
         msg.header.frame_id = 'map'
-        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.stamp = rclpy.time.Time().to_msg()
 
         msg.pose.pose.position.x = float(x)
         msg.pose.pose.position.y = float(y)
@@ -82,7 +82,8 @@ class InitialPosePublisher(Node):
 
         for _ in range(num_repeats):
             rclpy.spin_once(self, timeout_sec=0.1)
-            msg.header.stamp = self.get_clock().now().to_msg()
+            sim_now = self.get_clock().now()
+            msg.header.stamp = (sim_now - rclpy.time.Duration(seconds=0.05)).to_msg()
             self.pub.publish(msg)
             time.sleep(0.1)
 
