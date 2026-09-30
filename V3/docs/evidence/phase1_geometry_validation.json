@@ -1,0 +1,1551 @@
+{
+  "threshold_m": 0.52,
+  "summary": {
+    "G1_prop_intersections": "23/23 PASS",
+    "G2_node_clearance": "53/53 PASS",
+    "G3_edge_clearance": "55/55 PASS",
+    "G4_doorways": "8/8 PASS",
+    "G5_logistics_points": "2/2 PASS",
+    "G6_static_map": "108/108 PASS"
+  },
+  "results": {
+    "G1_prop_intersections": [
+      {
+        "prop": "v3_patient_bed_1",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_trolley_bed_2",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_bedside_drawer_1",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_bedside_drawer_2",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_iv_stand_ward",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_collection_table",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_collection_bp_monitor",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_ward_bp_cart",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_ward_nurse",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_waiting_chair_w1",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_waiting_chair_w2",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_waiting_chair_e1",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_waiting_chair_e2",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_reception_nurse",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_visitor_phone",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_parked_wheelchair",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_lab_instrument_cart",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_lab_cabinet",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_lab_surgical_trolley",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_storage_rack",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_sign_collection_point",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_sign_laboratory_test_point",
+        "intersects": [],
+        "status": "PASS"
+      },
+      {
+        "prop": "v3_payload_blood_sample_carrier",
+        "intersects": [],
+        "status": "PASS"
+      }
+    ],
+    "G2_node_clearance": [
+      {
+        "node": "Main Entrance Spawn",
+        "x": 0.0,
+        "y": -11.0,
+        "v26_clearance": 2.081,
+        "v3_clearance": 2.203,
+        "nearest_v3": "v3_waiting_chair_w2",
+        "status": "PASS"
+      },
+      {
+        "node": "Reception Desk & Waiting Area",
+        "x": 0.0,
+        "y": -8.6,
+        "v26_clearance": 1.334,
+        "v3_clearance": 1.334,
+        "nearest_v3": "reception_desk",
+        "status": "PASS"
+      },
+      {
+        "node": "Central South Crossway",
+        "x": 0.0,
+        "y": -5.0,
+        "v26_clearance": 1.879,
+        "v3_clearance": 1.879,
+        "nearest_v3": "wall_spine_e_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "East Medical Corridor Entry",
+        "x": 3.0,
+        "y": -5.0,
+        "v26_clearance": 1.36,
+        "v3_clearance": 1.36,
+        "nearest_v3": "wall_spine_e_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "Medical Wing Junction 2",
+        "x": 6.0,
+        "y": -5.0,
+        "v26_clearance": 1.0,
+        "v3_clearance": 1.0,
+        "nearest_v3": "pillar_j2",
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Ward Entry",
+        "x": 6.0,
+        "y": -7.0,
+        "v26_clearance": 0.75,
+        "v3_clearance": 0.75,
+        "nearest_v3": "wall_rec_div_e1",
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Medical Ward",
+        "x": 5.0,
+        "y": -9.0,
+        "v26_clearance": 1.4,
+        "v3_clearance": 0.877,
+        "nearest_v3": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "node": "Room B Inspection Ward",
+        "x": 5.0,
+        "y": -9.0,
+        "v26_clearance": 1.4,
+        "v3_clearance": 0.877,
+        "nearest_v3": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "node": "Triage Corridor Entry",
+        "x": 9.0,
+        "y": -5.0,
+        "v26_clearance": 1.9,
+        "v3_clearance": 1.9,
+        "nearest_v3": "wall_rec_div_e2",
+        "status": "PASS"
+      },
+      {
+        "node": "Triage Room",
+        "x": 12.0,
+        "y": -4.0,
+        "v26_clearance": 1.9,
+        "v3_clearance": 1.9,
+        "nearest_v3": "wall_triage_n",
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Equipment Alcove",
+        "x": 12.0,
+        "y": -9.0,
+        "v26_clearance": 2.025,
+        "v3_clearance": 2.025,
+        "nearest_v3": "wall_rec_div_e2",
+        "status": "PASS"
+      },
+      {
+        "node": "Restricted Vault Zone",
+        "x": 12.5,
+        "y": -9.0,
+        "v26_clearance": 1.924,
+        "v3_clearance": 1.924,
+        "nearest_v3": "wall_hosp_alcove_n",
+        "status": "PASS"
+      },
+      {
+        "node": "East Warehouse Bypass South",
+        "x": 6.0,
+        "y": -2.0,
+        "v26_clearance": 0.9,
+        "v3_clearance": 0.9,
+        "nearest_v3": "wall_wh_corridor_e",
+        "status": "PASS"
+      },
+      {
+        "node": "East Warehouse Bypass Mid",
+        "x": 6.0,
+        "y": 1.0,
+        "v26_clearance": 0.9,
+        "v3_clearance": 0.9,
+        "nearest_v3": "wall_wh_corridor_e",
+        "status": "PASS"
+      },
+      {
+        "node": "West Cafeteria Corridor Entry",
+        "x": -3.0,
+        "y": -5.0,
+        "v26_clearance": 1.36,
+        "v3_clearance": 1.36,
+        "nearest_v3": "wall_spine_w_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "West Cafeteria Junction 3",
+        "x": -6.0,
+        "y": -5.0,
+        "v26_clearance": 1.0,
+        "v3_clearance": 1.0,
+        "nearest_v3": "pillar_j3",
+        "status": "PASS"
+      },
+      {
+        "node": "Cafeteria Dining Entry",
+        "x": -6.0,
+        "y": -7.5,
+        "v26_clearance": 0.721,
+        "v3_clearance": 0.721,
+        "nearest_v3": "wall_rec_div_w2",
+        "status": "PASS"
+      },
+      {
+        "node": "Cafeteria Dining Hall",
+        "x": -6.0,
+        "y": -9.5,
+        "v26_clearance": 1.801,
+        "v3_clearance": 1.801,
+        "nearest_v3": "cafe_table_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Emergency Exit Corridor Turn",
+        "x": -12.5,
+        "y": -5.0,
+        "v26_clearance": 1.886,
+        "v3_clearance": 1.886,
+        "nearest_v3": "wall_utility_e",
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Entry",
+        "x": -12.5,
+        "y": -6.5,
+        "v26_clearance": 0.671,
+        "v3_clearance": 0.671,
+        "nearest_v3": "wall_rec_div_w1_a",
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Aisle",
+        "x": -15.2,
+        "y": -6.5,
+        "v26_clearance": 0.452,
+        "v3_clearance": 0.452,
+        "nearest_v3": "wall_rec_div_w1_a",
+        "status": "PASS"
+      },
+      {
+        "node": "Emergency Exit Door",
+        "x": -12.5,
+        "y": -9.0,
+        "v26_clearance": 1.4,
+        "v3_clearance": 1.4,
+        "nearest_v3": "wall_cafe_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Room",
+        "x": -15.2,
+        "y": -4.5,
+        "v26_clearance": 0.7,
+        "v3_clearance": 0.7,
+        "nearest_v3": "wall_west_mid_north",
+        "status": "PASS"
+      },
+      {
+        "node": "Central Spine South",
+        "x": 0.0,
+        "y": -2.0,
+        "v26_clearance": 1.7,
+        "v3_clearance": 1.7,
+        "nearest_v3": "wall_spine_e_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "Central Crossway",
+        "x": 0.0,
+        "y": 1.0,
+        "v26_clearance": 1.7,
+        "v3_clearance": 1.7,
+        "nearest_v3": "wall_spine_e_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "Office Wing Corridor",
+        "x": 0.0,
+        "y": 4.0,
+        "v26_clearance": 1.57,
+        "v3_clearance": 1.57,
+        "nearest_v3": "pillar_center_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Office Wing Junction 5",
+        "x": 0.0,
+        "y": 7.0,
+        "v26_clearance": 3.0,
+        "v3_clearance": 3.0,
+        "nearest_v3": "wall_archive_s",
+        "status": "PASS"
+      },
+      {
+        "node": "Executive Office Suite",
+        "x": 0.0,
+        "y": 10.0,
+        "v26_clearance": 0.96,
+        "v3_clearance": 0.96,
+        "nearest_v3": "office_desk_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Archive Doorway Entry",
+        "x": 1.15,
+        "y": 10.0,
+        "v26_clearance": 0.6,
+        "v3_clearance": 0.6,
+        "nearest_v3": "office_desk_2",
+        "status": "PASS"
+      },
+      {
+        "node": "Office File Archive",
+        "x": 2.6,
+        "y": 10.0,
+        "v26_clearance": 0.4,
+        "v3_clearance": 0.4,
+        "nearest_v3": "wall_archive_s",
+        "status": "PASS"
+      },
+      {
+        "node": "Office-Warehouse North Bypass",
+        "x": 3.0,
+        "y": 7.0,
+        "v26_clearance": 0.894,
+        "v3_clearance": 0.894,
+        "nearest_v3": "wall_office_e_north",
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse West Entry",
+        "x": 3.0,
+        "y": 1.8,
+        "v26_clearance": 1.36,
+        "v3_clearance": 1.36,
+        "nearest_v3": "wall_spine_e_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse Mid Junction 6",
+        "x": 6.0,
+        "y": 1.8,
+        "v26_clearance": 1.204,
+        "v3_clearance": 1.204,
+        "nearest_v3": "wall_wh_corridor_e",
+        "status": "PASS"
+      },
+      {
+        "node": "Industrial Warehouse Hub",
+        "x": 8.0,
+        "y": 7.0,
+        "v26_clearance": 0.728,
+        "v3_clearance": 0.728,
+        "nearest_v3": "pillar_wh_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse South Aisle",
+        "x": 8.0,
+        "y": 2.5,
+        "v26_clearance": 1.4,
+        "v3_clearance": 1.4,
+        "nearest_v3": "wall_cross_e",
+        "status": "PASS"
+      },
+      {
+        "node": "Loading Approach Lane",
+        "x": 10.8,
+        "y": 1.4,
+        "v26_clearance": 0.949,
+        "v3_clearance": 0.949,
+        "nearest_v3": "wh_rack_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Loading Bay Area",
+        "x": 12.8,
+        "y": 2.0,
+        "v26_clearance": 0.8,
+        "v3_clearance": 0.8,
+        "nearest_v3": "wh_rack_4",
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse North Aisle",
+        "x": 8.0,
+        "y": 10.5,
+        "v26_clearance": 0.4,
+        "v3_clearance": 0.4,
+        "nearest_v3": "wh_pallets",
+        "status": "PASS"
+      },
+      {
+        "node": "Lab East Entry",
+        "x": -3.0,
+        "y": 1.8,
+        "v26_clearance": 1.36,
+        "v3_clearance": 1.36,
+        "nearest_v3": "wall_spine_w_mid",
+        "status": "PASS"
+      },
+      {
+        "node": "Research & Storage Junction 7",
+        "x": -6.0,
+        "y": 1.8,
+        "v26_clearance": 0.86,
+        "v3_clearance": 0.86,
+        "nearest_v3": "wall_cross_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Storage Depot",
+        "x": -6.5,
+        "y": 3.0,
+        "v26_clearance": 1.9,
+        "v3_clearance": 1.9,
+        "nearest_v3": "wall_cross_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Storage Approach Waypoint",
+        "x": -6.0,
+        "y": 2.5,
+        "v26_clearance": 1.487,
+        "v3_clearance": 1.487,
+        "nearest_v3": "wall_cross_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Research Lab Junction 8",
+        "x": -5.0,
+        "y": 7.0,
+        "v26_clearance": 1.4,
+        "v3_clearance": 1.4,
+        "nearest_v3": "wall_office_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Lab Bypass Entry",
+        "x": -6.0,
+        "y": 5.5,
+        "v26_clearance": 1.024,
+        "v3_clearance": 1.024,
+        "nearest_v3": "wall_storage_div_e",
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Vault Approach",
+        "x": -11.8,
+        "y": 5.5,
+        "v26_clearance": 0.5,
+        "v3_clearance": 0.5,
+        "nearest_v3": "wall_storage_div_w",
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Vault Entry",
+        "x": -11.8,
+        "y": 7.0,
+        "v26_clearance": 0.7,
+        "v3_clearance": 0.7,
+        "nearest_v3": "wall_vault_e",
+        "status": "PASS"
+      },
+      {
+        "node": "Research Laboratory",
+        "x": -7.0,
+        "y": 9.5,
+        "v26_clearance": 0.791,
+        "v3_clearance": 0.791,
+        "nearest_v3": "pillar_lab_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Room A Research Suite",
+        "x": -7.0,
+        "y": 9.5,
+        "v26_clearance": 0.791,
+        "v3_clearance": 0.791,
+        "nearest_v3": "pillar_lab_1",
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Storage Vault",
+        "x": -13.0,
+        "y": 8.0,
+        "v26_clearance": 1.9,
+        "v3_clearance": 1.9,
+        "nearest_v3": "wall_vault_e",
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass South",
+        "x": -14.0,
+        "y": -2.0,
+        "v26_clearance": 0.3,
+        "v3_clearance": 0.3,
+        "nearest_v3": "wall_utility_e",
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass North",
+        "x": -14.0,
+        "y": 2.0,
+        "v26_clearance": 0.9,
+        "v3_clearance": 0.9,
+        "nearest_v3": "charging_dock_station",
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass North Corner",
+        "x": -14.0,
+        "y": 5.5,
+        "v26_clearance": 0.4,
+        "v3_clearance": 0.4,
+        "nearest_v3": "wall_vault_s",
+        "status": "PASS"
+      },
+      {
+        "node": "Charging Station Dock",
+        "x": -13.5,
+        "y": 2.0,
+        "v26_clearance": 0.5,
+        "v3_clearance": 0.5,
+        "nearest_v3": "wall_west_bypass_inner",
+        "status": "PASS"
+      }
+    ],
+    "G3_edge_clearance": [
+      {
+        "edge": "Archive Doorway Entry -> Office File Archive",
+        "min_prop_clearance": 8.402,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Archive Doorway Entry -> Office Wing Junction 5",
+        "min_prop_clearance": 8.131,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Cafeteria Dining Hall -> Cafeteria Dining Entry",
+        "min_prop_clearance": 2.76,
+        "nearest_prop": "v3_waiting_chair_w1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Cafeteria Dining Entry -> West Cafeteria Junction 3",
+        "min_prop_clearance": 3.53,
+        "nearest_prop": "v3_waiting_chair_w1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Spine South -> Central South Crossway",
+        "min_prop_clearance": 2.96,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Spine South -> Central Crossway",
+        "min_prop_clearance": 5.603,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Charging Station Dock -> West Bypass North",
+        "min_prop_clearance": 2.942,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "East Medical Corridor Entry -> Central South Crossway",
+        "min_prop_clearance": 2.96,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "East Medical Corridor Entry -> Medical Wing Junction 2",
+        "min_prop_clearance": 2.947,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Corridor Entry -> Central South Crossway",
+        "min_prop_clearance": 2.272,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Corridor Entry -> West Cafeteria Junction 3",
+        "min_prop_clearance": 2.335,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Equipment Alcove -> Triage Room",
+        "min_prop_clearance": 2.766,
+        "nearest_prop": "v3_iv_stand_ward",
+        "status": "PASS"
+      },
+      {
+        "edge": "Utility Service Room -> Utility Service Aisle",
+        "min_prop_clearance": 8.48,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Storage Vault -> Chemical Vault Entry",
+        "min_prop_clearance": 3.827,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass South -> East Warehouse Bypass Mid",
+        "min_prop_clearance": 6.189,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass South -> Medical Wing Junction 2",
+        "min_prop_clearance": 3.287,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass Mid -> Warehouse Mid Junction 6",
+        "min_prop_clearance": 9.11,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Door -> Utility Service Entry",
+        "min_prop_clearance": 9.279,
+        "nearest_prop": "v3_waiting_chair_w1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Corridor Turn -> West Cafeteria Junction 3",
+        "min_prop_clearance": 4.204,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Corridor Turn -> Utility Service Entry",
+        "min_prop_clearance": 7.869,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Medical Ward -> Hospital Ward Entry",
+        "min_prop_clearance": 0.866,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Ward Entry -> Medical Wing Junction 2",
+        "min_prop_clearance": 1.337,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Ward Entry -> Room B Inspection Ward",
+        "min_prop_clearance": 0.866,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central South Crossway -> Reception Desk & Waiting Area",
+        "min_prop_clearance": 1.898,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Medical Wing Junction 2 -> Triage Corridor Entry",
+        "min_prop_clearance": 3.255,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Junction 3 -> West Bypass South",
+        "min_prop_clearance": 4.204,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Lab East Entry",
+        "min_prop_clearance": 6.427,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Office Wing Corridor",
+        "min_prop_clearance": 8.487,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Warehouse West Entry",
+        "min_prop_clearance": 8.487,
+        "nearest_prop": "v3_reception_nurse",
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Executive Office Suite",
+        "min_prop_clearance": 7.26,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Office Wing Corridor",
+        "min_prop_clearance": 8.205,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Office-Warehouse North Bypass",
+        "min_prop_clearance": 8.205,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Research & Storage Junction 7 -> Lab East Entry",
+        "min_prop_clearance": 3.475,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Research & Storage Junction 7 -> Storage Approach Waypoint",
+        "min_prop_clearance": 3.374,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Research Laboratory",
+        "min_prop_clearance": 1.449,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Lab Bypass Entry",
+        "min_prop_clearance": 3.995,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Room A Research Suite",
+        "min_prop_clearance": 1.449,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Lab Bypass Entry -> Storage Approach Waypoint",
+        "min_prop_clearance": 3.371,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Lab Bypass Entry -> Chemical Vault Approach",
+        "min_prop_clearance": 2.143,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Loading Bay Area -> Loading Approach Lane",
+        "min_prop_clearance": 9.902,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Loading Approach Lane -> Warehouse South Aisle",
+        "min_prop_clearance": 9.902,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Office-Warehouse North Bypass -> Industrial Warehouse Hub",
+        "min_prop_clearance": 10.933,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Reception Desk & Waiting Area -> Main Entrance Spawn",
+        "min_prop_clearance": 2.085,
+        "nearest_prop": "v3_waiting_chair_w2",
+        "status": "PASS"
+      },
+      {
+        "edge": "Restricted Vault Zone -> Triage Room",
+        "min_prop_clearance": 3.253,
+        "nearest_prop": "v3_iv_stand_ward",
+        "status": "PASS"
+      },
+      {
+        "edge": "Storage Depot -> Storage Approach Waypoint",
+        "min_prop_clearance": 2.871,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Triage Room -> Triage Corridor Entry",
+        "min_prop_clearance": 3.279,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "Utility Service Aisle -> Utility Service Entry",
+        "min_prop_clearance": 9.332,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Vault Approach -> Chemical Vault Entry",
+        "min_prop_clearance": 2.442,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Vault Approach -> West Bypass North Corner",
+        "min_prop_clearance": 2.442,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Industrial Warehouse Hub -> Warehouse North Aisle",
+        "min_prop_clearance": 15.206,
+        "nearest_prop": "v3_sign_laboratory_test_point",
+        "status": "PASS"
+      },
+      {
+        "edge": "Industrial Warehouse Hub -> Warehouse South Aisle",
+        "min_prop_clearance": 10.755,
+        "nearest_prop": "v3_patient_bed_1",
+        "status": "PASS"
+      },
+      {
+        "edge": "West Bypass North -> West Bypass South",
+        "min_prop_clearance": 3.432,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "West Bypass North -> West Bypass North Corner",
+        "min_prop_clearance": 3.371,
+        "nearest_prop": "v3_storage_rack",
+        "status": "PASS"
+      },
+      {
+        "edge": "Warehouse South Aisle -> Warehouse Mid Junction 6",
+        "min_prop_clearance": 9.897,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "edge": "Warehouse West Entry -> Warehouse Mid Junction 6",
+        "min_prop_clearance": 9.747,
+        "nearest_prop": "v3_collection_bp_monitor",
+        "status": "PASS"
+      }
+    ],
+    "G4_doorways": [
+      {
+        "doorway": "hospital_north_door",
+        "width": 1.5,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "storage_lab_door",
+        "width": 1.6,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "cafeteria_north_door",
+        "width": 1.6,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "hospital_alcove_door",
+        "width": 1.5,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "office_warehouse_door",
+        "width": 1.6,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "central_spine_j1_west",
+        "width": 1.6,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "central_spine_j1_east",
+        "width": 1.6,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      },
+      {
+        "doorway": "main_entrance_south",
+        "width": 3.0,
+        "v3_blocking_props": [],
+        "status": "PASS"
+      }
+    ],
+    "G5_logistics_points": [
+      {
+        "location": "collection_point",
+        "x": 5.0,
+        "y": -9.0,
+        "clearance": 0.877,
+        "nearest": "v3_collection_bp_monitor",
+        "status": "PASS"
+      },
+      {
+        "location": "laboratory_test_point",
+        "x": -7.0,
+        "y": 9.5,
+        "clearance": 0.791,
+        "nearest": "pillar_lab_1",
+        "status": "PASS"
+      }
+    ],
+    "G6_static_map": [
+      {
+        "edge": "Loading Bay Area -> Loading Approach Lane",
+        "min_new_occupied_cell_m": 9.898,
+        "status": "PASS"
+      },
+      {
+        "edge": "Restricted Vault Zone -> Triage Room",
+        "min_new_occupied_cell_m": 3.276,
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Office Wing Corridor",
+        "min_new_occupied_cell_m": 8.212,
+        "status": "PASS"
+      },
+      {
+        "edge": "West Bypass North -> West Bypass South",
+        "min_new_occupied_cell_m": 3.412,
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass South -> East Warehouse Bypass Mid",
+        "min_new_occupied_cell_m": 6.188,
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Corridor Turn -> West Cafeteria Junction 3",
+        "min_new_occupied_cell_m": 4.203,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central South Crossway -> Reception Desk & Waiting Area",
+        "min_new_occupied_cell_m": 1.9,
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Vault Approach -> West Bypass North Corner",
+        "min_new_occupied_cell_m": 2.438,
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Equipment Alcove -> Triage Room",
+        "min_new_occupied_cell_m": 2.789,
+        "status": "PASS"
+      },
+      {
+        "edge": "West Bypass North -> West Bypass North Corner",
+        "min_new_occupied_cell_m": 3.35,
+        "status": "PASS"
+      },
+      {
+        "edge": "Warehouse South Aisle -> Warehouse Mid Junction 6",
+        "min_new_occupied_cell_m": 9.897,
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Door -> Utility Service Entry",
+        "min_new_occupied_cell_m": 9.335,
+        "status": "PASS"
+      },
+      {
+        "edge": "Reception Desk & Waiting Area -> Main Entrance Spawn",
+        "min_new_occupied_cell_m": 2.1,
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Medical Ward -> Hospital Ward Entry",
+        "min_new_occupied_cell_m": 0.85,
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Ward Entry -> Medical Wing Junction 2",
+        "min_new_occupied_cell_m": 1.329,
+        "status": "PASS"
+      },
+      {
+        "edge": "Research & Storage Junction 7 -> Storage Approach Waypoint",
+        "min_new_occupied_cell_m": 3.353,
+        "status": "PASS"
+      },
+      {
+        "edge": "Storage Depot -> Storage Approach Waypoint",
+        "min_new_occupied_cell_m": 2.85,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Lab East Entry",
+        "min_new_occupied_cell_m": 6.407,
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Office-Warehouse North Bypass",
+        "min_new_occupied_cell_m": 8.212,
+        "status": "PASS"
+      },
+      {
+        "edge": "Archive Doorway Entry -> Office Wing Junction 5",
+        "min_new_occupied_cell_m": 8.137,
+        "status": "PASS"
+      },
+      {
+        "edge": "Lab Bypass Entry -> Chemical Vault Approach",
+        "min_new_occupied_cell_m": 2.15,
+        "status": "PASS"
+      },
+      {
+        "edge": "Archive Doorway Entry -> Office File Archive",
+        "min_new_occupied_cell_m": 8.404,
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Corridor Entry -> Central South Crossway",
+        "min_new_occupied_cell_m": 2.25,
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Room A Research Suite",
+        "min_new_occupied_cell_m": 1.464,
+        "status": "PASS"
+      },
+      {
+        "edge": "Office Wing Junction 5 -> Executive Office Suite",
+        "min_new_occupied_cell_m": 7.262,
+        "status": "PASS"
+      },
+      {
+        "edge": "Cafeteria Dining Entry -> West Cafeteria Junction 3",
+        "min_new_occupied_cell_m": 3.55,
+        "status": "PASS"
+      },
+      {
+        "edge": "Lab Bypass Entry -> Storage Approach Waypoint",
+        "min_new_occupied_cell_m": 3.35,
+        "status": "PASS"
+      },
+      {
+        "edge": "East Medical Corridor Entry -> Medical Wing Junction 2",
+        "min_new_occupied_cell_m": 2.95,
+        "status": "PASS"
+      },
+      {
+        "edge": "Industrial Warehouse Hub -> Warehouse South Aisle",
+        "min_new_occupied_cell_m": 10.75,
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Lab Bypass Entry",
+        "min_new_occupied_cell_m": 3.981,
+        "status": "PASS"
+      },
+      {
+        "edge": "Charging Station Dock -> West Bypass North",
+        "min_new_occupied_cell_m": 2.923,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Spine South -> Central Crossway",
+        "min_new_occupied_cell_m": 5.583,
+        "status": "PASS"
+      },
+      {
+        "edge": "Triage Room -> Triage Corridor Entry",
+        "min_new_occupied_cell_m": 3.275,
+        "status": "PASS"
+      },
+      {
+        "edge": "Warehouse West Entry -> Warehouse Mid Junction 6",
+        "min_new_occupied_cell_m": 9.75,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Spine South -> Central South Crossway",
+        "min_new_occupied_cell_m": 2.945,
+        "status": "PASS"
+      },
+      {
+        "edge": "Loading Approach Lane -> Warehouse South Aisle",
+        "min_new_occupied_cell_m": 9.898,
+        "status": "PASS"
+      },
+      {
+        "edge": "Hospital Ward Entry -> Room B Inspection Ward",
+        "min_new_occupied_cell_m": 0.85,
+        "status": "PASS"
+      },
+      {
+        "edge": "Industrial Warehouse Hub -> Warehouse North Aisle",
+        "min_new_occupied_cell_m": 15.207,
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Vault Approach -> Chemical Vault Entry",
+        "min_new_occupied_cell_m": 2.438,
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Corridor Entry -> West Cafeteria Junction 3",
+        "min_new_occupied_cell_m": 2.316,
+        "status": "PASS"
+      },
+      {
+        "edge": "East Medical Corridor Entry -> Central South Crossway",
+        "min_new_occupied_cell_m": 2.945,
+        "status": "PASS"
+      },
+      {
+        "edge": "Cafeteria Dining Hall -> Cafeteria Dining Entry",
+        "min_new_occupied_cell_m": 3.55,
+        "status": "PASS"
+      },
+      {
+        "edge": "Office-Warehouse North Bypass -> Industrial Warehouse Hub",
+        "min_new_occupied_cell_m": 10.938,
+        "status": "PASS"
+      },
+      {
+        "edge": "Emergency Exit Corridor Turn -> Utility Service Entry",
+        "min_new_occupied_cell_m": 7.871,
+        "status": "PASS"
+      },
+      {
+        "edge": "Medical Wing Junction 2 -> Triage Corridor Entry",
+        "min_new_occupied_cell_m": 3.25,
+        "status": "PASS"
+      },
+      {
+        "edge": "Utility Service Room -> Utility Service Aisle",
+        "min_new_occupied_cell_m": 8.475,
+        "status": "PASS"
+      },
+      {
+        "edge": "Research Lab Junction 8 -> Research Laboratory",
+        "min_new_occupied_cell_m": 1.464,
+        "status": "PASS"
+      },
+      {
+        "edge": "Research & Storage Junction 7 -> Lab East Entry",
+        "min_new_occupied_cell_m": 3.456,
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass South -> Medical Wing Junction 2",
+        "min_new_occupied_cell_m": 3.281,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Office Wing Corridor",
+        "min_new_occupied_cell_m": 8.466,
+        "status": "PASS"
+      },
+      {
+        "edge": "Utility Service Aisle -> Utility Service Entry",
+        "min_new_occupied_cell_m": 9.335,
+        "status": "PASS"
+      },
+      {
+        "edge": "Central Crossway -> Warehouse West Entry",
+        "min_new_occupied_cell_m": 8.466,
+        "status": "PASS"
+      },
+      {
+        "edge": "West Cafeteria Junction 3 -> West Bypass South",
+        "min_new_occupied_cell_m": 4.203,
+        "status": "PASS"
+      },
+      {
+        "edge": "East Warehouse Bypass Mid -> Warehouse Mid Junction 6",
+        "min_new_occupied_cell_m": 9.11,
+        "status": "PASS"
+      },
+      {
+        "edge": "Chemical Storage Vault -> Chemical Vault Entry",
+        "min_new_occupied_cell_m": 3.827,
+        "status": "PASS"
+      },
+      {
+        "node": "Main Entrance Spawn",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Reception Desk & Waiting Area",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Central South Crossway",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "East Medical Corridor Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Medical Wing Junction 2",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Ward Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Medical Ward",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Room B Inspection Ward",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Triage Corridor Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Triage Room",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Hospital Equipment Alcove",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Restricted Vault Zone",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "East Warehouse Bypass South",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "East Warehouse Bypass Mid",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "West Cafeteria Corridor Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "West Cafeteria Junction 3",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Cafeteria Dining Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Cafeteria Dining Hall",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Emergency Exit Corridor Turn",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Aisle",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Emergency Exit Door",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Utility Service Room",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Central Spine South",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Central Crossway",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Office Wing Corridor",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Office Wing Junction 5",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Executive Office Suite",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Archive Doorway Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Office File Archive",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Office-Warehouse North Bypass",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse West Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse Mid Junction 6",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Industrial Warehouse Hub",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse South Aisle",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Loading Approach Lane",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Loading Bay Area",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Warehouse North Aisle",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Lab East Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Research & Storage Junction 7",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Storage Depot",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Storage Approach Waypoint",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Research Lab Junction 8",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Lab Bypass Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Vault Approach",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Vault Entry",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Research Laboratory",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Room A Research Suite",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Chemical Storage Vault",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass South",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass North",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "West Bypass North Corner",
+        "v3_map_value": 254,
+        "status": "PASS"
+      },
+      {
+        "node": "Charging Station Dock",
+        "v3_map_value": 254,
+        "status": "PASS"
+      }
+    ]
+  }
+}

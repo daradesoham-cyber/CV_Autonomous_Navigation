@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hospital_logistics</name>
+  <version>3.0.0</version>
+  <description>V3 CV-centric hospital logistics robot: world launch, mission and logistics layers on top of V2.6</description>
+  <maintainer email="soham@example.com">Soham Darade</maintainer>
+  <license>Apache-2.0</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>autonomous_robot_description</exec_depend>
+  <exec_depend>autonomous_robot_gazebo</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

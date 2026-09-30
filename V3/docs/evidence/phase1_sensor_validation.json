@@ -1,0 +1,852 @@
+{
+  "S1_rates": {
+    "camera_hz": 19.2,
+    "scan_hz": 20.0
+  },
+  "S2_viewpoints": [
+    {
+      "viewpoint": "ward_entry_south",
+      "pose": [
+        6.0,
+        -7.3,
+        -1.571
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/ward_entry_south.png",
+      "image_pixel_std": 70.1,
+      "scan_finite_beams": 653,
+      "props": [
+        {
+          "prop": "v3_patient_bed_1",
+          "model": "MalePatientBed",
+          "beam_deg": 55.8,
+          "measured_m": 1.522,
+          "geometric_m": 1.522,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_trolley_bed_2",
+          "model": "TrolleyBed",
+          "beam_deg": 13.3,
+          "measured_m": 3.358,
+          "geometric_m": 3.262,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_bedside_drawer_1",
+          "model": "Drawer",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_bedside_drawer_2",
+          "model": "Drawer",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_iv_stand_ward",
+          "model": "IVStand",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": -40.3,
+          "measured_m": 3.239,
+          "geometric_m": 3.147,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": -76.4,
+          "measured_m": 2.473,
+          "geometric_m": 2.319,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_ward_bp_cart",
+          "model": "BPCart",
+          "beam_deg": -4.8,
+          "measured_m": 4.715,
+          "geometric_m": 4.404,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_ward_nurse",
+          "model": "Scrubs",
+          "beam_deg": -19.3,
+          "measured_m": 5.078,
+          "geometric_m": 4.88,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_parked_wheelchair",
+          "model": "PatientWheelChair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": -52.3,
+          "measured_m": 3.014,
+          "geometric_m": 2.988,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "collection_point_west",
+      "pose": [
+        5.0,
+        -9.0,
+        3.142
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/collection_point_west.png",
+      "image_pixel_std": 50.4,
+      "scan_finite_beams": 691,
+      "props": [
+        {
+          "prop": "v3_patient_bed_1",
+          "model": "MalePatientBed",
+          "beam_deg": 174.5,
+          "measured_m": 1.913,
+          "geometric_m": 1.567,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_trolley_bed_2",
+          "model": "TrolleyBed",
+          "beam_deg": 149.0,
+          "measured_m": 3.123,
+          "geometric_m": 3.054,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_bedside_drawer_1",
+          "model": "Drawer",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_bedside_drawer_2",
+          "model": "Drawer",
+          "beam_deg": 157.0,
+          "measured_m": 4.49,
+          "geometric_m": 4.498,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_iv_stand_ward",
+          "model": "IVStand",
+          "beam_deg": 165.0,
+          "measured_m": 4.635,
+          "geometric_m": 4.122,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": 40.8,
+          "measured_m": 1.318,
+          "geometric_m": 1.224,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": -23.3,
+          "measured_m": 1.416,
+          "geometric_m": 1.288,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_ward_bp_cart",
+          "model": "BPCart",
+          "beam_deg": 102.4,
+          "measured_m": 3.167,
+          "geometric_m": 2.856,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_ward_nurse",
+          "model": "Scrubs",
+          "beam_deg": 80.9,
+          "measured_m": 3.285,
+          "geometric_m": 3.045,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_parked_wheelchair",
+          "model": "PatientWheelChair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": 18.3,
+          "measured_m": 1.348,
+          "geometric_m": 1.332,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "collection_point_south",
+      "pose": [
+        5.0,
+        -9.0,
+        -1.571
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/collection_point_south.png",
+      "image_pixel_std": 62.5,
+      "scan_finite_beams": 686,
+      "props": [
+        {
+          "prop": "v3_patient_bed_1",
+          "model": "MalePatientBed",
+          "beam_deg": 86.4,
+          "measured_m": 1.808,
+          "geometric_m": 1.463,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_trolley_bed_2",
+          "model": "TrolleyBed",
+          "beam_deg": 59.3,
+          "measured_m": 2.977,
+          "geometric_m": 2.892,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_bedside_drawer_1",
+          "model": "Drawer",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_bedside_drawer_2",
+          "model": "Drawer",
+          "beam_deg": 67.3,
+          "measured_m": 4.315,
+          "geometric_m": 4.309,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_iv_stand_ward",
+          "model": "IVStand",
+          "beam_deg": 79.4,
+          "measured_m": 4.167,
+          "geometric_m": 3.949,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": -54.8,
+          "measured_m": 1.316,
+          "geometric_m": 1.215,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": -115.4,
+          "measured_m": 1.529,
+          "geometric_m": 1.419,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_ward_bp_cart",
+          "model": "BPCart",
+          "beam_deg": 11.3,
+          "measured_m": 3.052,
+          "geometric_m": 2.742,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_ward_nurse",
+          "model": "Scrubs",
+          "beam_deg": -11.8,
+          "measured_m": 3.17,
+          "geometric_m": 2.968,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_parked_wheelchair",
+          "model": "PatientWheelChair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": -63.8,
+          "measured_m": 1.537,
+          "geometric_m": 1.521,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "reception_east",
+      "pose": [
+        0.5,
+        -10.8,
+        0.0
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/reception_east.png",
+      "image_pixel_std": 75.4,
+      "scan_finite_beams": 549,
+      "props": [
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_ward_bp_cart",
+          "model": "BPCart",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_ward_nurse",
+          "model": "Scrubs",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_w1",
+          "model": "Chair",
+          "beam_deg": 171.5,
+          "measured_m": 3.464,
+          "geometric_m": 3.452,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_w2",
+          "model": "Chair",
+          "beam_deg": 159.0,
+          "measured_m": 2.901,
+          "geometric_m": 2.877,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": 21.8,
+          "measured_m": 1.66,
+          "geometric_m": 1.647,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": 13.3,
+          "measured_m": 2.668,
+          "geometric_m": 2.662,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_reception_nurse",
+          "model": "Scrubs",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": -2.3,
+          "measured_m": 2.266,
+          "geometric_m": 1.961,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_parked_wheelchair",
+          "model": "PatientWheelChair",
+          "beam_deg": -26.3,
+          "measured_m": 1.828,
+          "geometric_m": 1.829,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "reception_north",
+      "pose": [
+        0.0,
+        -11.0,
+        1.571
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/reception_north.png",
+      "image_pixel_std": 41.5,
+      "scan_finite_beams": 538,
+      "props": [
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_ward_bp_cart",
+          "model": "BPCart",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_ward_nurse",
+          "model": "Scrubs",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_w1",
+          "model": "Chair",
+          "beam_deg": 76.9,
+          "measured_m": 2.847,
+          "geometric_m": 2.809,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_w2",
+          "model": "Chair",
+          "beam_deg": 76.4,
+          "measured_m": 2.589,
+          "geometric_m": 2.59,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": -71.3,
+          "measured_m": 2.235,
+          "geometric_m": 2.223,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": -75.9,
+          "measured_m": 2.922,
+          "geometric_m": 2.91,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_reception_nurse",
+          "model": "Scrubs",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": -90.4,
+          "measured_m": 2.877,
+          "geometric_m": 2.559,
+          "status": "MISMATCH"
+        },
+        {
+          "prop": "v3_parked_wheelchair",
+          "model": "PatientWheelChair",
+          "beam_deg": -107.4,
+          "measured_m": 2.352,
+          "geometric_m": 2.347,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "lab_junction_northwest",
+      "pose": [
+        -5.0,
+        7.0,
+        2.36
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/lab_junction_northwest.png",
+      "image_pixel_std": 47.9,
+      "scan_finite_beams": 698,
+      "props": [
+        {
+          "prop": "v3_sign_laboratory_test_point",
+          "model": "plaque",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "test_point_north",
+      "pose": [
+        -7.0,
+        9.5,
+        1.571
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/test_point_north.png",
+      "image_pixel_std": 8.7,
+      "scan_finite_beams": 701,
+      "props": [
+        {
+          "prop": "v3_lab_instrument_cart",
+          "model": "InstrumentCart1",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_lab_cabinet",
+          "model": "MetalCabinet",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_lab_surgical_trolley",
+          "model": "SurgicalTrolley",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_sign_laboratory_test_point",
+          "model": "plaque",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    },
+    {
+      "viewpoint": "storage_west",
+      "pose": [
+        -8.0,
+        3.0,
+        3.142
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/storage_west.png",
+      "image_pixel_std": 45.9,
+      "scan_finite_beams": 674,
+      "props": [
+        {
+          "prop": "v3_storage_rack",
+          "model": "StorageRack",
+          "beam_deg": 12.8,
+          "measured_m": 1.303,
+          "geometric_m": 1.303,
+          "status": "VISIBLE"
+        }
+      ]
+    },
+    {
+      "viewpoint": "corridor_west_person",
+      "pose": [
+        -3.0,
+        -5.0,
+        3.142
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/corridor_west_person.png",
+      "image_pixel_std": 58.8,
+      "scan_finite_beams": 626,
+      "props": [
+        {
+          "prop": "v3_waiting_chair_w1",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_w2",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_reception_nurse",
+          "model": "Scrubs",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        }
+      ]
+    },
+    {
+      "viewpoint": "corridor_east_trolley",
+      "pose": [
+        4.0,
+        -5.0,
+        0.0
+      ],
+      "teleported": true,
+      "image": "docs/evidence/phase1_sensors/corridor_east_trolley.png",
+      "image_pixel_std": 33.7,
+      "scan_finite_beams": 626,
+      "props": [
+        {
+          "prop": "v3_patient_bed_1",
+          "model": "MalePatientBed",
+          "beam_deg": -45.8,
+          "measured_m": 4.535,
+          "geometric_m": 4.539,
+          "status": "VISIBLE"
+        },
+        {
+          "prop": "v3_collection_table",
+          "model": "AdjTable",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_collection_bp_monitor",
+          "model": "BloodPressureMonitor",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_e1",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_waiting_chair_e2",
+          "model": "Chair",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_visitor_phone",
+          "model": "MaleVisitorOnPhone",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "OCCLUDED (no line of sight)"
+        },
+        {
+          "prop": "v3_sign_collection_point",
+          "model": "plaque",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        },
+        {
+          "prop": "v3_payload_blood_sample_carrier",
+          "model": "box",
+          "beam_deg": null,
+          "measured_m": null,
+          "geometric_m": null,
+          "status": "not in LiDAR plane"
+        }
+      ]
+    }
+  ]
+}

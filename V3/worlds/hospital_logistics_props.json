@@ -1,0 +1,419 @@
+{
+  "collection_point": {
+    "name": "collection_point",
+    "x": 5.0,
+    "y": -9.0,
+    "yaw": 3.141592653589793,
+    "v26_node": "Hospital Medical Ward"
+  },
+  "laboratory_test_point": {
+    "name": "laboratory_test_point",
+    "x": -7.0,
+    "y": 9.5,
+    "yaw": 1.5707963267948966,
+    "v26_node": "Research Laboratory"
+  },
+  "replaced_placeholders": {
+    "hospital_bed_1": "v3_patient_bed_1",
+    "hospital_bed_2": "v3_trolley_bed_2",
+    "bedside_table_1": "v3_bedside_drawer_1",
+    "bedside_table_2": "v3_bedside_drawer_2",
+    "waiting_bench_w": "v3_waiting_chair_w1/w2",
+    "waiting_bench_e": "v3_waiting_chair_e1/e2",
+    "storage_box_stack": "v3_storage_rack"
+  },
+  "dynamic_visuals": {
+    "dynamic_person": "Scrubs",
+    "dynamic_hospital_trolley": "SurgicalTrolley"
+  },
+  "props": [
+    {
+      "name": "v3_patient_bed_1",
+      "model": "MalePatientBed",
+      "x": 7.45,
+      "y": -8.8,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "bed with patient; large static obstacle",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 6.46,
+        "xmax": 8.601,
+        "ymin": -9.345,
+        "ymax": -8.255,
+        "height": 1.078
+      }
+    },
+    {
+      "name": "v3_trolley_bed_2",
+      "model": "TrolleyBed",
+      "x": 7.5,
+      "y": -11.0,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "hospital bed/trolley bed; static obstacle",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 6.509,
+        "xmax": 8.491,
+        "ymin": -11.423,
+        "ymax": -10.575,
+        "height": 0.854
+      }
+    },
+    {
+      "name": "v3_bedside_drawer_1",
+      "model": "Drawer",
+      "x": 8.95,
+      "y": -8.8,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "bedside cabinet; low clutter",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 8.745,
+        "xmax": 9.155,
+        "ymin": -9.062,
+        "ymax": -8.56,
+        "height": 0.63
+      }
+    },
+    {
+      "name": "v3_bedside_drawer_2",
+      "model": "Drawer",
+      "x": 8.95,
+      "y": -11.0,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "bedside cabinet; low clutter",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 8.745,
+        "xmax": 9.155,
+        "ymin": -11.262,
+        "ymax": -10.76,
+        "height": 0.63
+      }
+    },
+    {
+      "name": "v3_iv_stand_ward",
+      "model": "IVStand",
+      "x": 9.1,
+      "y": -9.9,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "IV stand; thin-pole LiDAR case",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 8.881,
+        "xmax": 9.319,
+        "ymin": -10.124,
+        "ymax": -9.679,
+        "height": 1.412
+      }
+    },
+    {
+      "name": "v3_collection_table",
+      "model": "AdjTable",
+      "x": 4.1,
+      "y": -10.6,
+      "yaw": 1.5708,
+      "area": "ward",
+      "purpose": "sample collection station table",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 3.7,
+        "xmax": 4.512,
+        "ymin": -11.4,
+        "ymax": -9.8,
+        "height": 0.811
+      }
+    },
+    {
+      "name": "v3_collection_bp_monitor",
+      "model": "BloodPressureMonitor",
+      "x": 4.0,
+      "y": -8.2,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "medical device landmark at collection station",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 3.714,
+        "xmax": 4.286,
+        "ymin": -8.491,
+        "ymax": -7.947,
+        "height": 1.478
+      }
+    },
+    {
+      "name": "v3_ward_bp_cart",
+      "model": "BPCart",
+      "x": 5.6,
+      "y": -12.2,
+      "yaw": 0.0,
+      "area": "ward",
+      "purpose": "medical cart",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 5.305,
+        "xmax": 5.895,
+        "ymin": -12.474,
+        "ymax": -11.789,
+        "height": 1.604
+      }
+    },
+    {
+      "name": "v3_ward_nurse",
+      "model": "Scrubs",
+      "x": 4.3,
+      "y": -12.2,
+      "yaw": 1.5708,
+      "area": "ward",
+      "purpose": "static person (nurse)",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 3.998,
+        "xmax": 4.563,
+        "ymin": -12.328,
+        "ymax": -12.006,
+        "height": 1.621
+      }
+    },
+    {
+      "name": "v3_waiting_chair_w1",
+      "model": "Chair",
+      "x": -2.95,
+      "y": -10.0,
+      "yaw": 0.0,
+      "area": "reception",
+      "purpose": "hospital chair",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -3.248,
+        "xmax": -2.735,
+        "ymin": -10.289,
+        "ymax": -9.711,
+        "height": 0.817
+      }
+    },
+    {
+      "name": "v3_waiting_chair_w2",
+      "model": "Chair",
+      "x": -2.3,
+      "y": -10.0,
+      "yaw": 0.0,
+      "area": "reception",
+      "purpose": "hospital chair",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -2.598,
+        "xmax": -2.085,
+        "ymin": -10.289,
+        "ymax": -9.711,
+        "height": 0.817
+      }
+    },
+    {
+      "name": "v3_waiting_chair_e1",
+      "model": "Chair",
+      "x": 2.4,
+      "y": -9.9,
+      "yaw": 0.0,
+      "area": "reception",
+      "purpose": "hospital chair",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 2.102,
+        "xmax": 2.615,
+        "ymin": -10.189,
+        "ymax": -9.611,
+        "height": 0.817
+      }
+    },
+    {
+      "name": "v3_waiting_chair_e2",
+      "model": "Chair",
+      "x": 3.05,
+      "y": -9.9,
+      "yaw": 0.0,
+      "area": "reception",
+      "purpose": "hospital chair",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 2.752,
+        "xmax": 3.265,
+        "ymin": -10.189,
+        "ymax": -9.611,
+        "height": 0.817
+      }
+    },
+    {
+      "name": "v3_reception_nurse",
+      "model": "Scrubs",
+      "x": -2.2,
+      "y": -7.4,
+      "yaw": -1.5708,
+      "area": "reception",
+      "purpose": "static person behind reception desk",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -2.463,
+        "xmax": -1.898,
+        "ymin": -7.594,
+        "ymax": -7.272,
+        "height": 1.621
+      }
+    },
+    {
+      "name": "v3_visitor_phone",
+      "model": "MaleVisitorOnPhone",
+      "x": 2.9,
+      "y": -10.8,
+      "yaw": 3.1416,
+      "area": "reception",
+      "purpose": "static person (visitor)",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 2.559,
+        "xmax": 3.014,
+        "ymin": -11.002,
+        "ymax": -10.501,
+        "height": 1.745
+      }
+    },
+    {
+      "name": "v3_parked_wheelchair",
+      "model": "PatientWheelChair",
+      "x": 2.8,
+      "y": -11.9,
+      "yaw": 0.0,
+      "area": "reception",
+      "purpose": "wheelchair",
+      "dynamic": false,
+      "footprint": {
+        "xmin": 2.24,
+        "xmax": 3.358,
+        "ymin": -12.219,
+        "ymax": -11.582,
+        "height": 1.779
+      }
+    },
+    {
+      "name": "v3_lab_instrument_cart",
+      "model": "InstrumentCart1",
+      "x": -9.0,
+      "y": 12.3,
+      "yaw": 0.0,
+      "area": "lab",
+      "purpose": "laboratory instrument cart",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -9.303,
+        "xmax": -8.697,
+        "ymin": 12.024,
+        "ymax": 12.543,
+        "height": 1.381
+      }
+    },
+    {
+      "name": "v3_lab_cabinet",
+      "model": "MetalCabinet",
+      "x": -8.0,
+      "y": 12.55,
+      "yaw": 0.0,
+      "area": "lab",
+      "purpose": "medical/lab cabinet",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -8.404,
+        "xmax": -7.596,
+        "ymin": 12.326,
+        "ymax": 12.774,
+        "height": 1.676
+      }
+    },
+    {
+      "name": "v3_lab_surgical_trolley",
+      "model": "SurgicalTrolley",
+      "x": -10.1,
+      "y": 12.4,
+      "yaw": 0.0,
+      "area": "lab",
+      "purpose": "medical trolley",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -10.551,
+        "xmax": -9.673,
+        "ymin": 12.226,
+        "ymax": 12.592,
+        "height": 0.704
+      }
+    },
+    {
+      "name": "v3_storage_rack",
+      "model": "StorageRack",
+      "x": -10.0,
+      "y": 3.0,
+      "yaw": 0.0,
+      "area": "storage",
+      "purpose": "medical supply storage rack",
+      "dynamic": false,
+      "footprint": {
+        "xmin": -10.629,
+        "xmax": -9.371,
+        "ymin": 2.643,
+        "ymax": 3.357,
+        "height": 1.74
+      }
+    },
+    {
+      "name": "v3_sign_collection_point",
+      "model": "plaque",
+      "x": 3.62,
+      "y": -9.6,
+      "area": "ward",
+      "dynamic": false,
+      "purpose": "collection point landmark plaque",
+      "footprint": {
+        "xmin": 3.605,
+        "xmax": 3.635,
+        "ymin": -10.0,
+        "ymax": -9.2,
+        "height": 1.05
+      }
+    },
+    {
+      "name": "v3_sign_laboratory_test_point",
+      "model": "plaque",
+      "x": -7.6,
+      "y": 10.95,
+      "area": "lab",
+      "dynamic": false,
+      "purpose": "laboratory test point landmark plaque (on lab_bench_2)",
+      "footprint": {
+        "xmin": -8.0,
+        "xmax": -7.2,
+        "ymin": 10.935,
+        "ymax": 10.965,
+        "height": 1.32
+      }
+    },
+    {
+      "name": "v3_payload_blood_sample_carrier",
+      "model": "box",
+      "x": 4.1,
+      "y": -10.3,
+      "area": "ward",
+      "dynamic": false,
+      "purpose": "logical payload marker (on collection table)",
+      "footprint": {
+        "xmin": 3.97,
+        "xmax": 4.23,
+        "ymin": -10.39,
+        "ymax": -10.21,
+        "height": 0.94
+      }
+    }
+  ]
+}

@@ -70,7 +70,7 @@ The launcher is `start_cv_navigation_v2.sh`, run from `~/Desktop/CV_Navigation_V
 
 ## E. Reusable robot / world assets
 
-- **Worth considering (props only):** the AWS RoboMaker hospital prop models, namely `TrolleyBed`, `MalePatientBed`, `PatientWheelChair`, `InstrumentCart1/2`, `SurgicalTrolley`, `BPCart`, `IVStand`, `XRayMachine`, `aws_robomaker_hospital_nursesstation`, `aws_robomaker_hospital_hospitalsign`. These are mesh-only SDF models. Each one must be checked individually for Classic-only material scripts before use. The upstream AWS RoboMaker hospital world is MIT-0 licensed. The reference repo has no LICENSE file, so V3 should source these from the upstream AWS repo, not from this repo.
+- **Superseded by section J (Phase 1):** the props were traced to their true source and license there. Original Phase 0 note: the AWS RoboMaker hospital prop models, namely `TrolleyBed`, `MalePatientBed`, `PatientWheelChair`, `InstrumentCart1/2`, `SurgicalTrolley`, `BPCart`, `IVStand`, `XRayMachine`, `aws_robomaker_hospital_nursesstation`, `aws_robomaker_hospital_hospitalsign`. These are mesh-only SDF models. Each one must be checked individually for Classic-only material scripts before use. The upstream AWS RoboMaker hospital world is MIT-0 licensed. The reference repo has no LICENSE file, so V3 should source these from the upstream AWS repo, not from this repo.
 - **Not reusable:** the Pioneer 3AT and Hokuyo models, which use Classic plugins, and V2.6 already has a validated robot. The full `hospital.world` is not reusable either: it has 183 includes, a Classic state plugin, and a different map from the V2.6 Nav2 map.
 
 ## F. Reusable path-planning ideas
@@ -131,3 +131,18 @@ v3_dashboard_backend subscribes to all of the above → http://localhost:5060
 **World:** the V2.6 facility already has lab, reception, storage, office, and charging areas plus lab signage. V3 therefore needs only a **copy** of it with a collection-point marker, a lab/test-point marker, and optionally 2–4 hospital props from section E. The V2.6 world file stays untouched.
 
 **Blocking decision before Phase 1:** the 24 uncommitted V2.6 changes. Either commit them to the V2.6 branch as part of the baseline, or stash them and branch V3 from `5312068`.
+
+---
+
+## J. Phase 1 addendum: asset compatibility findings (2026-09-30)
+
+Realistic props became a requirement in Phase 1, so I traced every candidate asset to its origin:
+
+1. **The reference repo is not the origin of its assets.** Its `models/` directory is a mix of AWS RoboMaker hospital-world assets and models from the Gazebo Fuel OpenRobotics collection. It has no LICENSE file, so V3 takes nothing from it directly.
+2. **The medical props (beds, wheelchair, IV stand, carts, cabinets, people) come from Gazebo Fuel, OpenRobotics.** The AWS repo only downloads them at setup time (`setup.sh` → `fuel_utility.py`). The Fuel API reports **CC-BY 4.0** for every model used, which permits modification and redistribution with attribution (`V3/models/ATTRIBUTION.md`).
+3. **The Fuel models are already Gazebo-Sim-native:** OBJ meshes, no plugins, no OGRE-1 material scripts, Z-up, floor origin, and a real-world scale. The only adaptations were relative mesh URIs, `<static>true</static>`, and a collision fix for PatientWheelChair (the upstream collision mesh was rotated 90° and 0.5 m short).
+4. **The AWS RoboMaker hospital world** (`ros2` branch, archived 2025-09-10) is MIT-0. Its nurses station was rejected on size (4.8 × 7.0 × 3.0 m). Its other assets are building shell or décor.
+5. **Nothing from Gazebo Classic was imported:** no `gazebo_ros` plugins, `SpawnEntity`, `.world` files or Classic launch files. The V3 world is the V2.6 builder output (unchanged SDF 1.x with gz-sim systems) plus `<include>`s of the vendored models, loaded through `GZ_SIM_RESOURCE_PATH` by `hospital_logistics/launch/v3_world.launch.py`.
+6. **Navigation-relevant finding:** with realistic beds, the 2D `gpu_lidar` at z = 0.235 m mostly sees bed legs. The frame underside is at 0.22–0.32 m, below the robot's 0.41 m camera mast. V2.6 clears the ward and lab rectangles from its static map, so V3 re-stamps the static prop footprints into the V3 map (global costmap static layer only). I changed no Nav2 parameters.
+
+The full inventory, placements and validation results are in `V3_REALISTIC_ASSET_INVENTORY.md`.
