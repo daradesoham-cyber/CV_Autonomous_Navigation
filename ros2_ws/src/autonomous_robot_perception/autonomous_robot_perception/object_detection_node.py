@@ -124,6 +124,9 @@ def build_sign_lookup(yaml_path: str) -> tuple:
             'x': float(wall.get('x', 0.0)),
             'y': float(wall.get('y', 0.0)),
             'z': float(wall.get('z', 1.10)),
+            'yaw': float(wall.get('yaw', 0.0)),
+            'approaching_from': sdata.get('approaching_from', []),
+            'branch_node': sdata.get('branch_node', ''),
             'confidence_prior': float(sdata.get('confidence_prior', 0.90)),
             'junction': sdata.get('junction', ''),
         }
@@ -543,6 +546,33 @@ class ObjectDetectionNode(Node):
                 dist = math.hypot(dx, dy)
                 if dist < self.min_sign_range_m or dist > self.max_sign_range_m:
                     continue
+
+                # Sign front normal vector in world frame
+                # Sign box model: front normal is (-sin(yaw), cos(yaw))
+                sign_yaw = entry.get('yaw', 0.0)
+                normal_x = -math.sin(sign_yaw)
+                normal_y = math.cos(sign_yaw)
+
+                # Vector from sign to robot
+                vec_s2r_x = self.robot_x - entry['x']
+                vec_s2r_y = self.robot_y - entry['y']
+
+                # 1. Sign Face Normal Check: Robot must be located in front of the sign face
+                # dot(V_s2r, Normal) / dist must be > 0.15 (within ~81 deg of front normal)
+                front_dot = (vec_s2r_x * normal_x + vec_s2r_y * normal_y) / max(0.01, dist)
+                if front_dot <= 0.15:
+                    # Robot is behind the sign or at an extreme acute angle -> reject rear face
+                    continue
+
+                # 2. Heading Check: Robot camera must be facing roughly opposite to the sign normal
+                # dot(R_heading, Normal) must be < -0.15 (facing into the sign)
+                robot_dir_x = math.cos(self.robot_yaw)
+                robot_dir_y = math.sin(self.robot_yaw)
+                heading_dot = robot_dir_x * normal_x + robot_dir_y * normal_y
+                if heading_dot >= -0.15:
+                    # Robot is looking away from the sign normal (viewing rear or parallel) -> reject
+                    continue
+
                 # Angle to sign in map frame
                 angle_to_sign = math.atan2(dy, dx)
                 # Relative angle in robot body frame
@@ -566,18 +596,13 @@ class ObjectDetectionNode(Node):
                     best_entry = entry
 
         if best_entry is None:
-            # Fallback: generic sign heuristic from bearing direction
-            if bearing_rad > 0.3:
-                text, direction = "EXIT", "LEFT"
-            elif bearing_rad < -0.3:
-                text, direction = "WAREHOUSE", "RIGHT"
-            else:
-                text, direction = "OFFICE", "STRAIGHT"
-            destination = text.lower().replace(' ', '_')
-        else:
-            text = best_entry['text']
-            direction = best_entry['direction']
-            destination = best_entry['destination']
+            # No confirmed sign matches pose, viewing angle, and bearing.
+            # Do NOT hallucinate fallback signs (e.g. "OFFICE STRAIGHT").
+            return None
+
+        text = best_entry['text']
+        direction = best_entry['direction']
+        destination = best_entry['destination']
 
         sign_det = SignDetection()
         sign_det.header = header

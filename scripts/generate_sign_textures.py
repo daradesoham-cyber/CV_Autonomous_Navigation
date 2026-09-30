@@ -14,7 +14,9 @@ os.makedirs(SIGNS_DIR, exist_ok=True)
 # Colors in BGR format
 SIGNS = [
     ("hospital_right.png", "HOSPITAL", "RIGHT", (245, 245, 245), (180, 50, 20), (180, 50, 20)),
+    ("hospital_left.png", "HOSPITAL", "LEFT", (245, 245, 245), (180, 50, 20), (180, 50, 20)),
     ("hospital_straight.png", "HOSPITAL", "STRAIGHT", (245, 245, 245), (180, 50, 20), (180, 50, 20)),
+    ("reception_straight.png", "RECEPTION", "STRAIGHT", (245, 245, 245), (40, 40, 180), (40, 40, 180)),
     ("warehouse_straight.png", "WAREHOUSE", "STRAIGHT", (240, 240, 240), (20, 100, 200), (20, 100, 200)),
     ("warehouse_right.png", "WAREHOUSE", "RIGHT", (240, 240, 240), (20, 100, 200), (20, 100, 200)),
     ("office_straight.png", "OFFICE", "STRAIGHT", (245, 245, 245), (30, 30, 30), (30, 30, 30)),

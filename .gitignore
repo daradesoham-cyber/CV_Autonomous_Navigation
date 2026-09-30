@@ -76,3 +76,4 @@ slprj/
 *.bak
 *.backup
 *~
+.aider*

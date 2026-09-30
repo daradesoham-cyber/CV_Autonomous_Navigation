@@ -41,7 +41,7 @@ WALLS = [
 
     # --- Interior Room Partitions ---
     # Entrance / Reception Dividers (Y = -7.0, opening in [-1.8, 1.8] for main corridor, [-7.0, -5.4] for Cafeteria, and [-13.25, -11.75] for Emergency Exit)
-    ("wall_rec_div_w1_a", -14.225, -7.0, 1.95, 0.2),
+    ("wall_rec_div_w1_a", -14.014, -7.0, 1.95, 0.2),
     ("wall_rec_div_w1_b", -9.375, -7.0, 4.75, 0.2),
     ("wall_rec_div_w2", -3.6, -7.0, 3.6, 0.2),
     # Hospital Wing North Wall with realistic 1.50m wide doorway at X in [5.25, 6.75]
@@ -73,7 +73,7 @@ WALLS = [
     ("wall_cafe_w", -11.0, -9.5, 0.2, 5.0),
     # Dead End 2: Utility Service Room (X in [-16.0, -14.4], Y in [-6.0, -3.0], 1.4m South Access corridor)
     ("wall_utility_n", -15.2, -3.0, 1.6, 0.2),
-    ("wall_utility_e", -14.4, -4.5, 0.2, 3.0),
+    ("wall_utility_e", -14.4, -2.937, 0.2, 3.0),
 
     # --- Central Crossway & North Spine (Y = +1.0 to +7.0) ---
     # Cross connector dividing walls with open corridors connecting Junction 4 to Warehouse and Storage
@@ -99,7 +99,7 @@ WALLS = [
     # --- Research Lab & Storage (North-West: X in [-15.5, -4.0], Y in [1.5, 12.5]) ---
     # Storage section divider with clear 1.6m corridor doorway at X in [-7.0, -5.4]
     ("wall_storage_div_w", -9.25, 5.0, 4.5, 0.2),
-    ("wall_storage_div_e", -4.7, 5.0, 1.4, 0.2),
+    ("wall_storage_div_e", -4.357, 5.0, 1.4, 0.2),
     # Dead End 4: Chemical Storage Vault (X in [-15.5, -12.5], Y in [6.0, 12.5])
     ("wall_vault_e", -11.0, 9.5, 0.2, 5.0),
     ("wall_vault_s", -14.0, 6.0, 3.0, 0.2),
@@ -117,6 +117,8 @@ PILLARS = [
     ("pillar_center_2", 1.8, 3.5, 0.5, 0.5),
     ("pillar_wh_1", 9.0, 6.5, 0.6, 0.6),
     ("pillar_lab_1", -7.5, 8.5, 0.5, 0.5),
+    ("pillar_j3", -6.8, -4.0, 0.4, 0.4),
+    ("pillar_j2", 6.8, -4.0, 0.4, 0.4),
 ]
 
 import yaml
@@ -394,7 +396,7 @@ def generate_sdf():
     sdf.append("")
     sdf.append("    <!-- Dynamic Moving Obstacle 1: Autonomous Warehouse Cart -->")
     sdf.append("    <model name='dynamic_warehouse_cart'>")
-    sdf.append("      <pose>8.0 3.5 0.3 0 0 1.5708</pose>")
+    sdf.append("      <pose>8.0 3.2035 0.3 0 0 1.5708</pose>")
     sdf.append("      <link name='cart_link'>")
     sdf.append("        <inertial>")
     sdf.append("          <mass>25.0</mass>")
@@ -419,7 +421,7 @@ def generate_sdf():
     sdf.append("")
     sdf.append("    <!-- Dynamic Moving Obstacle 2: Hospital Trolley (Patrols medical corridor along Y=-5.0) -->")
     sdf.append("    <model name='dynamic_hospital_trolley'>")
-    sdf.append("      <pose>6.0 -5.0 0.35 0 0 0</pose>")
+    sdf.append("      <pose>7.7935 -5.0 0.35 0 0 0</pose>")
     sdf.append("      <link name='trolley_link'>")
     sdf.append("        <inertial>")
     sdf.append("          <mass>18.0</mass>")
@@ -444,7 +446,7 @@ def generate_sdf():
     sdf.append("")
     sdf.append("    <!-- Dynamic Moving Obstacle 3: Autonomous Forklift -->")
     sdf.append("    <model name='dynamic_forklift'>")
-    sdf.append("      <pose>11.5 4.5 0.4 0 0 1.5708</pose>")
+    sdf.append("      <pose>11.5 4.8 0.4 0 0 1.5708</pose>")
     sdf.append("      <link name='forklift_link'>")
     sdf.append("        <inertial>")
     sdf.append("          <mass>40.0</mass>")
@@ -586,8 +588,8 @@ def generate_occupancy_map():
         (4.5, -11.5, 8.5, -6.5),
         # Cafeteria Doorway: X in [-7.0, -5.2], Y in [-8.0, -6.0]
         (-7.0, -8.0, -5.2, -6.0),
-        # Storage-Lab North-South Corridor Doorway: X in [-7.0, -5.2], Y in [4.0, 6.0]
-        (-7.0, 4.0, -5.2, 6.0),
+        # Storage-Lab North-South Corridor Doorway: X in [-7.0, -5.0], Y in [4.0, 6.0]
+        (-7.0, 4.0, -5.0, 6.0),
         # Office-Warehouse Doorway: X in [2.5, 4.5], Y in [6.2, 7.8]
         (2.5, 6.2, 4.5, 7.8),
         # Warehouse Main Aisle: X in [6.8, 9.8], Y in [1.0, 11.5]

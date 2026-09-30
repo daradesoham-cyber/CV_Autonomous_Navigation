@@ -604,15 +604,17 @@ class DecisionEngineNode(Node):
 
     def _signs_callback(self, msg: SignDetectionArray):
         """
-        V2.4: Processes semantic signs from YOLO directional_sign class.
+        V2.4/V2.6: Processes semantic signs from YOLO directional_sign class.
         - Records sign observation in topological memory
-        - Penalizes topological edges if sign says CLOSED or BLOCKED
-        - Logs sign-driven navigation decisions
+        - Validates semantic consistency with active destination and topological route
+        - Penalizes topological edges if sign indicates CLOSED or BLOCKED
+        - Disregards contradictory or irrelevant signs to prevent route hijacking
+        - Logs validated sign-driven navigation events
         """
         for sign in msg.signs:
             if sign.confidence < 0.50:
                 continue
-            nearest = self.current_node_id
+            nearest = self.current_node_id or "unknown"
             text = sign.text.strip().upper()
             direction = sign.direction.strip().upper()
 
@@ -620,16 +622,12 @@ class DecisionEngineNode(Node):
                 self.memory.record_sign(nearest, text, direction, float(sign.confidence))
             except Exception as e:
                 self.get_logger().warning(f"Could not record sign to memory: {e}")
-            self._emit_event(
-                f"Sign detected: '{text}' -> '{direction}' (conf={sign.confidence:.2f}) near [{nearest}]",
-                "INFO"
-            )
+
+            dest_name = text.replace("CLOSED", "").replace("BLOCKED", "").strip().lower().replace(" ", "_")
 
             # --- Dynamic sign semantics → navigation edge decision ---
             # 1. "STORAGE CLOSED" or "X CLOSED" or direction "BLOCKED" → penalize the edge to that destination
             if "CLOSED" in text or direction == "BLOCKED":
-                # Extract destination name from sign text (e.g. "STORAGE CLOSED" → "storage")
-                dest_name = text.replace("CLOSED", "").replace("BLOCKED", "").strip().lower().replace(" ", "_")
                 if dest_name:
                     # Find destination node id in graph and penalize incoming/outgoing edges
                     target_node = None
@@ -651,18 +649,46 @@ class DecisionEngineNode(Node):
                                 f"Sign '{text}': Penalized route to '{target_node}' (edges ×10)",
                                 "WARN"
                             )
+                            # If the closed node affects our active route, trigger replanning
+                            if self.active_path and any(target_node == n for n in self.active_path[self.current_target_index:]):
+                                self._emit_event(
+                                    f"Active path traverses closed node '{target_node}'! Triggering dynamic replan.",
+                                    "WARN"
+                                )
+                                self._trigger_recovery(ReplanReason.OBSTACLE_BLOCKED)
                         except Exception as e:
                             self.get_logger().debug(f"Sign edge penalty failed: {e}")
 
-            # 2. If sign confirms our current route direction, log as positive confirmation
-            elif self._navigating_to_node:
-                dest_lower = text.lower().replace(" ", "_")
-                target_lower = str(self._navigating_to_node).lower()
-                if dest_lower in target_lower or target_lower in dest_lower:
+            # 2. Destination & Route Consistency Gating for Standard Directional Signs
+            elif self.current_goal_node_id:
+                current_goal = str(self.current_goal_node_id).lower()
+                target_waypoint = str(self._navigating_to_node).lower() if self._navigating_to_node else ""
+                remaining_path = [str(n).lower() for n in self.active_path[self.current_target_index:]] if self.active_path else []
+
+                # Is this sign relevant to our active destination or along our topological path?
+                is_goal_sign = bool(dest_name and (dest_name in current_goal or current_goal in dest_name))
+                is_path_sign = bool(dest_name and (any(dest_name in rn or rn in dest_name for rn in remaining_path)))
+
+                if is_goal_sign or is_path_sign:
                     self._emit_event(
-                        f"Sign CONFIRMS route: '{text}' -> '{direction}' toward target [{self._navigating_to_node}]",
+                        f"Sign CONFIRMS route: '{text}' -> '{direction}' toward target [{self._navigating_to_node}] (goal: [{self.current_goal_node_id}])",
                         "INFO"
                     )
+                else:
+                    # Inconsistent or irrelevant sign for the current destination:
+                    # Preserving validated global route — DO NOT alter path or confuse decision engine.
+                    self.get_logger().info(
+                        f"[SIGN_GATING] Sign '{text}' -> '{direction}' observed near [{nearest}], but destination '{dest_name}' does not match current goal [{self.current_goal_node_id}]. Preserving validated route."
+                    )
+                    self._emit_event(
+                        f"Sign observed: '{text}' -> '{direction}' (destination '{dest_name}' not on active route toward [{self.current_goal_node_id}]) — preserving global route",
+                        "INFO"
+                    )
+            else:
+                self._emit_event(
+                    f"Sign detected: '{text}' -> '{direction}' (conf={sign.confidence:.2f}) near [{nearest}]",
+                    "INFO"
+                )
 
     def _ttc_callback(self, msg: Float32):
         """

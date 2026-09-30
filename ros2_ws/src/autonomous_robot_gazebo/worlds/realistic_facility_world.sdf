@@ -228,7 +228,7 @@
     </model>
     <model name='wall_rec_div_w1_a'>
       <static>true</static>
-      <pose>-14.225 -7.000 1.4 0 0 0</pose>
+      <pose>-14.014 -7.000 1.4 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry><box><size>1.950 0.200 2.8</size></box></geometry>
@@ -517,7 +517,7 @@
     </model>
     <model name='wall_utility_e'>
       <static>true</static>
-      <pose>-14.400 -4.500 1.4 0 0 0</pose>
+      <pose>-14.400 -2.937 1.4 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry><box><size>0.200 3.000 2.8</size></box></geometry>
@@ -704,7 +704,7 @@
     </model>
     <model name='wall_storage_div_e'>
       <static>true</static>
-      <pose>-4.700 5.000 1.4 0 0 0</pose>
+      <pose>-4.357 5.000 1.4 0 0 0</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry><box><size>1.400 0.200 2.8</size></box></geometry>
@@ -861,6 +861,38 @@
         </collision>
         <visual name='visual'>
           <geometry><box><size>0.500 0.500 2.8</size></box></geometry>
+          <material>
+            <ambient>0.7 0.72 0.75 1</ambient>
+            <diffuse>0.7 0.72 0.75 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name='pillar_j3'>
+      <static>true</static>
+      <pose>-6.800 -4.000 1.4 0 0 0</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.400 0.400 2.8</size></box></geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.400 0.400 2.8</size></box></geometry>
+          <material>
+            <ambient>0.7 0.72 0.75 1</ambient>
+            <diffuse>0.7 0.72 0.75 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name='pillar_j2'>
+      <static>true</static>
+      <pose>6.800 -4.000 1.4 0 0 0</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.400 0.400 2.8</size></box></geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.400 0.400 2.8</size></box></geometry>
           <material>
             <ambient>0.7 0.72 0.75 1</ambient>
             <diffuse>0.7 0.72 0.75 1</diffuse>
@@ -1338,7 +1370,7 @@
     <!-- Directional Semantic Signposts with PBR Textures -->
     <model name='sign_j1_hospital'>
       <static>true</static>
-      <pose>1.200 -4.200 0.850 0.0 0.0 3.1416</pose>
+      <pose>1.650 -4.250 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1363,7 +1395,7 @@
     </model>
     <model name='sign_j1_office'>
       <static>true</static>
-      <pose>0.000 -3.800 0.850 0.0 0.0 3.1416</pose>
+      <pose>1.650 -3.800 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1388,7 +1420,7 @@
     </model>
     <model name='sign_j1_exit'>
       <static>true</static>
-      <pose>-1.200 -4.200 0.850 0.0 0.0 3.1416</pose>
+      <pose>-1.650 -4.250 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1411,9 +1443,59 @@
         </collision>
       </link>
     </model>
+    <model name='sign_j1_hospital_south'>
+      <static>true</static>
+      <pose>1.650 -5.750 0.850 0.0 0.0 0.0000</pose>
+      <link name='link'>
+        <visual name='board_visual'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+            <specular>0.2 0.2 0.2 1.0</specular>
+            <emissive>0.08 0.08 0.08 1.0</emissive>
+            <pbr>
+              <metal>
+                <albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_left.png</albedo_map>
+                <roughness>0.2</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name='board_collision'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+    <model name='sign_j1_reception_south'>
+      <static>true</static>
+      <pose>-1.650 -5.750 0.850 0.0 0.0 0.0000</pose>
+      <link name='link'>
+        <visual name='board_visual'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+            <specular>0.2 0.2 0.2 1.0</specular>
+            <emissive>0.08 0.08 0.08 1.0</emissive>
+            <pbr>
+              <metal>
+                <albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/reception_straight.png</albedo_map>
+                <roughness>0.2</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name='board_collision'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+        </collision>
+      </link>
+    </model>
     <model name='sign_j2_hospital'>
       <static>true</static>
-      <pose>7.200 -4.700 0.850 0.0 0.0 1.5708</pose>
+      <pose>6.550 -4.100 0.850 0.0 0.0 1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1438,7 +1520,7 @@
     </model>
     <model name='sign_j2_warehouse'>
       <static>true</static>
-      <pose>7.200 -5.300 0.850 0.0 0.0 1.5708</pose>
+      <pose>6.550 -3.900 0.850 0.0 0.0 1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1463,7 +1545,7 @@
     </model>
     <model name='sign_j3_exit'>
       <static>true</static>
-      <pose>-7.200 -4.700 0.850 0.0 0.0 -1.5708</pose>
+      <pose>-6.550 -4.100 0.850 0.0 0.0 -1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1488,7 +1570,7 @@
     </model>
     <model name='sign_j3_storage'>
       <static>true</static>
-      <pose>-7.200 -5.300 0.850 0.0 0.0 -1.5708</pose>
+      <pose>-6.550 -3.900 0.850 0.0 0.0 -1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1513,7 +1595,7 @@
     </model>
     <model name='sign_j4_office'>
       <static>true</static>
-      <pose>0.000 2.500 0.850 0.0 0.0 3.1416</pose>
+      <pose>-1.650 3.200 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1538,7 +1620,7 @@
     </model>
     <model name='sign_j4_warehouse'>
       <static>true</static>
-      <pose>1.400 1.200 0.850 0.0 0.0 3.1416</pose>
+      <pose>1.650 1.100 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1563,7 +1645,7 @@
     </model>
     <model name='sign_j4_lab'>
       <static>true</static>
-      <pose>-1.400 1.200 0.850 0.0 0.0 3.1416</pose>
+      <pose>-1.650 1.100 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1586,9 +1668,59 @@
         </collision>
       </link>
     </model>
+    <model name='sign_j4_hospital'>
+      <static>true</static>
+      <pose>1.650 3.750 0.850 0.0 0.0 0.0000</pose>
+      <link name='link'>
+        <visual name='board_visual'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+            <specular>0.2 0.2 0.2 1.0</specular>
+            <emissive>0.08 0.08 0.08 1.0</emissive>
+            <pbr>
+              <metal>
+                <albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/hospital_straight.png</albedo_map>
+                <roughness>0.2</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name='board_collision'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+    <model name='sign_j4_reception'>
+      <static>true</static>
+      <pose>-1.650 3.750 0.850 0.0 0.0 0.0000</pose>
+      <link name='link'>
+        <visual name='board_visual'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+            <specular>0.2 0.2 0.2 1.0</specular>
+            <emissive>0.08 0.08 0.08 1.0</emissive>
+            <pbr>
+              <metal>
+                <albedo_map>/home/soham-darade/CV_Autonomous_Navigation/ros2_ws/src/autonomous_robot_gazebo/materials/textures/signs/reception_straight.png</albedo_map>
+                <roughness>0.2</roughness>
+                <metalness>0.0</metalness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name='board_collision'>
+          <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
+        </collision>
+      </link>
+    </model>
     <model name='sign_j7_storage'>
       <static>true</static>
-      <pose>-5.800 2.400 0.850 0.0 0.0 3.1416</pose>
+      <pose>-5.300 4.900 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1613,7 +1745,7 @@
     </model>
     <model name='sign_j7_charging'>
       <static>true</static>
-      <pose>-6.500 1.800 0.850 0.0 0.0 3.1416</pose>
+      <pose>-7.100 4.900 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1638,7 +1770,7 @@
     </model>
     <model name='sign_j8_room_a'>
       <static>true</static>
-      <pose>-5.800 8.500 0.850 0.0 0.0 3.1416</pose>
+      <pose>-7.500 8.200 0.850 0.0 0.0 3.1416</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1663,7 +1795,7 @@
     </model>
     <model name='sign_j8_storage'>
       <static>true</static>
-      <pose>-6.200 6.500 0.850 0.0 0.0 0.0000</pose>
+      <pose>-7.500 8.800 0.850 0.0 0.0 0.0000</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1688,7 +1820,7 @@
     </model>
     <model name='sign_j6_loading'>
       <static>true</static>
-      <pose>7.200 1.300 0.850 0.0 0.0 1.5708</pose>
+      <pose>7.100 1.100 0.850 0.0 0.0 1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1713,7 +1845,7 @@
     </model>
     <model name='sign_j6_charging'>
       <static>true</static>
-      <pose>5.500 0.800 0.850 0.0 0.0 -1.5708</pose>
+      <pose>6.900 0.800 0.850 0.0 0.0 -1.5708</pose>
       <link name='link'>
         <visual name='board_visual'>
           <geometry><box><size>0.8 0.03 0.4</size></box></geometry>
@@ -1739,7 +1871,7 @@
 
     <!-- Dynamic Moving Obstacle 1: Autonomous Warehouse Cart -->
     <model name='dynamic_warehouse_cart'>
-      <pose>8.0 3.5 0.3 0 0 1.5708</pose>
+      <pose>8.0 3.2035 0.3 0 0 1.5708</pose>
       <link name='cart_link'>
         <inertial>
           <mass>25.0</mass>
@@ -1764,7 +1896,7 @@
 
     <!-- Dynamic Moving Obstacle 2: Hospital Trolley (Patrols medical corridor along Y=-5.0) -->
     <model name='dynamic_hospital_trolley'>
-      <pose>6.0 -5.0 0.35 0 0 0</pose>
+      <pose>7.7935 -5.0 0.35 0 0 0</pose>
       <link name='trolley_link'>
         <inertial>
           <mass>18.0</mass>
@@ -1789,7 +1921,7 @@
 
     <!-- Dynamic Moving Obstacle 3: Autonomous Forklift -->
     <model name='dynamic_forklift'>
-      <pose>11.5 4.5 0.4 0 0 1.5708</pose>
+      <pose>11.5 4.8 0.4 0 0 1.5708</pose>
       <link name='forklift_link'>
         <inertial>
           <mass>40.0</mass>

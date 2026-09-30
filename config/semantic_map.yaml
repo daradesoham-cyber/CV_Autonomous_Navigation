@@ -141,10 +141,10 @@ signs:
     texture_file: "hospital_right.png"
     wall_attachment:
       wall_name: "wall_spine_e_corner"
-      x: 1.20
-      y: -4.20
+      x: 1.65
+      y: -4.25
       z: 0.85
-      yaw: 3.14159   # Facing south towards approaching robot from reception
+      yaw: 3.14159   # Facing south towards robot approaching north from reception
     approaching_from: ["reception"]
     branch_node: "corridor_east_1"
     confidence_prior: 0.96
@@ -157,13 +157,13 @@ signs:
     text: "OFFICE"
     texture_file: "office_straight.png"
     wall_attachment:
-      wall_name: "wall_spine_mid"
-      x: 0.00
+      wall_name: "wall_spine_e_mid"
+      x: 1.65
       y: -3.80
       z: 0.85
-      yaw: 3.14159   # Facing south
+      yaw: 3.14159   # Facing south towards robot approaching north from reception
     approaching_from: ["reception"]
-    branch_node: "central_archway"
+    branch_node: "central_spine_1"
     confidence_prior: 0.96
 
   sign_j1_exit:
@@ -175,13 +175,47 @@ signs:
     texture_file: "exit_left.png"
     wall_attachment:
       wall_name: "wall_spine_w_corner"
-      x: -1.20
-      y: -4.20
+      x: -1.65
+      y: -4.25
       z: 0.85
-      yaw: 3.14159   # Facing south
+      yaw: 3.14159   # Facing south towards robot approaching north from reception
     approaching_from: ["reception", "corridor_east_1"]
     branch_node: "corridor_west_1"
     confidence_prior: 0.95
+
+  sign_j1_hospital_south:
+    id: "sign_j1_hospital_south"
+    junction: "junction_1"
+    destination: "hospital"
+    direction: "LEFT"
+    text: "HOSPITAL"
+    texture_file: "hospital_left.png"
+    wall_attachment:
+      wall_name: "wall_spine_e_south"
+      x: 1.65
+      y: -5.75
+      z: 0.85
+      yaw: 0.0       # Facing north towards robot approaching south from central spine
+    approaching_from: ["central_spine_1"]
+    branch_node: "corridor_east_1"
+    confidence_prior: 0.96
+
+  sign_j1_reception_south:
+    id: "sign_j1_reception_south"
+    junction: "junction_1"
+    destination: "reception"
+    direction: "STRAIGHT"
+    text: "RECEPTION"
+    texture_file: "reception_straight.png"
+    wall_attachment:
+      wall_name: "wall_spine_w_south"
+      x: -1.65
+      y: -5.75
+      z: 0.85
+      yaw: 0.0       # Facing north towards robot approaching south from central spine
+    approaching_from: ["central_spine_1"]
+    branch_node: "reception"
+    confidence_prior: 0.96
 
   # --- Junction 2 (Southeast Hospital Intersection: x=6.0, y=-5.0) ---
   sign_j2_hospital:
@@ -192,11 +226,11 @@ signs:
     text: "HOSPITAL"
     texture_file: "hospital_right.png"
     wall_attachment:
-      wall_name: "wall_j2_east"
-      x: 7.20
-      y: -4.70
+      wall_name: "pillar_j2_west"
+      x: 6.55
+      y: -4.10
       z: 0.85
-      yaw: 1.5708    # Facing west towards approaching robot
+      yaw: 1.5708    # Facing west towards approaching robot from corridor_east_1
     approaching_from: ["corridor_east_1"]
     branch_node: "hospital_ward_entry"
     confidence_prior: 0.97
@@ -209,11 +243,11 @@ signs:
     text: "WAREHOUSE"
     texture_file: "warehouse_left.png"
     wall_attachment:
-      wall_name: "wall_j2_east"
-      x: 7.20
-      y: -5.30
+      wall_name: "pillar_j2_west"
+      x: 6.55
+      y: -3.90
       z: 0.85
-      yaw: 1.5708    # Facing west towards approaching robot
+      yaw: 1.5708    # Facing west towards approaching robot from corridor_east_1
     approaching_from: ["corridor_east_1"]
     branch_node: "east_bypass_1"
     confidence_prior: 0.95
@@ -227,13 +261,13 @@ signs:
     text: "EXIT"
     texture_file: "exit_straight.png"
     wall_attachment:
-      wall_name: "wall_j3_west"
-      x: -7.20
-      y: -4.70
+      wall_name: "pillar_j3_east"
+      x: -6.55
+      y: -4.10
       z: 0.85
-      yaw: -1.5708   # Facing east towards approaching robot
+      yaw: -1.5708   # Facing east towards robot approaching from corridor_west_1
     approaching_from: ["corridor_west_1"]
-    branch_node: "exit"
+    branch_node: "exit_corridor"
     confidence_prior: 0.96
 
   sign_j3_storage:
@@ -244,11 +278,11 @@ signs:
     text: "STORAGE"
     texture_file: "storage_right.png"
     wall_attachment:
-      wall_name: "wall_j3_west"
-      x: -7.20
-      y: -5.30
+      wall_name: "pillar_j3_east"
+      x: -6.55
+      y: -3.90
       z: 0.85
-      yaw: -1.5708   # Facing east towards approaching robot
+      yaw: -1.5708   # Facing east towards robot approaching from corridor_west_1
     approaching_from: ["corridor_west_1"]
     branch_node: "west_bypass_south"
     confidence_prior: 0.94
@@ -262,13 +296,13 @@ signs:
     text: "OFFICE"
     texture_file: "office_straight.png"
     wall_attachment:
-      wall_name: "wall_j4_north"
-      x: 0.00
-      y: 2.50
+      wall_name: "pillar_center_1_south"
+      x: -1.65
+      y: 3.20
       z: 0.85
-      yaw: 3.14159   # Facing south towards robot moving north
-    approaching_from: ["central_archway"]
-    branch_node: "junction_5"
+      yaw: 3.14159   # Facing south towards robot moving north from central spine
+    approaching_from: ["central_spine_1"]
+    branch_node: "office_corridor"
     confidence_prior: 0.97
 
   sign_j4_warehouse:
@@ -279,12 +313,12 @@ signs:
     text: "WAREHOUSE"
     texture_file: "warehouse_right.png"
     wall_attachment:
-      wall_name: "wall_j4_east"
-      x: 1.40
-      y: 1.20
+      wall_name: "wall_spine_e_north"
+      x: 1.65
+      y: 1.10
       z: 0.85
-      yaw: 3.14159   # Facing south towards robot moving north
-    approaching_from: ["central_archway"]
+      yaw: 3.14159   # Facing south towards robot moving north from central spine
+    approaching_from: ["central_spine_1"]
     branch_node: "wh_corridor_entry"
     confidence_prior: 0.95
 
@@ -296,13 +330,47 @@ signs:
     text: "LAB"
     texture_file: "lab_left.png"
     wall_attachment:
-      wall_name: "wall_j4_west"
-      x: -1.40
-      y: 1.20
+      wall_name: "wall_spine_w_north"
+      x: -1.65
+      y: 1.10
       z: 0.85
-      yaw: 3.14159   # Facing south towards robot moving north
-    approaching_from: ["central_archway"]
+      yaw: 3.14159   # Facing south towards robot moving north from central spine
+    approaching_from: ["central_spine_1"]
     branch_node: "lab_corridor_entry"
+    confidence_prior: 0.96
+
+  sign_j4_hospital:
+    id: "sign_j4_hospital"
+    junction: "junction_4"
+    destination: "hospital"
+    direction: "STRAIGHT"
+    text: "HOSPITAL"
+    texture_file: "hospital_straight.png"
+    wall_attachment:
+      wall_name: "pillar_center_2_north"
+      x: 1.65
+      y: 3.75
+      z: 0.85
+      yaw: 0.0       # Facing north towards robot approaching south from office corridor
+    approaching_from: ["office_corridor"]
+    branch_node: "central_spine_1"
+    confidence_prior: 0.97
+
+  sign_j4_reception:
+    id: "sign_j4_reception"
+    junction: "junction_4"
+    destination: "reception"
+    direction: "STRAIGHT"
+    text: "RECEPTION"
+    texture_file: "reception_straight.png"
+    wall_attachment:
+      wall_name: "pillar_center_1_north"
+      x: -1.65
+      y: 3.75
+      z: 0.85
+      yaw: 0.0       # Facing north towards robot approaching south from office corridor
+    approaching_from: ["office_corridor"]
+    branch_node: "central_spine_1"
     confidence_prior: 0.96
 
   # --- Junction 7 (Storage Approach & Lab Bypass: x=-6.0, y=2.5) ---
@@ -314,13 +382,13 @@ signs:
     text: "STORAGE"
     texture_file: "storage_straight.png"
     wall_attachment:
-      wall_name: "wall_storage_approach"
-      x: -5.80
-      y: 2.40
+      wall_name: "wall_storage_div_e"
+      x: -5.30
+      y: 4.90
       z: 0.85
-      yaw: 3.14159   # Facing south towards approaching robot
-    approaching_from: ["lab_bypass_entry"]
-    branch_node: "storage"
+      yaw: 3.14159   # Facing south towards robot entering storage corridor
+    approaching_from: ["junction_7"]
+    branch_node: "storage_approach"
     confidence_prior: 0.97
 
   sign_j7_charging:
@@ -331,13 +399,13 @@ signs:
     text: "CHARGING"
     texture_file: "charging_left.png"
     wall_attachment:
-      wall_name: "wall_storage_west"
-      x: -6.50
-      y: 1.80
+      wall_name: "wall_storage_div_w"
+      x: -7.10
+      y: 4.90
       z: 0.85
-      yaw: 3.14159   # Facing south towards approaching robot
+      yaw: 3.14159   # Facing south towards robot heading into bypass
     approaching_from: ["storage_approach"]
-    branch_node: "west_bypass_north"
+    branch_node: "lab_bypass_entry"
     confidence_prior: 0.94
 
   # --- Junction 8 (Room A Entrance Approach: x=-6.0, y=7.5) ---
@@ -349,9 +417,9 @@ signs:
     text: "ROOM A"
     texture_file: "room_a_straight.png"
     wall_attachment:
-      wall_name: "wall_room_a_door"
-      x: -5.80
-      y: 8.50
+      wall_name: "pillar_lab_1_south"
+      x: -7.50
+      y: 8.20
       z: 0.85
       yaw: 3.14159   # Facing south towards approaching robot
     approaching_from: ["lab_bypass_entry"]
@@ -366,9 +434,9 @@ signs:
     text: "STORAGE"
     texture_file: "storage_straight.png"
     wall_attachment:
-      wall_name: "wall_room_a_south"
-      x: -6.20
-      y: 6.50
+      wall_name: "pillar_lab_1_north"
+      x: -7.50
+      y: 8.80
       z: 0.85
       yaw: 0.0       # Facing north towards robot exiting Room A heading south
     approaching_from: ["room_a"]
@@ -384,13 +452,13 @@ signs:
     text: "LOADING"
     texture_file: "loading_right.png"
     wall_attachment:
-      wall_name: "wall_wh_j6_north"
-      x: 7.20
-      y: 1.30
+      wall_name: "wall_cross_e_north"
+      x: 7.10
+      y: 1.10
       z: 0.85
       yaw: 1.5708    # Facing west towards approaching robot
     approaching_from: ["wh_corridor_entry"]
-    branch_node: "loading"
+    branch_node: "wh_aisle_south"
     confidence_prior: 0.96
 
   sign_j6_charging:
@@ -401,12 +469,12 @@ signs:
     text: "CHARGING"
     texture_file: "charging_left.png"
     wall_attachment:
-      wall_name: "wall_wh_j6_south"
-      x: 5.50
+      wall_name: "wall_wh_corridor_e_west"
+      x: 6.90
       y: 0.80
       z: 0.85
       yaw: -1.5708   # Facing east towards robot returning from Warehouse/Loading
-    approaching_from: ["loading"]
+    approaching_from: ["wh_aisle_south", "loading_approach"]
     branch_node: "wh_corridor_entry"
     confidence_prior: 0.93
 
