@@ -1,0 +1,96 @@
+{
+  "method": "Measure the unoccluded pixel-fill ratio (visible_px / tight box area) of each labelled V3 model.",
+  "samples_per_model": 30,
+  "reference_fill": {
+    "BPCart": 0.3556,
+    "BloodPressureMonitor": 0.1933,
+    "FemaleVisitor": 0.5073,
+    "IVStand": 0.1169,
+    "InstrumentCart1": 0.581,
+    "MalePatientBed": 0.6,
+    "MaleVisitorOnPhone": 0.5161,
+    "PatientWheelChair": 0.2986,
+    "Scrubs": 0.4989,
+    "SurgicalTrolley": 0.1475,
+    "TrolleyBed": 0.463
+  },
+  "per_model": {
+    "BPCart": {
+      "object_used": "v3_ward_bp_cart",
+      "n": 30,
+      "median_fill": 0.3556,
+      "p10_fill": 0.3061,
+      "p90_fill": 0.3814
+    },
+    "BloodPressureMonitor": {
+      "object_used": "v3_collection_bp_monitor",
+      "n": 30,
+      "median_fill": 0.1933,
+      "p10_fill": 0.1744,
+      "p90_fill": 0.2313
+    },
+    "FemaleVisitor": {
+      "object_used": "pool_FemaleVisitor_0",
+      "n": 30,
+      "median_fill": 0.5073,
+      "p10_fill": 0.4516,
+      "p90_fill": 0.6073
+    },
+    "IVStand": {
+      "object_used": "v3_iv_stand_ward",
+      "n": 30,
+      "median_fill": 0.1169,
+      "p10_fill": 0.1139,
+      "p90_fill": 0.1257
+    },
+    "InstrumentCart1": {
+      "object_used": "v3_lab_instrument_cart",
+      "n": 30,
+      "median_fill": 0.581,
+      "p10_fill": 0.4414,
+      "p90_fill": 0.6967
+    },
+    "MalePatientBed": {
+      "object_used": "v3_patient_bed_1",
+      "n": 30,
+      "median_fill": 0.6,
+      "p10_fill": 0.5328,
+      "p90_fill": 0.724
+    },
+    "MaleVisitorOnPhone": {
+      "object_used": "v3_visitor_phone",
+      "n": 30,
+      "median_fill": 0.5161,
+      "p10_fill": 0.4031,
+      "p90_fill": 0.5784
+    },
+    "PatientWheelChair": {
+      "object_used": "v3_parked_wheelchair",
+      "n": 30,
+      "median_fill": 0.2986,
+      "p10_fill": 0.2684,
+      "p90_fill": 0.3893
+    },
+    "Scrubs": {
+      "object_used": "dynamic_person",
+      "n": 30,
+      "median_fill": 0.4989,
+      "p10_fill": 0.4416,
+      "p90_fill": 0.5938
+    },
+    "SurgicalTrolley": {
+      "object_used": "dynamic_hospital_trolley",
+      "n": 30,
+      "median_fill": 0.1475,
+      "p10_fill": 0.1273,
+      "p90_fill": 0.2269
+    },
+    "TrolleyBed": {
+      "object_used": "v3_trolley_bed_2",
+      "n": 30,
+      "median_fill": 0.463,
+      "p10_fill": 0.4274,
+      "p90_fill": 0.5012
+    }
+  }
+}

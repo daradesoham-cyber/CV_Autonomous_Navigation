@@ -1,0 +1,175 @@
+{
+ "passed": 15,
+ "total": 15,
+ "results": [
+  {
+   "id": "U01",
+   "name": "dashboard loads: NEW hospital map (543x1181), live camera stream, link connected",
+   "result": "PASS",
+   "observed": {
+    "cam_w": 640,
+    "cam_off": false,
+    "map_ok": true,
+    "map_w": 543,
+    "map_h": 1181,
+    "rotated": true,
+    "pos": "8.42, 14.17 \u00b7 -111\u00b0",
+    "link": "connected",
+    "health": "11/11"
+   }
+  },
+  {
+   "id": "U02",
+   "name": "robot position shown matches /amcl_pose",
+   "result": "PASS",
+   "observed": {
+    "ui": "8.42, 14.17 \u00b7 -111\u00b0",
+    "api_pose": [
+     8.421,
+     14.172,
+     -1.93
+    ]
+   }
+  },
+  {
+   "id": "U03",
+   "name": "Start button starts a collection -> laboratory mission and the robot moves",
+   "result": "PASS",
+   "observed": {
+    "state": "GO_TO_COLLECTION",
+    "speed": 0.5,
+    "ui_state": "Driving to collection"
+   }
+  },
+  {
+   "id": "U04",
+   "name": "live mission progress (state, stepper, route progress, mission id)",
+   "result": "PASS",
+   "observed": {
+    "state": "Driving to collection",
+    "route_w": "15.1%",
+    "steps_cur": 1,
+    "mission": "M20261001-233221-4e01"
+   }
+  },
+  {
+   "id": "U05",
+   "name": "perception view: camera, YOLO object list with confidence, LiDAR-ranged vs not-ranged",
+   "result": "PASS",
+   "observed": {
+    "rows": 3,
+    "first": "Hospital Bed35%8.97 m \u00b7 LiDAR7.93 / 4.3929\u00b0",
+    "ranged": 2,
+    "notranged": 1,
+    "cam_w": 640,
+    "meta": "Camera 26.2 HzYOLO 25.6 HzInference 24.3 msStream 8 fpsObjects 3",
+    "api_objects": 5
+   }
+  },
+  {
+   "id": "U06",
+   "name": "navigation view: route, decision-engine state, events",
+   "result": "PASS",
+   "observed": {
+    "route": 12,
+    "events": 62,
+    "de": "Navigating"
+   }
+  },
+  {
+   "id": "U07",
+   "name": "Pause holds the robot, Resume continues the mission",
+   "result": "PASS",
+   "observed": {
+    "paused": true,
+    "max_speed_paused": 0.0,
+    "resumed_state": "GO_TO_COLLECTION"
+   }
+  },
+  {
+   "id": "U08",
+   "name": "mission completes and the UI shows completion",
+   "result": "PASS",
+   "observed": {
+    "state": "MISSION_COMPLETE",
+    "ui": "Mission complete"
+   }
+  },
+  {
+   "id": "U09",
+   "name": "history view lists stored missions, detail, filter and sort work",
+   "result": "PASS",
+   "observed": {
+    "ui_rows": 45,
+    "api_rows": 45,
+    "detail_legs": 2,
+    "filter_ok": true
+   }
+  },
+  {
+   "id": "U10",
+   "name": "path learning view shows stored segment statistics and the cost model",
+   "result": "PASS",
+   "observed": {
+    "rows": 50,
+    "note": true
+   }
+  },
+  {
+   "id": "U11",
+   "name": "system health: every subsystem online, battery marked unavailable, ROS node list",
+   "result": "PASS",
+   "observed": {
+    "cards": 13,
+    "online": 12,
+    "unavailable": 1,
+    "nodes": 27
+   }
+  },
+  {
+   "id": "U12",
+   "name": "Cancel stops the mission (CANCELLED, robot stops)",
+   "result": "PASS",
+   "observed": {
+    "state": "CANCELLED",
+    "speed": 0.0
+   }
+  },
+  {
+   "id": "U13",
+   "name": "E-STOP latches (existing estop command), robot held, Start disabled, banner shown, Reset releases",
+   "result": "PASS",
+   "observed": {
+    "max_speed_after": 0.0,
+    "ui_latched": true,
+    "start_disabled": true,
+    "reset_ready": true
+   }
+  },
+  {
+   "id": "U14",
+   "name": "dashboard served on the LAN address and live",
+   "result": "PASS",
+   "observed": {
+    "lan_ip": "192.168.1.42",
+    "http": 200,
+    "link": "connected"
+   }
+  },
+  {
+   "id": "U15",
+   "name": "responsive: tablet and phone widths have no horizontal page scroll",
+   "result": "PASS",
+   "observed": {
+    "tablet": {
+     "scrollW": 888,
+     "innerW": 900
+    },
+    "phone": {
+     "scrollW": 488,
+     "innerW": 500
+    }
+   }
+  }
+ ]
+}

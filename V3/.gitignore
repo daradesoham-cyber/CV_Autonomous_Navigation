@@ -1,0 +1,17 @@
+# Generated artefacts (reproducible from the seeded scripts; see V3_DATASET_GENERATION_REPORT.md)
+datasets/v3_hospital_cv/images/
+datasets/v3_hospital_cv/labels/
+datasets/v3_hospital_cv/subsets/*/images/
+datasets/v3_hospital_cv/subsets/*/labels/
+datasets/v3_hospital_cv/*.cache
+datasets/v3_hospital_cv/**/*.cache
+training/runs/
+__pycache__/
+datasets/fusion_corpus/
+data/
+logs/
+run/
+ui/generated/
+
+# Upstream sources / download cache (inputs of scripts/build_aws_hospital_world.py; see V3_NEW_HOSPITAL_SOURCE.md)
+third_party/

@@ -1,0 +1,191 @@
+{
+ "missions": 5,
+ "complete": 5,
+ "runs": [
+  {
+   "mission_id": "M20261001-111420-0283",
+   "final": "MISSION_COMPLETE",
+   "duration_s": 184.6,
+   "distance_m": 72.79,
+   "replans": 2,
+   "ttc_events": 0,
+   "min_lidar_range_m": 0.395,
+   "failure_reason": null,
+   "samples": 369,
+   "objects": {
+    "dynamic_person": {
+     "path_travelled_m": 37.54,
+     "max_extent_m": 2.7,
+     "min_centre_distance_to_robot_m": 1.05,
+     "samples_within_2m_of_robot": 21
+    },
+    "dynamic_hospital_trolley": {
+     "path_travelled_m": 29.23,
+     "max_extent_m": 0.25,
+     "min_centre_distance_to_robot_m": 2.35,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_warehouse_cart": {
+     "path_travelled_m": 45.71,
+     "max_extent_m": 1.54,
+     "min_centre_distance_to_robot_m": 2.47,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_forklift": {
+     "path_travelled_m": 7.85,
+     "max_extent_m": 0.3,
+     "min_centre_distance_to_robot_m": 6.57,
+     "samples_within_2m_of_robot": 0
+    }
+   }
+  },
+  {
+   "mission_id": "M20261001-111725-815e",
+   "final": "MISSION_COMPLETE",
+   "duration_s": 146.0,
+   "distance_m": 58.63,
+   "replans": 0,
+   "ttc_events": 0,
+   "min_lidar_range_m": 0.289,
+   "failure_reason": null,
+   "samples": 292,
+   "objects": {
+    "dynamic_person": {
+     "path_travelled_m": 31.65,
+     "max_extent_m": 3.02,
+     "min_centre_distance_to_robot_m": 4.27,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_hospital_trolley": {
+     "path_travelled_m": 23.21,
+     "max_extent_m": 0.24,
+     "min_centre_distance_to_robot_m": 1.97,
+     "samples_within_2m_of_robot": 1
+    },
+    "dynamic_warehouse_cart": {
+     "path_travelled_m": 36.24,
+     "max_extent_m": 1.54,
+     "min_centre_distance_to_robot_m": 6.99,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_forklift": {
+     "path_travelled_m": 6.3,
+     "max_extent_m": 0.3,
+     "min_centre_distance_to_robot_m": 11.27,
+     "samples_within_2m_of_robot": 0
+    }
+   }
+  },
+  {
+   "mission_id": "M20261001-111952-2c30",
+   "final": "MISSION_COMPLETE",
+   "duration_s": 145.5,
+   "distance_m": 58.5,
+   "replans": 1,
+   "ttc_events": 0,
+   "min_lidar_range_m": 0.313,
+   "failure_reason": null,
+   "samples": 291,
+   "objects": {
+    "dynamic_person": {
+     "path_travelled_m": 29.36,
+     "max_extent_m": 2.13,
+     "min_centre_distance_to_robot_m": 4.3,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_hospital_trolley": {
+     "path_travelled_m": 23.11,
+     "max_extent_m": 0.69,
+     "min_centre_distance_to_robot_m": 2.12,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_warehouse_cart": {
+     "path_travelled_m": 36.08,
+     "max_extent_m": 1.57,
+     "min_centre_distance_to_robot_m": 7.45,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_forklift": {
+     "path_travelled_m": 6.29,
+     "max_extent_m": 0.3,
+     "min_centre_distance_to_robot_m": 11.54,
+     "samples_within_2m_of_robot": 0
+    }
+   }
+  },
+  {
+   "mission_id": "M20261001-112219-af8d",
+   "final": "MISSION_COMPLETE",
+   "duration_s": 146.9,
+   "distance_m": 58.38,
+   "replans": 2,
+   "ttc_events": 0,
+   "min_lidar_range_m": 0.339,
+   "failure_reason": null,
+   "samples": 293,
+   "objects": {
+    "dynamic_person": {
+     "path_travelled_m": 32.44,
+     "max_extent_m": 3.05,
+     "min_centre_distance_to_robot_m": 4.25,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_hospital_trolley": {
+     "path_travelled_m": 23.24,
+     "max_extent_m": 0.89,
+     "min_centre_distance_to_robot_m": 2.22,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_warehouse_cart": {
+     "path_travelled_m": 36.33,
+     "max_extent_m": 1.54,
+     "min_centre_distance_to_robot_m": 7.81,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_forklift": {
+     "path_travelled_m": 6.3,
+     "max_extent_m": 0.3,
+     "min_centre_distance_to_robot_m": 11.24,
+     "samples_within_2m_of_robot": 0
+    }
+   }
+  },
+  {
+   "mission_id": "M20261001-112446-aa62",
+   "final": "MISSION_COMPLETE",
+   "duration_s": 145.5,
+   "distance_m": 58.58,
+   "replans": 0,
+   "ttc_events": 0,
+   "min_lidar_range_m": 0.325,
+   "failure_reason": null,
+   "samples": 291,
+   "objects": {
+    "dynamic_person": {
+     "path_travelled_m": 30.46,
+     "max_extent_m": 2.11,
+     "min_centre_distance_to_robot_m": 3.89,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_hospital_trolley": {
+     "path_travelled_m": 23.03,
+     "max_extent_m": 0.26,
+     "min_centre_distance_to_robot_m": 1.85,
+     "samples_within_2m_of_robot": 4
+    },
+    "dynamic_warehouse_cart": {
+     "path_travelled_m": 35.98,
+     "max_extent_m": 1.51,
+     "min_centre_distance_to_robot_m": 7.36,
+     "samples_within_2m_of_robot": 0
+    },
+    "dynamic_forklift": {
+     "path_travelled_m": 6.15,
+     "max_extent_m": 0.3,
+     "min_centre_distance_to_robot_m": 11.5,
+     "samples_within_2m_of_robot": 0
+    }
+   }
+  }
+ ]
+}

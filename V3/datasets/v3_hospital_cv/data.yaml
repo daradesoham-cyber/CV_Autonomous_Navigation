@@ -1,0 +1,15 @@
+path: /home/soham-darade/CV_Autonomous_Navigation/V3/datasets/v3_hospital_cv
+train: images/train
+val: images/val
+test: images/test
+nc: 9
+names:
+  0: person
+  1: hospital_bed
+  2: cart
+  3: wheelchair
+  4: iv_stand
+  5: surgical_trolley
+  6: directional_sign
+  7: collection_point_marker
+  8: lab_test_point_marker

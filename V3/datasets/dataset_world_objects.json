@@ -1,0 +1,5413 @@
+{
+  "park_z": -30.0,
+  "lights": [
+    {
+      "name": "light_reception",
+      "pose": [
+        0.0,
+        -9.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.9,
+        0.85,
+        0.75
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 15.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_center_1",
+      "pose": [
+        0.0,
+        -5.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 12.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_center_2",
+      "pose": [
+        0.0,
+        1.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 12.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_hosp_ward",
+      "pose": [
+        6.5,
+        -9.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.98,
+        1.0
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 18.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_hosp_corridor",
+      "pose": [
+        6.0,
+        -5.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.98,
+        1.0
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 14.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_warehouse_1",
+      "pose": [
+        10.0,
+        4.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.85,
+        0.65
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 14.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_warehouse_2",
+      "pose": [
+        10.0,
+        9.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.95,
+        0.85,
+        0.65
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 14.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_lab",
+      "pose": [
+        -7.0,
+        8.5,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.92,
+        0.96,
+        1.0
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 16.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_cafeteria",
+      "pose": [
+        -7.0,
+        -9.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        1.0,
+        0.85,
+        0.65
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 15.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    },
+    {
+      "name": "light_emerg_exit",
+      "pose": [
+        -13.0,
+        -7.0,
+        2.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diffuse": [
+        0.8,
+        0.9,
+        0.8
+      ],
+      "specular": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "range": 10.0,
+      "constant": 0.3,
+      "linear": 0.08,
+      "quadratic": 0.015
+    }
+  ],
+  "objects": [
+    {
+      "name": "ground_plane",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": null,
+      "visual_aabb": null
+    },
+    {
+      "name": "wall_south_left",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -8.75,
+        -13.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -7.25,
+          -0.1
+        ],
+        [
+          7.25,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -7.25,
+          -0.1,
+          -1.4
+        ],
+        [
+          7.25,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_south_right",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        8.75,
+        -13.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -7.25,
+          -0.1
+        ],
+        [
+          7.25,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -7.25,
+          -0.1,
+          -1.4
+        ],
+        [
+          7.25,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_north",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        0.0,
+        13.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -16.0,
+          -0.1
+        ],
+        [
+          16.0,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -16.0,
+          -0.1,
+          -1.4
+        ],
+        [
+          16.0,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_west_south",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -16.0,
+        -11.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.0
+        ],
+        [
+          0.1,
+          2.0
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.0,
+          -1.4
+        ],
+        [
+          0.1,
+          2.0,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_west_mid_north",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -16.0,
+        2.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -11.0
+        ],
+        [
+          0.1,
+          11.0
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -11.0,
+          -1.4
+        ],
+        [
+          0.1,
+          11.0,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_east",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        16.0,
+        0.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -13.0
+        ],
+        [
+          0.1,
+          13.0
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -13.0,
+          -1.4
+        ],
+        [
+          0.1,
+          13.0,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_rec_div_w1_a",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -14.014,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.975,
+          -0.1
+        ],
+        [
+          0.975,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.975,
+          -0.1,
+          -1.4
+        ],
+        [
+          0.975,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_rec_div_w1_b",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -9.375,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.375,
+          -0.1
+        ],
+        [
+          2.375,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.375,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.375,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_rec_div_w2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -3.6,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.8,
+          -0.1
+        ],
+        [
+          1.8,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.8,
+          -0.1,
+          -1.4
+        ],
+        [
+          1.8,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_rec_div_e1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        3.525,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.725,
+          -0.1
+        ],
+        [
+          1.725,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.725,
+          -0.1,
+          -1.4
+        ],
+        [
+          1.725,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_rec_div_e2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        9.025,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.275,
+          -0.1
+        ],
+        [
+          2.275,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.275,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.275,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_spine_w_south",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.8,
+        -6.4,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -0.6
+        ],
+        [
+          0.1,
+          0.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -0.6,
+          -1.4
+        ],
+        [
+          0.1,
+          0.6,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_spine_w_mid",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.8,
+        -1.6,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.6
+        ],
+        [
+          0.1,
+          2.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.6,
+          -1.4
+        ],
+        [
+          0.1,
+          2.6,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_spine_e_south",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.8,
+        -6.4,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -0.6
+        ],
+        [
+          0.1,
+          0.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -0.6,
+          -1.4
+        ],
+        [
+          0.1,
+          0.6,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_spine_e_mid",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.8,
+        -1.6,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.6
+        ],
+        [
+          0.1,
+          2.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.6,
+          -1.4
+        ],
+        [
+          0.1,
+          2.6,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_hosp_ward_w",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        3.5,
+        -9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.5
+        ],
+        [
+          0.1,
+          2.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.5,
+          -1.4
+        ],
+        [
+          0.1,
+          2.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_hosp_ward_div",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        9.5,
+        -9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.5
+        ],
+        [
+          0.1,
+          2.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.5,
+          -1.4
+        ],
+        [
+          0.1,
+          2.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_triage_n",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        13.0,
+        -2.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.5,
+          -0.1
+        ],
+        [
+          2.5,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.5,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.5,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_hosp_alcove_n",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        14.1,
+        -7.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.3,
+          -0.1
+        ],
+        [
+          1.3,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.3,
+          -0.1,
+          -1.4
+        ],
+        [
+          1.3,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_hosp_alcove_s",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        13.0,
+        -11.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.5,
+          -0.1
+        ],
+        [
+          2.5,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.5,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.5,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_cafe_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -3.5,
+        -9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.5
+        ],
+        [
+          0.1,
+          2.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.5,
+          -1.4
+        ],
+        [
+          0.1,
+          2.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_cafe_w",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -11.0,
+        -9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.5
+        ],
+        [
+          0.1,
+          2.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.5,
+          -1.4
+        ],
+        [
+          0.1,
+          2.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_utility_n",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -15.2,
+        -3.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.8,
+          -0.1
+        ],
+        [
+          0.8,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.8,
+          -0.1,
+          -1.4
+        ],
+        [
+          0.8,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_utility_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -14.4,
+        -2.937,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -1.5
+        ],
+        [
+          0.1,
+          1.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -1.5,
+          -1.4
+        ],
+        [
+          0.1,
+          1.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_cross_w",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -9.35,
+        1.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.85,
+          -0.1
+        ],
+        [
+          2.85,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.85,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.85,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_cross_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        7.75,
+        1.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.75,
+          -0.1
+        ],
+        [
+          0.75,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.75,
+          -0.1,
+          -1.4
+        ],
+        [
+          0.75,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_office_w",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -3.5,
+        8.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -3.5
+        ],
+        [
+          0.1,
+          3.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -3.5,
+          -1.4
+        ],
+        [
+          0.1,
+          3.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_office_e_south",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        3.5,
+        5.6,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -0.6
+        ],
+        [
+          0.1,
+          0.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -0.6,
+          -1.4
+        ],
+        [
+          0.1,
+          0.6,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_office_e_north",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        3.5,
+        9.9,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.1
+        ],
+        [
+          0.1,
+          2.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.1,
+          -1.4
+        ],
+        [
+          0.1,
+          2.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_archive_s",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        2.65,
+        9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.85,
+          -0.1
+        ],
+        [
+          0.85,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.85,
+          -0.1,
+          -1.4
+        ],
+        [
+          0.85,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_wh_corridor_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        7.0,
+        -1.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.0
+        ],
+        [
+          0.1,
+          2.0
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.0,
+          -1.4
+        ],
+        [
+          0.1,
+          2.0,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_wh_div_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        12.75,
+        4.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.75,
+          -0.1
+        ],
+        [
+          2.75,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.75,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.75,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_wh_div_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        12.75,
+        9.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.75,
+          -0.1
+        ],
+        [
+          2.75,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.75,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.75,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_storage_div_w",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -9.25,
+        5.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -2.25,
+          -0.1
+        ],
+        [
+          2.25,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -2.25,
+          -0.1,
+          -1.4
+        ],
+        [
+          2.25,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_storage_div_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -4.357,
+        5.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.7,
+          -0.1
+        ],
+        [
+          0.7,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.7,
+          -0.1,
+          -1.4
+        ],
+        [
+          0.7,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_vault_e",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -11.0,
+        9.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -2.5
+        ],
+        [
+          0.1,
+          2.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -2.5,
+          -1.4
+        ],
+        [
+          0.1,
+          2.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_vault_s",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -14.0,
+        6.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.5,
+          -0.1
+        ],
+        [
+          1.5,
+          0.1
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.5,
+          -0.1,
+          -1.4
+        ],
+        [
+          1.5,
+          0.1,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "wall_west_bypass_inner",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -12.9,
+        1.35,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.1,
+          -3.25
+        ],
+        [
+          0.1,
+          3.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.1,
+          -3.25,
+          -1.4
+        ],
+        [
+          0.1,
+          3.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_rec_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.8,
+        -9.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -1.4
+        ],
+        [
+          0.25,
+          0.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_rec_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.8,
+        -9.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -1.4
+        ],
+        [
+          0.25,
+          0.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_center_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.8,
+        3.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -1.4
+        ],
+        [
+          0.25,
+          0.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_center_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.8,
+        3.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -1.4
+        ],
+        [
+          0.25,
+          0.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_wh_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        9.0,
+        6.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.3,
+          -0.3
+        ],
+        [
+          0.3,
+          0.3
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.3,
+          -0.3,
+          -1.4
+        ],
+        [
+          0.3,
+          0.3,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_lab_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -7.5,
+        8.5,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -1.4
+        ],
+        [
+          0.25,
+          0.25,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_j3",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -6.8,
+        -4.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.2,
+          -0.2
+        ],
+        [
+          0.2,
+          0.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.2,
+          -0.2,
+          -1.4
+        ],
+        [
+          0.2,
+          0.2,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "pillar_j2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        6.8,
+        -4.0,
+        1.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.2,
+          -0.2
+        ],
+        [
+          0.2,
+          0.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.2,
+          -0.2,
+          -1.4
+        ],
+        [
+          0.2,
+          0.2,
+          1.4
+        ]
+      ]
+    },
+    {
+      "name": "reception_desk",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -2.2,
+        -8.0,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.9,
+          -0.3
+        ],
+        [
+          0.9,
+          0.3
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.9,
+          -0.3,
+          -0.45
+        ],
+        [
+          0.9,
+          0.3,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        11.5,
+        3.1,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.8
+        ],
+        [
+          0.4,
+          0.8
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.8,
+          -1.0
+        ],
+        [
+          0.4,
+          0.8,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        11.5,
+        7.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -1.2
+        ],
+        [
+          0.4,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -1.2,
+          -1.0
+        ],
+        [
+          0.4,
+          1.2,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_3",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        11.5,
+        11.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -1.2
+        ],
+        [
+          0.4,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -1.2,
+          -1.0
+        ],
+        [
+          0.4,
+          1.2,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_4",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        14.0,
+        2.5,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -1.2
+        ],
+        [
+          0.4,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -1.2,
+          -1.0
+        ],
+        [
+          0.4,
+          1.2,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_5",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        14.0,
+        7.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -1.2
+        ],
+        [
+          0.4,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -1.2,
+          -1.0
+        ],
+        [
+          0.4,
+          1.2,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_rack_6",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        14.0,
+        11.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -1.2
+        ],
+        [
+          0.4,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -1.2,
+          -1.0
+        ],
+        [
+          0.4,
+          1.2,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "wh_pallets",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        8.0,
+        11.5,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.6,
+          -0.6
+        ],
+        [
+          0.6,
+          0.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.6,
+          -0.6,
+          -0.4
+        ],
+        [
+          0.6,
+          0.6,
+          0.4
+        ]
+      ]
+    },
+    {
+      "name": "loading_pallet_stack",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        13.5,
+        3.5,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.6,
+          -0.6
+        ],
+        [
+          0.6,
+          0.6
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.6,
+          -0.6,
+          -0.4
+        ],
+        [
+          0.6,
+          0.6,
+          0.4
+        ]
+      ]
+    },
+    {
+      "name": "wh_workstation_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        5.0,
+        3.5,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.0,
+          -0.45
+        ],
+        [
+          1.0,
+          0.45
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.0,
+          -0.45,
+          -0.45
+        ],
+        [
+          1.0,
+          0.45,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "office_desk_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.5,
+        11.0,
+        0.38,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.75,
+          -0.4
+        ],
+        [
+          0.75,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.75,
+          -0.4,
+          -0.375
+        ],
+        [
+          0.75,
+          0.4,
+          0.375
+        ]
+      ]
+    },
+    {
+      "name": "office_desk_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.5,
+        11.0,
+        0.38,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.75,
+          -0.4
+        ],
+        [
+          0.75,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.75,
+          -0.4,
+          -0.375
+        ],
+        [
+          0.75,
+          0.4,
+          0.375
+        ]
+      ]
+    },
+    {
+      "name": "office_chair_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -1.5,
+        11.8,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.3,
+          -0.3
+        ],
+        [
+          0.3,
+          0.3
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.3,
+          -0.3,
+          -0.45
+        ],
+        [
+          0.3,
+          0.3,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "office_chair_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        1.5,
+        11.8,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.3,
+          -0.3
+        ],
+        [
+          0.3,
+          0.3
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.3,
+          -0.3,
+          -0.45
+        ],
+        [
+          0.3,
+          0.3,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "lab_bench_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -7.6,
+        7.0,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.1,
+          -0.4
+        ],
+        [
+          1.1,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.1,
+          -0.4,
+          -0.45
+        ],
+        [
+          1.1,
+          0.4,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "lab_bench_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -7.6,
+        11.0,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -1.1,
+          -0.4
+        ],
+        [
+          1.1,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -1.1,
+          -0.4,
+          -0.45
+        ],
+        [
+          1.1,
+          0.4,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "room_a_assembly_bench",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -9.8,
+        9.5,
+        0.45,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.5,
+          -1.2
+        ],
+        [
+          0.5,
+          1.2
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.5,
+          -1.2,
+          -0.45
+        ],
+        [
+          0.5,
+          1.2,
+          0.45
+        ]
+      ]
+    },
+    {
+      "name": "charging_dock_station",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -15.2,
+        2.0,
+        0.5,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.3,
+          -0.5
+        ],
+        [
+          0.3,
+          0.5
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.3,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.3,
+          0.5,
+          0.5
+        ]
+      ]
+    },
+    {
+      "name": "cafe_table_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -8.5,
+        -9.0,
+        0.38,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.7,
+          -0.45
+        ],
+        [
+          0.7,
+          0.45
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.7,
+          -0.45,
+          -0.375
+        ],
+        [
+          0.7,
+          0.45,
+          0.375
+        ]
+      ]
+    },
+    {
+      "name": "cafe_table_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -8.5,
+        -11.0,
+        0.38,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.7,
+          -0.45
+        ],
+        [
+          0.7,
+          0.45
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.7,
+          -0.45,
+          -0.375
+        ],
+        [
+          0.7,
+          0.45,
+          0.375
+        ]
+      ]
+    },
+    {
+      "name": "cafe_chair_1",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -8.5,
+        -8.2,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -0.4
+        ],
+        [
+          0.25,
+          0.25,
+          0.4
+        ]
+      ]
+    },
+    {
+      "name": "cafe_chair_2",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -8.5,
+        -9.8,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.25,
+          -0.25,
+          -0.4
+        ],
+        [
+          0.25,
+          0.25,
+          0.4
+        ]
+      ]
+    },
+    {
+      "name": "sign_j1_hospital",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        1.65,
+        -4.25,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j1_office",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        1.65,
+        -3.8,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j1_exit",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -1.65,
+        -4.25,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j1_hospital_south",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        1.65,
+        -5.75,
+        0.85,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j1_reception_south",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -1.65,
+        -5.75,
+        0.85,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j2_hospital",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        6.55,
+        -4.1,
+        0.85,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j2_warehouse",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        6.55,
+        -3.9,
+        0.85,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j3_exit",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -6.55,
+        -4.1,
+        0.85,
+        0.0,
+        0.0,
+        -1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j3_storage",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -6.55,
+        -3.9,
+        0.85,
+        0.0,
+        0.0,
+        -1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j4_office",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -1.65,
+        3.2,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j4_warehouse",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        1.65,
+        1.1,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j4_lab",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -1.65,
+        1.1,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j4_hospital",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        1.65,
+        3.75,
+        0.85,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j4_reception",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -1.65,
+        3.75,
+        0.85,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j7_storage",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -5.3,
+        4.9,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j7_charging",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -7.1,
+        4.9,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j8_room_a",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -7.5,
+        8.2,
+        0.85,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j8_storage",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        -7.5,
+        8.8,
+        0.85,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j6_loading",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        7.1,
+        1.1,
+        0.85,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "sign_j6_charging",
+      "kind": "inline",
+      "class_id": 6,
+      "canonical_pose": [
+        6.9,
+        0.8,
+        0.85,
+        0.0,
+        0.0,
+        -1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "dynamic_warehouse_cart",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        8.0,
+        3.2035,
+        0.3,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.6,
+          -0.4
+        ],
+        [
+          0.6,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.6,
+          -0.4,
+          -0.3
+        ],
+        [
+          0.6,
+          0.4,
+          0.3
+        ]
+      ]
+    },
+    {
+      "name": "dynamic_hospital_trolley",
+      "kind": "inline",
+      "class_id": 5,
+      "canonical_pose": [
+        7.7935,
+        -5.0,
+        0.35,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.45,
+          -0.3
+        ],
+        [
+          0.45,
+          0.3
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.451269,
+          -0.174309,
+          -0.346697
+        ],
+        [
+          0.427299,
+          0.192129,
+          0.35402900000000004
+        ]
+      ]
+    },
+    {
+      "name": "dynamic_forklift",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        11.5,
+        4.8,
+        0.4,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.7,
+          -0.45
+        ],
+        [
+          0.7,
+          0.45
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.7,
+          -0.45,
+          -0.4
+        ],
+        [
+          0.7,
+          0.45,
+          0.4
+        ]
+      ]
+    },
+    {
+      "name": "dynamic_person",
+      "kind": "inline",
+      "class_id": 0,
+      "canonical_pose": [
+        -6.0,
+        -6.5,
+        0.85,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.25,
+          -0.25
+        ],
+        [
+          0.25,
+          0.25
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.129419,
+          -0.260726,
+          -0.851708
+        ],
+        [
+          0.191695,
+          0.296591,
+          0.759461
+        ]
+      ]
+    },
+    {
+      "name": "v3_sign_collection_point",
+      "kind": "inline",
+      "class_id": 7,
+      "canonical_pose": [
+        3.62,
+        -9.6,
+        0.85,
+        0.0,
+        0.0,
+        -1.5708
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "v3_sign_laboratory_test_point",
+      "kind": "inline",
+      "class_id": 8,
+      "canonical_pose": [
+        -7.6,
+        10.95,
+        1.12,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.4,
+          -0.015
+        ],
+        [
+          0.4,
+          0.015
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.4,
+          -0.015,
+          -0.2
+        ],
+        [
+          0.4,
+          0.015,
+          0.2
+        ]
+      ]
+    },
+    {
+      "name": "v3_floor_collection_point",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        5.0,
+        -9.0,
+        0.002,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": null,
+      "visual_aabb": [
+        [
+          -0.45,
+          -0.45,
+          -0.002
+        ],
+        [
+          0.45,
+          0.45,
+          0.002
+        ]
+      ]
+    },
+    {
+      "name": "v3_floor_laboratory_test_point",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        -7.0,
+        9.5,
+        0.002,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": null,
+      "visual_aabb": [
+        [
+          -0.45,
+          -0.45,
+          -0.002
+        ],
+        [
+          0.45,
+          0.45,
+          0.002
+        ]
+      ]
+    },
+    {
+      "name": "v3_payload_blood_sample_carrier",
+      "kind": "inline",
+      "class_id": null,
+      "canonical_pose": [
+        4.1,
+        -10.3,
+        0.87,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.13,
+          -0.09
+        ],
+        [
+          0.13,
+          0.09
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.13,
+          -0.09,
+          -0.07
+        ],
+        [
+          0.13,
+          0.09,
+          0.07
+        ]
+      ]
+    },
+    {
+      "name": "v3_patient_bed_1",
+      "kind": "prop",
+      "model": "MalePatientBed",
+      "class_id": 1,
+      "canonical_pose": [
+        7.45,
+        -8.8,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.989991,
+          -0.544505
+        ],
+        [
+          1.151215,
+          0.544505
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.989991,
+          -0.544505,
+          -0.00166
+        ],
+        [
+          1.151215,
+          0.544505,
+          1.078424
+        ]
+      ]
+    },
+    {
+      "name": "v3_trolley_bed_2",
+      "kind": "prop",
+      "model": "TrolleyBed",
+      "class_id": 1,
+      "canonical_pose": [
+        7.5,
+        -11.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.990578,
+          -0.42289
+        ],
+        [
+          0.990578,
+          0.425114
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.990578,
+          -0.42289,
+          0.0
+        ],
+        [
+          0.990578,
+          0.425114,
+          0.854368
+        ]
+      ]
+    },
+    {
+      "name": "v3_bedside_drawer_1",
+      "kind": "prop",
+      "model": "Drawer",
+      "class_id": null,
+      "canonical_pose": [
+        8.95,
+        -8.8,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.205,
+          -0.262323
+        ],
+        [
+          0.205,
+          0.24
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.205,
+          -0.262323,
+          0.00878
+        ],
+        [
+          0.205,
+          0.24,
+          0.63
+        ]
+      ]
+    },
+    {
+      "name": "v3_bedside_drawer_2",
+      "kind": "prop",
+      "model": "Drawer",
+      "class_id": null,
+      "canonical_pose": [
+        8.95,
+        -11.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.205,
+          -0.262323
+        ],
+        [
+          0.205,
+          0.24
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.205,
+          -0.262323,
+          0.00878
+        ],
+        [
+          0.205,
+          0.24,
+          0.63
+        ]
+      ]
+    },
+    {
+      "name": "v3_iv_stand_ward",
+      "kind": "prop",
+      "model": "IVStand",
+      "class_id": 4,
+      "canonical_pose": [
+        9.1,
+        -9.9,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.219198649,
+          -0.224358821
+        ],
+        [
+          0.219198649,
+          0.22121092
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.219198649,
+          -0.224358821,
+          -0.000674842
+        ],
+        [
+          0.219198649,
+          0.22121092,
+          1.41224986
+        ]
+      ]
+    },
+    {
+      "name": "v3_collection_table",
+      "kind": "prop",
+      "model": "AdjTable",
+      "class_id": null,
+      "canonical_pose": [
+        4.1,
+        -10.6,
+        0.0,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.8,
+          -0.412219
+        ],
+        [
+          0.8,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.8,
+          -0.412219,
+          0.006375
+        ],
+        [
+          0.8,
+          0.4,
+          0.802432
+        ]
+      ]
+    },
+    {
+      "name": "v3_collection_bp_monitor",
+      "kind": "prop",
+      "model": "BloodPressureMonitor",
+      "class_id": 2,
+      "canonical_pose": [
+        4.0,
+        -8.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.286088,
+          -0.290706
+        ],
+        [
+          0.286088,
+          0.253479
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.286298,
+          -0.294397,
+          0.000804
+        ],
+        [
+          0.284574,
+          0.249796,
+          1.474308
+        ]
+      ]
+    },
+    {
+      "name": "v3_ward_bp_cart",
+      "kind": "prop",
+      "model": "BPCart",
+      "class_id": 2,
+      "canonical_pose": [
+        5.6,
+        -12.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.295343,
+          -0.273809
+        ],
+        [
+          0.295343,
+          0.410874
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.295343,
+          -0.273809,
+          -0.000669
+        ],
+        [
+          0.295343,
+          0.410874,
+          1.606498
+        ]
+      ]
+    },
+    {
+      "name": "v3_ward_nurse",
+      "kind": "prop",
+      "model": "Scrubs",
+      "class_id": 0,
+      "canonical_pose": [
+        4.3,
+        -12.2,
+        0.0,
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "footprint": [
+        [
+          -0.128255,
+          -0.262598
+        ],
+        [
+          0.194346,
+          0.301591
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.129419,
+          -0.260726,
+          -0.001708
+        ],
+        [
+          0.191695,
+          0.296591,
+          1.609461
+        ]
+      ]
+    },
+    {
+      "name": "v3_waiting_chair_w1",
+      "kind": "prop",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        -2.95,
+        -10.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "v3_waiting_chair_w2",
+      "kind": "prop",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        -2.3,
+        -10.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "v3_waiting_chair_e1",
+      "kind": "prop",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        2.4,
+        -9.9,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "v3_waiting_chair_e2",
+      "kind": "prop",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        3.05,
+        -9.9,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "v3_reception_nurse",
+      "kind": "prop",
+      "model": "Scrubs",
+      "class_id": 0,
+      "canonical_pose": [
+        -2.2,
+        -7.4,
+        0.0,
+        0.0,
+        0.0,
+        -1.5708
+      ],
+      "footprint": [
+        [
+          -0.128255,
+          -0.262598
+        ],
+        [
+          0.194346,
+          0.301591
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.129419,
+          -0.260726,
+          -0.001708
+        ],
+        [
+          0.191695,
+          0.296591,
+          1.609461
+        ]
+      ]
+    },
+    {
+      "name": "v3_visitor_phone",
+      "kind": "prop",
+      "model": "MaleVisitorOnPhone",
+      "class_id": 0,
+      "canonical_pose": [
+        2.9,
+        -10.8,
+        0.0,
+        0.0,
+        0.0,
+        3.1416
+      ],
+      "footprint": [
+        [
+          -0.113582,
+          -0.299005
+        ],
+        [
+          0.340983,
+          0.202216
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.112053,
+          -0.304667,
+          -0.001669
+        ],
+        [
+          0.351347,
+          0.206214,
+          1.73886
+        ]
+      ]
+    },
+    {
+      "name": "v3_parked_wheelchair",
+      "kind": "prop",
+      "model": "PatientWheelChair",
+      "class_id": 3,
+      "canonical_pose": [
+        2.8,
+        -11.9,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.56,
+          -0.3185
+        ],
+        [
+          0.558,
+          0.3185
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.559758,
+          -0.318745,
+          0.001206
+        ],
+        [
+          0.558031,
+          0.318745,
+          1.779978
+        ]
+      ]
+    },
+    {
+      "name": "v3_lab_instrument_cart",
+      "kind": "prop",
+      "model": "InstrumentCart1",
+      "class_id": 2,
+      "canonical_pose": [
+        -9.0,
+        12.3,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.302888,
+          -0.276444
+        ],
+        [
+          0.302888,
+          0.243183
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.302888,
+          -0.276444,
+          0.0
+        ],
+        [
+          0.302888,
+          0.243183,
+          1.381048
+        ]
+      ]
+    },
+    {
+      "name": "v3_lab_cabinet",
+      "kind": "prop",
+      "model": "MetalCabinet",
+      "class_id": null,
+      "canonical_pose": [
+        -8.0,
+        12.55,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.403796,
+          -0.224326
+        ],
+        [
+          0.403796,
+          0.224326
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.403796,
+          -0.224326,
+          0.0
+        ],
+        [
+          0.403796,
+          0.224326,
+          1.676169
+        ]
+      ]
+    },
+    {
+      "name": "v3_lab_surgical_trolley",
+      "kind": "prop",
+      "model": "SurgicalTrolley",
+      "class_id": 5,
+      "canonical_pose": [
+        -10.1,
+        12.4,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.451269,
+          -0.174309
+        ],
+        [
+          0.427299,
+          0.192129
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.451269,
+          -0.174309,
+          0.003303
+        ],
+        [
+          0.427299,
+          0.192129,
+          0.704029
+        ]
+      ]
+    },
+    {
+      "name": "v3_storage_rack",
+      "kind": "prop",
+      "model": "StorageRack",
+      "class_id": null,
+      "canonical_pose": [
+        -10.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "footprint": [
+        [
+          -0.629121,
+          -0.357212
+        ],
+        [
+          0.629121,
+          0.357212
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.629121,
+          -0.357212,
+          0.0
+        ],
+        [
+          0.629121,
+          0.357212,
+          1.74
+        ]
+      ]
+    },
+    {
+      "name": "pool_MalePatientBed_0",
+      "kind": "pool",
+      "model": "MalePatientBed",
+      "class_id": 1,
+      "canonical_pose": [
+        354.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.989991,
+          -0.544505
+        ],
+        [
+          1.151215,
+          0.544505
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.989991,
+          -0.544505,
+          -0.00166
+        ],
+        [
+          1.151215,
+          0.544505,
+          1.078424
+        ]
+      ]
+    },
+    {
+      "name": "pool_TrolleyBed_0",
+      "kind": "pool",
+      "model": "TrolleyBed",
+      "class_id": 1,
+      "canonical_pose": [
+        357.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.990578,
+          -0.42289
+        ],
+        [
+          0.990578,
+          0.425114
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.990578,
+          -0.42289,
+          0.0
+        ],
+        [
+          0.990578,
+          0.425114,
+          0.854368
+        ]
+      ]
+    },
+    {
+      "name": "pool_TrolleyBed_1",
+      "kind": "pool",
+      "model": "TrolleyBed",
+      "class_id": 1,
+      "canonical_pose": [
+        360.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.990578,
+          -0.42289
+        ],
+        [
+          0.990578,
+          0.425114
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.990578,
+          -0.42289,
+          0.0
+        ],
+        [
+          0.990578,
+          0.425114,
+          0.854368
+        ]
+      ]
+    },
+    {
+      "name": "pool_PatientWheelChair_0",
+      "kind": "pool",
+      "model": "PatientWheelChair",
+      "class_id": 3,
+      "canonical_pose": [
+        363.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.56,
+          -0.3185
+        ],
+        [
+          0.558,
+          0.3185
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.559758,
+          -0.318745,
+          0.001206
+        ],
+        [
+          0.558031,
+          0.318745,
+          1.779978
+        ]
+      ]
+    },
+    {
+      "name": "pool_PatientWheelChair_1",
+      "kind": "pool",
+      "model": "PatientWheelChair",
+      "class_id": 3,
+      "canonical_pose": [
+        366.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.56,
+          -0.3185
+        ],
+        [
+          0.558,
+          0.3185
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.559758,
+          -0.318745,
+          0.001206
+        ],
+        [
+          0.558031,
+          0.318745,
+          1.779978
+        ]
+      ]
+    },
+    {
+      "name": "pool_IVStand_0",
+      "kind": "pool",
+      "model": "IVStand",
+      "class_id": 4,
+      "canonical_pose": [
+        369.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.219198649,
+          -0.224358821
+        ],
+        [
+          0.219198649,
+          0.22121092
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.219198649,
+          -0.224358821,
+          -0.000674842
+        ],
+        [
+          0.219198649,
+          0.22121092,
+          1.41224986
+        ]
+      ]
+    },
+    {
+      "name": "pool_IVStand_1",
+      "kind": "pool",
+      "model": "IVStand",
+      "class_id": 4,
+      "canonical_pose": [
+        372.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.219198649,
+          -0.224358821
+        ],
+        [
+          0.219198649,
+          0.22121092
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.219198649,
+          -0.224358821,
+          -0.000674842
+        ],
+        [
+          0.219198649,
+          0.22121092,
+          1.41224986
+        ]
+      ]
+    },
+    {
+      "name": "pool_IVStand_2",
+      "kind": "pool",
+      "model": "IVStand",
+      "class_id": 4,
+      "canonical_pose": [
+        375.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.219198649,
+          -0.224358821
+        ],
+        [
+          0.219198649,
+          0.22121092
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.219198649,
+          -0.224358821,
+          -0.000674842
+        ],
+        [
+          0.219198649,
+          0.22121092,
+          1.41224986
+        ]
+      ]
+    },
+    {
+      "name": "pool_BPCart_0",
+      "kind": "pool",
+      "model": "BPCart",
+      "class_id": 2,
+      "canonical_pose": [
+        378.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.295343,
+          -0.273809
+        ],
+        [
+          0.295343,
+          0.410874
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.295343,
+          -0.273809,
+          -0.000669
+        ],
+        [
+          0.295343,
+          0.410874,
+          1.606498
+        ]
+      ]
+    },
+    {
+      "name": "pool_InstrumentCart1_0",
+      "kind": "pool",
+      "model": "InstrumentCart1",
+      "class_id": 2,
+      "canonical_pose": [
+        381.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.302888,
+          -0.276444
+        ],
+        [
+          0.302888,
+          0.243183
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.302888,
+          -0.276444,
+          0.0
+        ],
+        [
+          0.302888,
+          0.243183,
+          1.381048
+        ]
+      ]
+    },
+    {
+      "name": "pool_InstrumentCart1_1",
+      "kind": "pool",
+      "model": "InstrumentCart1",
+      "class_id": 2,
+      "canonical_pose": [
+        384.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.302888,
+          -0.276444
+        ],
+        [
+          0.302888,
+          0.243183
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.302888,
+          -0.276444,
+          0.0
+        ],
+        [
+          0.302888,
+          0.243183,
+          1.381048
+        ]
+      ]
+    },
+    {
+      "name": "pool_SurgicalTrolley_0",
+      "kind": "pool",
+      "model": "SurgicalTrolley",
+      "class_id": 5,
+      "canonical_pose": [
+        387.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.451269,
+          -0.174309
+        ],
+        [
+          0.427299,
+          0.192129
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.451269,
+          -0.174309,
+          0.003303
+        ],
+        [
+          0.427299,
+          0.192129,
+          0.704029
+        ]
+      ]
+    },
+    {
+      "name": "pool_SurgicalTrolley_1",
+      "kind": "pool",
+      "model": "SurgicalTrolley",
+      "class_id": 5,
+      "canonical_pose": [
+        390.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.451269,
+          -0.174309
+        ],
+        [
+          0.427299,
+          0.192129
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.451269,
+          -0.174309,
+          0.003303
+        ],
+        [
+          0.427299,
+          0.192129,
+          0.704029
+        ]
+      ]
+    },
+    {
+      "name": "pool_Scrubs_0",
+      "kind": "pool",
+      "model": "Scrubs",
+      "class_id": 0,
+      "canonical_pose": [
+        393.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.128255,
+          -0.262598
+        ],
+        [
+          0.194346,
+          0.301591
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.129419,
+          -0.260726,
+          -0.001708
+        ],
+        [
+          0.191695,
+          0.296591,
+          1.609461
+        ]
+      ]
+    },
+    {
+      "name": "pool_Scrubs_1",
+      "kind": "pool",
+      "model": "Scrubs",
+      "class_id": 0,
+      "canonical_pose": [
+        396.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.128255,
+          -0.262598
+        ],
+        [
+          0.194346,
+          0.301591
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.129419,
+          -0.260726,
+          -0.001708
+        ],
+        [
+          0.191695,
+          0.296591,
+          1.609461
+        ]
+      ]
+    },
+    {
+      "name": "pool_FemaleVisitor_0",
+      "kind": "pool",
+      "model": "FemaleVisitor",
+      "class_id": 0,
+      "canonical_pose": [
+        399.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.312123,
+          -0.338878
+        ],
+        [
+          0.240631,
+          0.139756
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.317183,
+          -0.338479,
+          -0.000816
+        ],
+        [
+          0.233551,
+          0.141583,
+          1.635011
+        ]
+      ]
+    },
+    {
+      "name": "pool_FemaleVisitor_1",
+      "kind": "pool",
+      "model": "FemaleVisitor",
+      "class_id": 0,
+      "canonical_pose": [
+        402.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.312123,
+          -0.338878
+        ],
+        [
+          0.240631,
+          0.139756
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.317183,
+          -0.338479,
+          -0.000816
+        ],
+        [
+          0.233551,
+          0.141583,
+          1.635011
+        ]
+      ]
+    },
+    {
+      "name": "pool_MaleVisitorOnPhone_0",
+      "kind": "pool",
+      "model": "MaleVisitorOnPhone",
+      "class_id": 0,
+      "canonical_pose": [
+        405.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.113582,
+          -0.299005
+        ],
+        [
+          0.340983,
+          0.202216
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.112053,
+          -0.304667,
+          -0.001669
+        ],
+        [
+          0.351347,
+          0.206214,
+          1.73886
+        ]
+      ]
+    },
+    {
+      "name": "pool_Chair_0",
+      "kind": "pool",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        408.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "pool_Chair_1",
+      "kind": "pool",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        411.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "pool_Chair_2",
+      "kind": "pool",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        414.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "pool_Chair_3",
+      "kind": "pool",
+      "model": "Chair",
+      "class_id": null,
+      "canonical_pose": [
+        417.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.29762574699799216,
+          -0.2893358358197453
+        ],
+        [
+          0.21526642799854775,
+          0.2893355677786629
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.297625747,
+          -0.28933483099999996,
+          0.0
+        ],
+        [
+          0.215266428,
+          0.28933483099999996,
+          0.816866829
+        ]
+      ]
+    },
+    {
+      "name": "pool_BloodPressureMonitor_0",
+      "kind": "pool",
+      "model": "BloodPressureMonitor",
+      "class_id": 2,
+      "canonical_pose": [
+        420.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.286088,
+          -0.290706
+        ],
+        [
+          0.286088,
+          0.253479
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.286298,
+          -0.294397,
+          0.000804
+        ],
+        [
+          0.284574,
+          0.249796,
+          1.474308
+        ]
+      ]
+    },
+    {
+      "name": "pool_BloodPressureMonitor_1",
+      "kind": "pool",
+      "model": "BloodPressureMonitor",
+      "class_id": 2,
+      "canonical_pose": [
+        423.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.286088,
+          -0.290706
+        ],
+        [
+          0.286088,
+          0.253479
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.286298,
+          -0.294397,
+          0.000804
+        ],
+        [
+          0.284574,
+          0.249796,
+          1.474308
+        ]
+      ]
+    },
+    {
+      "name": "pool_MetalCabinet_0",
+      "kind": "pool",
+      "model": "MetalCabinet",
+      "class_id": null,
+      "canonical_pose": [
+        426.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.403796,
+          -0.224326
+        ],
+        [
+          0.403796,
+          0.224326
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.403796,
+          -0.224326,
+          0.0
+        ],
+        [
+          0.403796,
+          0.224326,
+          1.676169
+        ]
+      ]
+    },
+    {
+      "name": "pool_Drawer_0",
+      "kind": "pool",
+      "model": "Drawer",
+      "class_id": null,
+      "canonical_pose": [
+        429.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.205,
+          -0.262323
+        ],
+        [
+          0.205,
+          0.24
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.205,
+          -0.262323,
+          0.00878
+        ],
+        [
+          0.205,
+          0.24,
+          0.63
+        ]
+      ]
+    },
+    {
+      "name": "pool_Drawer_1",
+      "kind": "pool",
+      "model": "Drawer",
+      "class_id": null,
+      "canonical_pose": [
+        432.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.205,
+          -0.262323
+        ],
+        [
+          0.205,
+          0.24
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.205,
+          -0.262323,
+          0.00878
+        ],
+        [
+          0.205,
+          0.24,
+          0.63
+        ]
+      ]
+    },
+    {
+      "name": "pool_AdjTable_0",
+      "kind": "pool",
+      "model": "AdjTable",
+      "class_id": null,
+      "canonical_pose": [
+        435.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.8,
+          -0.412219
+        ],
+        [
+          0.8,
+          0.4
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.8,
+          -0.412219,
+          0.006375
+        ],
+        [
+          0.8,
+          0.4,
+          0.802432
+        ]
+      ]
+    },
+    {
+      "name": "pool_StorageRack_0",
+      "kind": "pool",
+      "model": "StorageRack",
+      "class_id": null,
+      "canonical_pose": [
+        438.0,
+        0,
+        -30.0,
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        [
+          -0.629121,
+          -0.357212
+        ],
+        [
+          0.629121,
+          0.357212
+        ]
+      ],
+      "visual_aabb": [
+        [
+          -0.629121,
+          -0.357212,
+          0.0
+        ],
+        [
+          0.629121,
+          0.357212,
+          1.74
+        ]
+      ]
+    }
+  ]
+}

@@ -1,9 +1,0 @@
-names:
-  0: person
-  1: chair
-  2: table
-  3: box
-  4: traffic_cone
-path: /home/soham-darade/CV_Autonomous_Navigation/datasets/gazebo_objects
-train: images/train
-val: images/val

@@ -1,0 +1,1107 @@
+{
+  "conf": 0.35,
+  "iou": 0.5,
+  "models": {
+    "v3_from_v25": {
+      "path": "/home/soham-darade/CV_Autonomous_Navigation/V3/models_trained/v3_yolov8n_from_v25.pt",
+      "classes": {
+        "0": "person",
+        "1": "hospital_bed",
+        "2": "cart",
+        "3": "wheelchair",
+        "4": "iv_stand",
+        "5": "surgical_trolley",
+        "6": "directional_sign",
+        "7": "collection_point_marker",
+        "8": "lab_test_point_marker"
+      },
+      "ultralytics_test": {
+        "mAP50": 0.8211,
+        "mAP50_95": 0.7102,
+        "precision": 0.8325,
+        "recall": 0.8006,
+        "per_class_AP50": {
+          "person": 0.9925,
+          "hospital_bed": 0.827,
+          "cart": 0.5945,
+          "wheelchair": 0.665,
+          "iv_stand": 0.4895,
+          "surgical_trolley": 0.9919,
+          "directional_sign": 0.9787,
+          "collection_point_marker": 0.8561,
+          "lab_test_point_marker": 0.995
+        },
+        "per_class_AP50_95": {
+          "person": 0.9626,
+          "hospital_bed": 0.6884,
+          "cart": 0.5299,
+          "wheelchair": 0.334,
+          "iv_stand": 0.3604,
+          "surgical_trolley": 0.9427,
+          "directional_sign": 0.8592,
+          "collection_point_marker": 0.7894,
+          "lab_test_point_marker": 0.9252
+        },
+        "confusion_matrix_png": "V3/docs/evidence/phase3_regression/yolo/ultralytics_val_v3_from_v25/confusion_matrix.png"
+      }
+    }
+  },
+  "sets": {
+    "test_canonical": {
+      "v3_from_v25": {
+        "images": 500,
+        "AP50": {
+          "person": 0.9814,
+          "hospital_bed": 0.8228,
+          "cart": 0.5379,
+          "wheelchair": 0.6667,
+          "iv_stand": 0.5137,
+          "surgical_trolley": 0.9964,
+          "directional_sign": 0.9689,
+          "collection_point_marker": 0.75,
+          "lab_test_point_marker": 1.0
+        },
+        "AP50_95": {
+          "person": 0.9515,
+          "hospital_bed": 0.6674,
+          "cart": 0.4709,
+          "wheelchair": 0.3333,
+          "iv_stand": 0.3451,
+          "surgical_trolley": 0.9387,
+          "directional_sign": 0.8429,
+          "collection_point_marker": 0.725,
+          "lab_test_point_marker": 0.9213
+        },
+        "mAP50": 0.8042,
+        "mAP50_95": 0.6885,
+        "per_class": {
+          "person": {
+            "TP": 181,
+            "FP": 2,
+            "FN": 5,
+            "GT": 186,
+            "precision": 0.9891,
+            "recall": 0.9731
+          },
+          "hospital_bed": {
+            "TP": 34,
+            "FP": 6,
+            "FN": 13,
+            "GT": 47,
+            "precision": 0.85,
+            "recall": 0.7234
+          },
+          "cart": {
+            "TP": 16,
+            "FP": 3,
+            "FN": 23,
+            "GT": 39,
+            "precision": 0.8421,
+            "recall": 0.4103
+          },
+          "wheelchair": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 1,
+            "GT": 3,
+            "precision": 1.0,
+            "recall": 0.6667
+          },
+          "iv_stand": {
+            "TP": 8,
+            "FP": 11,
+            "FN": 4,
+            "GT": 12,
+            "precision": 0.4211,
+            "recall": 0.6667
+          },
+          "surgical_trolley": {
+            "TP": 171,
+            "FP": 5,
+            "FN": 7,
+            "GT": 178,
+            "precision": 0.9716,
+            "recall": 0.9607
+          },
+          "directional_sign": {
+            "TP": 944,
+            "FP": 34,
+            "FN": 59,
+            "GT": 1003,
+            "precision": 0.9652,
+            "recall": 0.9412
+          },
+          "collection_point_marker": {
+            "TP": 3,
+            "FP": 0,
+            "FN": 1,
+            "GT": 4,
+            "precision": 1.0,
+            "recall": 0.75
+          },
+          "lab_test_point_marker": {
+            "TP": 32,
+            "FP": 0,
+            "FN": 0,
+            "GT": 32,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "total": {
+          "TP": 1391,
+          "FP_in_taxonomy": 61,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 61,
+          "FN": 113,
+          "precision": 0.958,
+          "recall": 0.9249,
+          "FP_per_image": 0.122,
+          "images_with_FP": 55
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "directional_sign on GT:directional_sign": 20,
+          "directional_sign on background": 11,
+          "hospital_bed on GT:hospital_bed": 6,
+          "iv_stand on GT:iv_stand": 6,
+          "cart on struct:wall": 3,
+          "iv_stand on struct:wall": 2,
+          "person on GT:person": 2,
+          "surgical_trolley on neg:StorageRack": 1,
+          "surgical_trolley on struct:office_chair_1": 1,
+          "directional_sign on GT:surgical_trolley": 1,
+          "iv_stand on neg:StorageRack": 1,
+          "iv_stand on struct:pillar_rec_2": 1,
+          "directional_sign on struct:pillar_j3": 1,
+          "surgical_trolley on GT:surgical_trolley": 1,
+          "directional_sign on struct:wall": 1,
+          "iv_stand on background": 1,
+          "surgical_trolley on struct:wall": 1,
+          "surgical_trolley on background": 1
+        }
+      }
+    },
+    "A_hospital_beds": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.7938,
+          "hospital_bed": 0.9405,
+          "cart": 1.0,
+          "wheelchair": 1.0,
+          "iv_stand": 1.0,
+          "surgical_trolley": 1.0,
+          "directional_sign": 0.9114
+        },
+        "AP50_95": {
+          "person": 0.6118,
+          "hospital_bed": 0.8325,
+          "cart": 0.9667,
+          "wheelchair": 0.2,
+          "iv_stand": 1.0,
+          "surgical_trolley": 0.9,
+          "directional_sign": 0.7539
+        },
+        "mAP50": 0.9494,
+        "mAP50_95": 0.7521,
+        "per_class": {
+          "person": {
+            "TP": 4,
+            "FP": 1,
+            "FN": 4,
+            "GT": 8,
+            "precision": 0.8,
+            "recall": 0.5
+          },
+          "hospital_bed": {
+            "TP": 43,
+            "FP": 2,
+            "FN": 5,
+            "GT": 48,
+            "precision": 0.9556,
+            "recall": 0.8958
+          },
+          "cart": {
+            "TP": 6,
+            "FP": 0,
+            "FN": 0,
+            "GT": 6,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "wheelchair": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "iv_stand": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "surgical_trolley": {
+            "TP": 1,
+            "FP": 1,
+            "FN": 0,
+            "GT": 1,
+            "precision": 0.5,
+            "recall": 1.0
+          },
+          "directional_sign": {
+            "TP": 31,
+            "FP": 1,
+            "FN": 5,
+            "GT": 36,
+            "precision": 0.9688,
+            "recall": 0.8611
+          }
+        },
+        "total": {
+          "TP": 87,
+          "FP_in_taxonomy": 5,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 5,
+          "FN": 14,
+          "precision": 0.9457,
+          "recall": 0.8614,
+          "FP_per_image": 0.125,
+          "images_with_FP": 5
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "hospital_bed on GT:hospital_bed": 2,
+          "person on GT:person": 1,
+          "surgical_trolley on neg:StorageRack": 1,
+          "directional_sign on GT:directional_sign": 1
+        }
+      }
+    },
+    "B_bed_vs_lab_bench": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "hospital_bed": 1.0,
+          "cart": 0.8889,
+          "surgical_trolley": 0.1889,
+          "directional_sign": 0.9691,
+          "lab_test_point_marker": 0.9963
+        },
+        "AP50_95": {
+          "hospital_bed": 0.8239,
+          "cart": 0.84,
+          "surgical_trolley": 0.1733,
+          "directional_sign": 0.8345,
+          "lab_test_point_marker": 0.8939
+        },
+        "mAP50": 0.8086,
+        "mAP50_95": 0.7131,
+        "per_class": {
+          "hospital_bed": {
+            "TP": 20,
+            "FP": 0,
+            "FN": 0,
+            "GT": 20,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "cart": {
+            "TP": 8,
+            "FP": 0,
+            "FN": 1,
+            "GT": 9,
+            "precision": 1.0,
+            "recall": 0.8889
+          },
+          "surgical_trolley": {
+            "TP": 1,
+            "FP": 1,
+            "FN": 5,
+            "GT": 6,
+            "precision": 0.5,
+            "recall": 0.1667
+          },
+          "directional_sign": {
+            "TP": 27,
+            "FP": 1,
+            "FN": 2,
+            "GT": 29,
+            "precision": 0.9643,
+            "recall": 0.931
+          },
+          "lab_test_point_marker": {
+            "TP": 15,
+            "FP": 0,
+            "FN": 1,
+            "GT": 16,
+            "precision": 1.0,
+            "recall": 0.9375
+          }
+        },
+        "total": {
+          "TP": 71,
+          "FP_in_taxonomy": 2,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 2,
+          "FN": 9,
+          "precision": 0.9726,
+          "recall": 0.8875,
+          "FP_per_image": 0.05,
+          "images_with_FP": 2
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "surgical_trolley on GT:surgical_trolley": 1,
+          "directional_sign on GT:hospital_bed": 1
+        }
+      }
+    },
+    "C_bed_vs_reception_desk": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.7756,
+          "hospital_bed": 0.9524,
+          "directional_sign": 0.75
+        },
+        "AP50_95": {
+          "person": 0.7015,
+          "hospital_bed": 0.8505,
+          "directional_sign": 0.4511
+        },
+        "mAP50": 0.826,
+        "mAP50_95": 0.6677,
+        "per_class": {
+          "person": {
+            "TP": 8,
+            "FP": 2,
+            "FN": 3,
+            "GT": 11,
+            "precision": 0.8,
+            "recall": 0.7273
+          },
+          "hospital_bed": {
+            "TP": 20,
+            "FP": 0,
+            "FN": 1,
+            "GT": 21,
+            "precision": 1.0,
+            "recall": 0.9524
+          },
+          "directional_sign": {
+            "TP": 3,
+            "FP": 1,
+            "FN": 1,
+            "GT": 4,
+            "precision": 0.75,
+            "recall": 0.75
+          },
+          "lab_test_point_marker": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          }
+        },
+        "total": {
+          "TP": 31,
+          "FP_in_taxonomy": 4,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 4,
+          "FN": 5,
+          "precision": 0.8857,
+          "recall": 0.8611,
+          "FP_per_image": 0.1,
+          "images_with_FP": 4
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "person on GT:person": 2,
+          "directional_sign on struct:pillar_rec_1": 1,
+          "lab_test_point_marker on struct:pillar_center_1": 1
+        }
+      }
+    },
+    "D_chair_vs_cart": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.8929,
+          "cart": 1.0,
+          "wheelchair": 1.0,
+          "surgical_trolley": 1.0,
+          "directional_sign": 0.8545
+        },
+        "AP50_95": {
+          "person": 0.6845,
+          "cart": 0.9117,
+          "wheelchair": 0.2667,
+          "surgical_trolley": 1.0,
+          "directional_sign": 0.6519
+        },
+        "mAP50": 0.9495,
+        "mAP50_95": 0.703,
+        "per_class": {
+          "person": {
+            "TP": 3,
+            "FP": 2,
+            "FN": 1,
+            "GT": 4,
+            "precision": 0.6,
+            "recall": 0.75
+          },
+          "cart": {
+            "TP": 20,
+            "FP": 1,
+            "FN": 0,
+            "GT": 20,
+            "precision": 0.9524,
+            "recall": 1.0
+          },
+          "wheelchair": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "GT": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "iv_stand": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "surgical_trolley": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "directional_sign": {
+            "TP": 31,
+            "FP": 2,
+            "FN": 8,
+            "GT": 39,
+            "precision": 0.9394,
+            "recall": 0.7949
+          }
+        },
+        "total": {
+          "TP": 55,
+          "FP_in_taxonomy": 6,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 6,
+          "FN": 10,
+          "precision": 0.9016,
+          "recall": 0.8462,
+          "FP_per_image": 0.15,
+          "images_with_FP": 5
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "person on struct:wall": 2,
+          "cart on neg:Chair": 1,
+          "directional_sign on GT:directional_sign": 1,
+          "iv_stand on GT:cart": 1,
+          "directional_sign on struct:wall": 1
+        }
+      }
+    },
+    "E_trolley_vs_forklift_cart": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 1.0,
+          "hospital_bed": 1.0,
+          "cart": 1.0,
+          "surgical_trolley": 0.9857,
+          "directional_sign": 0.9082,
+          "lab_test_point_marker": 1.0
+        },
+        "AP50_95": {
+          "person": 1.0,
+          "hospital_bed": 0.9,
+          "cart": 0.8,
+          "surgical_trolley": 0.9327,
+          "directional_sign": 0.6549,
+          "lab_test_point_marker": 1.0
+        },
+        "mAP50": 0.9823,
+        "mAP50_95": 0.8813,
+        "per_class": {
+          "person": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 0,
+            "GT": 2,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "hospital_bed": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "cart": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "surgical_trolley": {
+            "TP": 19,
+            "FP": 3,
+            "FN": 1,
+            "GT": 20,
+            "precision": 0.8636,
+            "recall": 0.95
+          },
+          "directional_sign": {
+            "TP": 21,
+            "FP": 2,
+            "FN": 5,
+            "GT": 26,
+            "precision": 0.913,
+            "recall": 0.8077
+          },
+          "lab_test_point_marker": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "total": {
+          "TP": 45,
+          "FP_in_taxonomy": 5,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 5,
+          "FN": 6,
+          "precision": 0.9,
+          "recall": 0.8824,
+          "FP_per_image": 0.125,
+          "images_with_FP": 4
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "directional_sign on GT:directional_sign": 2,
+          "surgical_trolley on GT:surgical_trolley": 1,
+          "surgical_trolley on neg:dynamic_warehouse_cart": 1,
+          "surgical_trolley on neg:StorageRack": 1
+        }
+      }
+    },
+    "F_wheelchair": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.8571,
+          "cart": 0.5,
+          "wheelchair": 0.9914,
+          "surgical_trolley": 0.0147,
+          "directional_sign": 0.8642,
+          "lab_test_point_marker": 0.0
+        },
+        "AP50_95": {
+          "person": 0.7833,
+          "cart": 0.45,
+          "wheelchair": 0.9346,
+          "surgical_trolley": 0.0074,
+          "directional_sign": 0.6296,
+          "lab_test_point_marker": 0.0
+        },
+        "mAP50": 0.5379,
+        "mAP50_95": 0.4675,
+        "per_class": {
+          "person": {
+            "TP": 6,
+            "FP": 0,
+            "FN": 1,
+            "GT": 7,
+            "precision": 1.0,
+            "recall": 0.8571
+          },
+          "hospital_bed": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "cart": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 1,
+            "GT": 2,
+            "precision": 1.0,
+            "recall": 0.5
+          },
+          "wheelchair": {
+            "TP": 38,
+            "FP": 2,
+            "FN": 2,
+            "GT": 40,
+            "precision": 0.95,
+            "recall": 0.95
+          },
+          "iv_stand": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "surgical_trolley": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "GT": 2,
+            "precision": null,
+            "recall": 0.0
+          },
+          "directional_sign": {
+            "TP": 31,
+            "FP": 3,
+            "FN": 9,
+            "GT": 40,
+            "precision": 0.9118,
+            "recall": 0.775
+          },
+          "lab_test_point_marker": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "GT": 1,
+            "precision": null,
+            "recall": 0.0
+          }
+        },
+        "total": {
+          "TP": 76,
+          "FP_in_taxonomy": 7,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 7,
+          "FN": 16,
+          "precision": 0.9157,
+          "recall": 0.8261,
+          "FP_per_image": 0.175,
+          "images_with_FP": 7
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "wheelchair on GT:wheelchair": 2,
+          "directional_sign on GT:directional_sign": 1,
+          "directional_sign on background": 1,
+          "iv_stand on struct:wall": 1,
+          "directional_sign on GT:cart": 1,
+          "hospital_bed on struct:lab_bench_2": 1
+        }
+      }
+    },
+    "G_iv_stand": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.9667,
+          "hospital_bed": 0.6667,
+          "cart": 1.0,
+          "wheelchair": 1.0,
+          "iv_stand": 0.96,
+          "surgical_trolley": 0.9805,
+          "directional_sign": 0.9157,
+          "collection_point_marker": 1.0,
+          "lab_test_point_marker": 1.0
+        },
+        "AP50_95": {
+          "person": 0.7938,
+          "hospital_bed": 0.45,
+          "cart": 0.9,
+          "wheelchair": 0.9,
+          "iv_stand": 0.9215,
+          "surgical_trolley": 0.8707,
+          "directional_sign": 0.759,
+          "collection_point_marker": 1.0,
+          "lab_test_point_marker": 0.85
+        },
+        "mAP50": 0.9433,
+        "mAP50_95": 0.8272,
+        "per_class": {
+          "person": {
+            "TP": 6,
+            "FP": 0,
+            "FN": 3,
+            "GT": 9,
+            "precision": 1.0,
+            "recall": 0.6667
+          },
+          "hospital_bed": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 1,
+            "GT": 3,
+            "precision": 1.0,
+            "recall": 0.6667
+          },
+          "cart": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "wheelchair": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 0,
+            "GT": 2,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "iv_stand": {
+            "TP": 23,
+            "FP": 0,
+            "FN": 2,
+            "GT": 25,
+            "precision": 1.0,
+            "recall": 0.92
+          },
+          "surgical_trolley": {
+            "TP": 8,
+            "FP": 0,
+            "FN": 3,
+            "GT": 11,
+            "precision": 1.0,
+            "recall": 0.7273
+          },
+          "directional_sign": {
+            "TP": 90,
+            "FP": 13,
+            "FN": 13,
+            "GT": 103,
+            "precision": 0.8738,
+            "recall": 0.8738
+          },
+          "collection_point_marker": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 0,
+            "GT": 2,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "lab_test_point_marker": {
+            "TP": 2,
+            "FP": 0,
+            "FN": 0,
+            "GT": 2,
+            "precision": 1.0,
+            "recall": 1.0
+          }
+        },
+        "total": {
+          "TP": 136,
+          "FP_in_taxonomy": 13,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 13,
+          "FN": 22,
+          "precision": 0.9128,
+          "recall": 0.8608,
+          "FP_per_image": 0.325,
+          "images_with_FP": 10
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "directional_sign on GT:directional_sign": 4,
+          "directional_sign on background": 4,
+          "directional_sign on struct:wall": 3,
+          "directional_sign on GT:surgical_trolley": 2
+        }
+      }
+    },
+    "H_person": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.9998,
+          "hospital_bed": 0.5,
+          "directional_sign": 0.9444,
+          "lab_test_point_marker": 0.0
+        },
+        "AP50_95": {
+          "person": 0.974,
+          "hospital_bed": 0.3,
+          "directional_sign": 0.7358,
+          "lab_test_point_marker": 0.0
+        },
+        "mAP50": 0.611,
+        "mAP50_95": 0.5025,
+        "per_class": {
+          "person": {
+            "TP": 70,
+            "FP": 1,
+            "FN": 0,
+            "GT": 70,
+            "precision": 0.9859,
+            "recall": 1.0
+          },
+          "hospital_bed": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 2,
+            "GT": 2,
+            "precision": null,
+            "recall": 0.0
+          },
+          "wheelchair": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "directional_sign": {
+            "TP": 31,
+            "FP": 0,
+            "FN": 5,
+            "GT": 36,
+            "precision": 1.0,
+            "recall": 0.8611
+          },
+          "lab_test_point_marker": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 1,
+            "GT": 1,
+            "precision": 0.0,
+            "recall": 0.0
+          }
+        },
+        "total": {
+          "TP": 101,
+          "FP_in_taxonomy": 3,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 3,
+          "FN": 8,
+          "precision": 0.9712,
+          "recall": 0.9266,
+          "FP_per_image": 0.075,
+          "images_with_FP": 3
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "person on GT:person": 1,
+          "wheelchair on GT:hospital_bed": 1,
+          "lab_test_point_marker on GT:lab_test_point_marker": 1
+        }
+      }
+    },
+    "I_empty_hallway": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 1.0,
+          "cart": 1.0,
+          "wheelchair": 1.0,
+          "directional_sign": 0.9824
+        },
+        "AP50_95": {
+          "person": 1.0,
+          "cart": 0.5,
+          "wheelchair": 0.6,
+          "directional_sign": 0.8111
+        },
+        "mAP50": 0.9956,
+        "mAP50_95": 0.7278,
+        "per_class": {
+          "person": {
+            "TP": 1,
+            "FP": 0,
+            "FN": 0,
+            "GT": 1,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "cart": {
+            "TP": 0,
+            "FP": 0,
+            "FN": 1,
+            "GT": 1,
+            "precision": null,
+            "recall": 0.0
+          },
+          "wheelchair": {
+            "TP": 1,
+            "FP": 1,
+            "FN": 0,
+            "GT": 1,
+            "precision": 0.5,
+            "recall": 1.0
+          },
+          "surgical_trolley": {
+            "TP": 0,
+            "FP": 1,
+            "FN": 0,
+            "GT": 0,
+            "precision": 0.0,
+            "recall": null
+          },
+          "directional_sign": {
+            "TP": 30,
+            "FP": 3,
+            "FN": 3,
+            "GT": 33,
+            "precision": 0.9091,
+            "recall": 0.9091
+          }
+        },
+        "total": {
+          "TP": 32,
+          "FP_in_taxonomy": 5,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 5,
+          "FN": 4,
+          "precision": 0.8649,
+          "recall": 0.8889,
+          "FP_per_image": 0.125,
+          "images_with_FP": 4
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "directional_sign on neg:StorageRack": 2,
+          "directional_sign on struct:wh_rack_1": 1,
+          "surgical_trolley on struct:room_a_assembly_bench": 1,
+          "wheelchair on GT:cart": 1
+        }
+      }
+    },
+    "J_cluttered_corridor": {
+      "v3_from_v25": {
+        "images": 40,
+        "AP50": {
+          "person": 0.9432,
+          "hospital_bed": 0.9798,
+          "cart": 0.9553,
+          "wheelchair": 0.8182,
+          "iv_stand": 0.9154,
+          "surgical_trolley": 0.975,
+          "directional_sign": 0.7402
+        },
+        "AP50_95": {
+          "person": 0.8237,
+          "hospital_bed": 0.7643,
+          "cart": 0.8208,
+          "wheelchair": 0.7071,
+          "iv_stand": 0.7168,
+          "surgical_trolley": 0.684,
+          "directional_sign": 0.564
+        },
+        "mAP50": 0.9039,
+        "mAP50_95": 0.7258,
+        "per_class": {
+          "person": {
+            "TP": 34,
+            "FP": 0,
+            "FN": 6,
+            "GT": 40,
+            "precision": 1.0,
+            "recall": 0.85
+          },
+          "hospital_bed": {
+            "TP": 8,
+            "FP": 2,
+            "FN": 1,
+            "GT": 9,
+            "precision": 0.8,
+            "recall": 0.8889
+          },
+          "cart": {
+            "TP": 24,
+            "FP": 1,
+            "FN": 3,
+            "GT": 27,
+            "precision": 0.96,
+            "recall": 0.8889
+          },
+          "wheelchair": {
+            "TP": 9,
+            "FP": 0,
+            "FN": 2,
+            "GT": 11,
+            "precision": 1.0,
+            "recall": 0.8182
+          },
+          "iv_stand": {
+            "TP": 16,
+            "FP": 4,
+            "FN": 5,
+            "GT": 21,
+            "precision": 0.8,
+            "recall": 0.7619
+          },
+          "surgical_trolley": {
+            "TP": 7,
+            "FP": 0,
+            "FN": 1,
+            "GT": 8,
+            "precision": 1.0,
+            "recall": 0.875
+          },
+          "directional_sign": {
+            "TP": 17,
+            "FP": 3,
+            "FN": 9,
+            "GT": 26,
+            "precision": 0.85,
+            "recall": 0.6538
+          }
+        },
+        "total": {
+          "TP": 115,
+          "FP_in_taxonomy": 10,
+          "FP_out_of_taxonomy": 0,
+          "FP_total": 10,
+          "FN": 27,
+          "precision": 0.92,
+          "recall": 0.8099,
+          "FP_per_image": 0.25,
+          "images_with_FP": 8
+        },
+        "out_of_taxonomy_predictions": {},
+        "FP_attribution": {
+          "iv_stand on background": 2,
+          "directional_sign on GT:directional_sign": 2,
+          "hospital_bed on GT:hospital_bed": 1,
+          "iv_stand on GT:iv_stand": 1,
+          "iv_stand on GT:person": 1,
+          "directional_sign on background": 1,
+          "cart on background": 1,
+          "hospital_bed on struct:wall": 1
+        }
+      }
+    }
+  }
+}

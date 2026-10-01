@@ -1,0 +1,25 @@
+{
+ "frames": 9314,
+ "counts": {
+  "person": 4282,
+  "cart": 2395,
+  "iv_stand": 1098,
+  "directional_sign": 12517,
+  "wheelchair": 1812,
+  "hospital_bed": 1445,
+  "surgical_trolley": 2103,
+  "collection_point_marker": 97,
+  "lab_test_point_marker": 44
+ },
+ "mean_conf": {
+  "person": 0.802,
+  "cart": 0.646,
+  "iv_stand": 0.738,
+  "directional_sign": 0.759,
+  "wheelchair": 0.733,
+  "hospital_bed": 0.641,
+  "surgical_trolley": 0.69,
+  "collection_point_marker": 0.458,
+  "lab_test_point_marker": 0.442
+ }
+}

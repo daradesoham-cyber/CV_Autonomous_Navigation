@@ -1,0 +1,27 @@
+{
+ "mission_id": "M20261001-102642-ab30",
+ "final": "MISSION_COMPLETE",
+ "samples": 293,
+ "objects": {
+  "dynamic_person": {
+   "path_travelled_m": 0.0,
+   "max_extent_m": 0.0,
+   "min_centre_distance_to_robot_m": 9.37
+  },
+  "dynamic_hospital_trolley": {
+   "path_travelled_m": 23.38,
+   "max_extent_m": 0.29,
+   "min_centre_distance_to_robot_m": 1.07
+  },
+  "dynamic_warehouse_cart": {
+   "path_travelled_m": 36.05,
+   "max_extent_m": 1.57,
+   "min_centre_distance_to_robot_m": 2.2
+  },
+  "dynamic_forklift": {
+   "path_travelled_m": 6.3,
+   "max_extent_m": 0.3,
+   "min_centre_distance_to_robot_m": 6.55
+  }
+ }
+}

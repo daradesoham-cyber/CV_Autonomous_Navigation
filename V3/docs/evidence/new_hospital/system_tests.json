@@ -1,0 +1,193 @@
+{
+ "run_at": "2026-10-01 14:46:00",
+ "results": [
+  {
+   "id": "T01",
+   "name": "state API, all subsystems up, mission READY",
+   "result": "PASS",
+   "observed": {
+    "up": [
+     "camera",
+     "costmap_obstacles",
+     "fusion",
+     "gazebo",
+     "lidar",
+     "localization",
+     "mission_manager",
+     "navigation",
+     "ros",
+     "yolo"
+    ],
+    "down": [],
+    "mission_state": "READY",
+    "ready_conditions": {
+     "amcl_pose": true,
+     "decision_engine": true,
+     "nav2_navigate_to_pose": true,
+     "spatial_fusion": true,
+     "yolo_detections": true
+    },
+    "rates_hz": {
+     "amcl": 0.0,
+     "camera": 27.4,
+     "clock": 120.0,
+     "costmap": 9.6,
+     "decision_engine": 4.0,
+     "detections": 27.6,
+     "fusion": 27.4,
+     "mission": 2.0,
+     "odom": 27.6,
+     "scan": 19.2,
+     "ttc": 27.4
+    }
+   }
+  },
+  {
+   "id": "T02",
+   "name": "UI page, map image, camera snapshot and MJPEG stream",
+   "result": "PASS",
+   "observed": {
+    "ui": 200,
+    "map": 200,
+    "map_png": true,
+    "jpg": 200,
+    "jpg_magic": true,
+    "mjpeg_frames_in_3s": 5
+   }
+  },
+  {
+   "id": "T03",
+   "name": "command whitelist rejects unknown/injected commands and invalid locations",
+   "result": "PASS",
+   "observed": {
+    "http_codes": {
+     "unknown_cmd": 400,
+     "shell_injection": 400,
+     "exec_field": 400,
+     "bad_location": 400,
+     "same_location": 400
+    },
+    "mission_still_READY": true
+   }
+  },
+  {
+   "id": "T04",
+   "name": "start mission -> GO_TO_COLLECTION and robot moves",
+   "result": "PASS",
+   "observed": {
+    "response": {
+     "ok": true,
+     "sent": {
+      "cmd": "start",
+      "destination": "laboratory",
+      "source": "collection_point"
+     }
+    },
+    "mission_id": "M20261001-144101-8e83",
+    "state": "GO_TO_COLLECTION",
+    "speed": [
+     0.407,
+     0.556
+    ]
+   }
+  },
+  {
+   "id": "T05",
+   "name": "pause -> PAUSED and robot stops",
+   "result": "PASS",
+   "observed": {
+    "state": "PAUSED",
+    "max_linear_speed_while_paused": 0.0,
+    "pose_drift_3s_m": 0.0
+   }
+  },
+  {
+   "id": "T06",
+   "name": "resume -> navigation state restored and robot moves",
+   "result": "PASS",
+   "observed": {
+    "state": "GO_TO_COLLECTION",
+    "speed": [
+     0.065,
+     0.0
+    ]
+   }
+  },
+  {
+   "id": "T07",
+   "name": "cancel during navigation -> CANCELLED and robot stops",
+   "result": "PASS",
+   "observed": {
+    "state": "CANCELLED",
+    "max_linear_speed_after_cancel": 0.0
+   }
+  },
+  {
+   "id": "T08",
+   "name": "reset after cancel -> READY",
+   "result": "PASS",
+   "observed": {
+    "state": "READY"
+   }
+  },
+  {
+   "id": "T09",
+   "name": "e-stop -> EMERGENCY_STOP, robot held still, start refused while latched, reset clears",
+   "result": "PASS",
+   "observed": {
+    "was_moving": true,
+    "state": "EMERGENCY_STOP",
+    "max_linear_speed_4s_after_estop": 0.0,
+    "latched": true,
+    "start_refused_while_latched": true,
+    "reset_cleared": true,
+    "check_window_s": 6.6
+   }
+  },
+  {
+   "id": "T10",
+   "name": "LAN URL serves UI and API (private address only)",
+   "result": "PASS",
+   "observed": {
+    "lan_ip": "192.168.1.42",
+    "private": true,
+    "ui": 200,
+    "api": 200
+   }
+  },
+  {
+   "id": "T11",
+   "name": "history API lists the test missions with outcome",
+   "result": "PASS",
+   "observed": {
+    "missions": {
+     "M20261001-144101-8e83": "CANCELLED",
+     "M20261001-144120-4c48": "ESTOP",
+     "M20261001-144128-c971": "COMPLETE"
+    }
+   }
+  },
+  {
+   "id": "T12",
+   "name": "full mission collection_point -> laboratory completes",
+   "result": "PASS",
+   "observed": {
+    "final": "MISSION_COMPLETE",
+    "mission_id": "M20261001-144128-c971",
+    "states": [
+     "READY",
+     "GO_TO_COLLECTION",
+     "GO_TO_COLLECTION",
+     "COLLECTING",
+     "GO_TO_LAB",
+     "DELIVERING",
+     "MISSION_COMPLETE"
+    ],
+    "duration_s": 271.0,
+    "distance_m": 114.39,
+    "replans": 1,
+    "failure_reason": null
+   }
+  }
+ ]
+}

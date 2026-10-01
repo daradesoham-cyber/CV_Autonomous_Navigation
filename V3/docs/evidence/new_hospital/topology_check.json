@@ -1,0 +1,433 @@
+{
+ "radius_m": 0.27,
+ "map": "/home/soham-darade/CV_Autonomous_Navigation/V3/maps/v3_hospital_map.yaml",
+ "nodes": {
+  "entrance": {
+   "x": 0.0,
+   "y": 15.5,
+   "free": true
+  },
+  "lobby": {
+   "x": 0.0,
+   "y": 11.0,
+   "free": true
+  },
+  "reception": {
+   "x": 0.0,
+   "y": 8.7,
+   "free": true
+  },
+  "lobby_west": {
+   "x": -4.6,
+   "y": 10.6,
+   "free": true
+  },
+  "lobby_east": {
+   "x": 4.6,
+   "y": 10.6,
+   "free": true
+  },
+  "waiting_west": {
+   "x": -6.5,
+   "y": 10.4,
+   "free": true
+  },
+  "storage_door": {
+   "x": -6.7,
+   "y": 11.4,
+   "free": true
+  },
+  "storage": {
+   "x": -8.6,
+   "y": 14.4,
+   "free": true
+  },
+  "lab_door": {
+   "x": 6.7,
+   "y": 11.4,
+   "free": true
+  },
+  "laboratory": {
+   "x": 8.6,
+   "y": 14.6,
+   "free": true
+  },
+  "pharmacy": {
+   "x": 7.6,
+   "y": 5.2,
+   "free": true
+  },
+  "corridor_w_north": {
+   "x": -5.0,
+   "y": 4.6,
+   "free": true
+  },
+  "corridor_e_north": {
+   "x": 5.0,
+   "y": 4.6,
+   "free": true
+  },
+  "nursing_station": {
+   "x": -2.6,
+   "y": 1.6,
+   "free": true
+  },
+  "corridor_w_mid": {
+   "x": -5.0,
+   "y": -3.4,
+   "free": true
+  },
+  "corridor_e_mid": {
+   "x": 5.0,
+   "y": -3.4,
+   "free": true
+  },
+  "x_west_north": {
+   "x": -5.0,
+   "y": -8.6,
+   "free": true
+  },
+  "x_east_north": {
+   "x": 5.0,
+   "y": -8.6,
+   "free": true
+  },
+  "cross_north_mid": {
+   "x": -1.0,
+   "y": -8.4,
+   "free": true
+  },
+  "patient_room_west": {
+   "x": -8.6,
+   "y": -5.0,
+   "free": true
+  },
+  "patient_room_east": {
+   "x": 8.6,
+   "y": -5.0,
+   "free": true
+  },
+  "x_west_mid": {
+   "x": -5.0,
+   "y": -14.5,
+   "free": true
+  },
+  "x_east_mid": {
+   "x": 5.0,
+   "y": -14.5,
+   "free": true
+  },
+  "diagnostics": {
+   "x": 0.0,
+   "y": -14.5,
+   "free": true
+  },
+  "x_west_south": {
+   "x": -5.0,
+   "y": -24.5,
+   "free": true
+  },
+  "x_east_south": {
+   "x": 5.0,
+   "y": -24.5,
+   "free": true
+  },
+  "cross_south_mid": {
+   "x": 0.0,
+   "y": -24.5,
+   "free": true
+  },
+  "ward_west_door": {
+   "x": -7.6,
+   "y": -23.0,
+   "free": true
+  },
+  "collection_point": {
+   "x": -8.5,
+   "y": -15.6,
+   "free": true
+  },
+  "ward_east_door": {
+   "x": 7.6,
+   "y": -23.0,
+   "free": true
+  },
+  "ward_east": {
+   "x": 8.5,
+   "y": -16.0,
+   "free": true
+  },
+  "recovery": {
+   "x": 5.4,
+   "y": -28.0,
+   "free": true
+  },
+  "staff_lounge": {
+   "x": -8.6,
+   "y": -26.6,
+   "free": true
+  }
+ },
+ "edges": [
+  {
+   "u": "entrance",
+   "v": "lobby",
+   "euclid_m": 4.5,
+   "path_m": 4.5,
+   "ok": true
+  },
+  {
+   "u": "lobby",
+   "v": "reception",
+   "euclid_m": 2.3,
+   "path_m": 2.3,
+   "ok": true
+  },
+  {
+   "u": "lobby",
+   "v": "lobby_west",
+   "euclid_m": 4.62,
+   "path_m": 4.77,
+   "ok": true
+  },
+  {
+   "u": "lobby",
+   "v": "lobby_east",
+   "euclid_m": 4.62,
+   "path_m": 4.77,
+   "ok": true
+  },
+  {
+   "u": "lobby_west",
+   "v": "waiting_west",
+   "euclid_m": 1.91,
+   "path_m": 1.98,
+   "ok": true
+  },
+  {
+   "u": "lobby_west",
+   "v": "storage_door",
+   "euclid_m": 2.25,
+   "path_m": 2.43,
+   "ok": true
+  },
+  {
+   "u": "storage_door",
+   "v": "storage",
+   "euclid_m": 3.55,
+   "path_m": 3.79,
+   "ok": true
+  },
+  {
+   "u": "lobby_west",
+   "v": "corridor_w_north",
+   "euclid_m": 6.01,
+   "path_m": 6.46,
+   "ok": true
+  },
+  {
+   "u": "lobby_east",
+   "v": "lab_door",
+   "euclid_m": 2.25,
+   "path_m": 2.43,
+   "ok": true
+  },
+  {
+   "u": "lab_door",
+   "v": "laboratory",
+   "euclid_m": 3.72,
+   "path_m": 3.99,
+   "ok": true
+  },
+  {
+   "u": "lobby_east",
+   "v": "corridor_e_north",
+   "euclid_m": 6.01,
+   "path_m": 6.17,
+   "ok": true
+  },
+  {
+   "u": "corridor_e_north",
+   "v": "pharmacy",
+   "euclid_m": 2.67,
+   "path_m": 2.85,
+   "ok": true
+  },
+  {
+   "u": "reception",
+   "v": "corridor_w_north",
+   "euclid_m": 6.47,
+   "path_m": 6.7,
+   "ok": true
+  },
+  {
+   "u": "reception",
+   "v": "corridor_e_north",
+   "euclid_m": 6.47,
+   "path_m": 6.7,
+   "ok": true
+  },
+  {
+   "u": "corridor_w_north",
+   "v": "corridor_w_mid",
+   "euclid_m": 8.0,
+   "path_m": 8.41,
+   "ok": true
+  },
+  {
+   "u": "corridor_w_north",
+   "v": "nursing_station",
+   "euclid_m": 3.84,
+   "path_m": 4.08,
+   "ok": true
+  },
+  {
+   "u": "corridor_w_mid",
+   "v": "x_west_north",
+   "euclid_m": 5.2,
+   "path_m": 5.2,
+   "ok": true
+  },
+  {
+   "u": "corridor_e_north",
+   "v": "corridor_e_mid",
+   "euclid_m": 8.0,
+   "path_m": 8.0,
+   "ok": true
+  },
+  {
+   "u": "corridor_e_mid",
+   "v": "x_east_north",
+   "euclid_m": 5.2,
+   "path_m": 5.2,
+   "ok": true
+  },
+  {
+   "u": "x_west_north",
+   "v": "patient_room_west",
+   "euclid_m": 5.09,
+   "path_m": 6.16,
+   "ok": true
+  },
+  {
+   "u": "x_east_north",
+   "v": "patient_room_east",
+   "euclid_m": 5.09,
+   "path_m": 6.13,
+   "ok": true
+  },
+  {
+   "u": "x_west_north",
+   "v": "cross_north_mid",
+   "euclid_m": 4.0,
+   "path_m": 4.08,
+   "ok": true
+  },
+  {
+   "u": "cross_north_mid",
+   "v": "x_east_north",
+   "euclid_m": 6.0,
+   "path_m": 6.5,
+   "ok": true
+  },
+  {
+   "u": "x_west_north",
+   "v": "x_west_mid",
+   "euclid_m": 5.9,
+   "path_m": 5.9,
+   "ok": true
+  },
+  {
+   "u": "x_east_north",
+   "v": "x_east_mid",
+   "euclid_m": 5.9,
+   "path_m": 5.9,
+   "ok": true
+  },
+  {
+   "u": "x_west_mid",
+   "v": "diagnostics",
+   "euclid_m": 5.0,
+   "path_m": 5.0,
+   "ok": true
+  },
+  {
+   "u": "diagnostics",
+   "v": "x_east_mid",
+   "euclid_m": 5.0,
+   "path_m": 5.0,
+   "ok": true
+  },
+  {
+   "u": "x_west_mid",
+   "v": "x_west_south",
+   "euclid_m": 10.0,
+   "path_m": 10.0,
+   "ok": true
+  },
+  {
+   "u": "x_east_mid",
+   "v": "x_east_south",
+   "euclid_m": 10.0,
+   "path_m": 10.0,
+   "ok": true
+  },
+  {
+   "u": "x_west_south",
+   "v": "cross_south_mid",
+   "euclid_m": 5.0,
+   "path_m": 5.0,
+   "ok": true
+  },
+  {
+   "u": "cross_south_mid",
+   "v": "x_east_south",
+   "euclid_m": 5.0,
+   "path_m": 5.0,
+   "ok": true
+  },
+  {
+   "u": "x_west_south",
+   "v": "ward_west_door",
+   "euclid_m": 3.0,
+   "path_m": 3.22,
+   "ok": true
+  },
+  {
+   "u": "ward_west_door",
+   "v": "collection_point",
+   "euclid_m": 7.45,
+   "path_m": 7.77,
+   "ok": true
+  },
+  {
+   "u": "x_west_south",
+   "v": "staff_lounge",
+   "euclid_m": 4.17,
+   "path_m": 4.47,
+   "ok": true
+  },
+  {
+   "u": "x_east_south",
+   "v": "ward_east_door",
+   "euclid_m": 3.0,
+   "path_m": 3.22,
+   "ok": true
+  },
+  {
+   "u": "ward_east_door",
+   "v": "ward_east",
+   "euclid_m": 7.06,
+   "path_m": 7.37,
+   "ok": true
+  },
+  {
+   "u": "cross_south_mid",
+   "v": "recovery",
+   "euclid_m": 6.44,
+   "path_m": 7.96,
+   "ok": true
+  }
+ ],
+ "all_ok": true
+}

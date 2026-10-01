@@ -1,5 +1,0 @@
-object_class,ground_truth_m,estimated_distance_m,absolute_error_m,percentage_error,status
-person,1.0,0.9909,0.0091,0.91,PASS
-person,1.5,1.4889,0.0111,0.74,PASS
-person,2.0,1.9875,0.0125,0.62,PASS
-person,2.5,2.4922,0.0078,0.31,PASS

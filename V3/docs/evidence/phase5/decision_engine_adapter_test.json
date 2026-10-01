@@ -1,0 +1,31 @@
+{
+ "segment": [
+  "junction_4",
+  "lab_corridor_entry"
+ ],
+ "counts(success,failure)": {
+  "start": [
+   0,
+   0
+  ],
+  "after_proximity_success": [
+   1,
+   0
+  ],
+  "after_nav2_path_success": [
+   2,
+   0
+  ],
+  "after_failure": [
+   2,
+   1
+  ]
+ },
+ "checks": {
+  "proximity_success_counted": true,
+  "no_double_count": true,
+  "failure_counted": true,
+  "obstacle_blocked_reason": true
+ },
+ "result": "PASS"
+}

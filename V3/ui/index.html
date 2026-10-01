@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V3 Hospital Robotics</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0a0e13; --panel: #10161d; --panel-2: #141b24; --line: #1e2732; --line-2: #2a3542;
+  --text: #dbe3ec; --muted: #8796a8; --faint: #5d6b7c;
+  --accent: #3d9bff; --accent-dim: rgba(61,155,255,.14);
+  --ok: #2fbf71; --ok-dim: rgba(47,191,113,.13); --warn: #e8a317; --warn-dim: rgba(232,163,23,.13);
+  --err: #ef4f4f; --err-dim: rgba(239,79,79,.14); --idle: #6b7889; --idle-dim: rgba(107,120,137,.15);
+  --route: #f2a33a; --trail: #34d399; --radius: 8px;
+  --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: Inter, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; scrollbar-color: #2a3542 transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 8px; height: 8px; } ::-webkit-scrollbar-thumb { background: #2a3542; border-radius: 4px; } ::-webkit-scrollbar-track { background: transparent; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.45 var(--sans); }
+body { display: flex; flex-direction: column; overflow: hidden; }
+button, select, input { font: inherit; color: inherit; }
+svg.i { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- header ---------- */
+header { display: flex; align-items: center; gap: 18px; height: 52px; padding: 0 16px; background: var(--panel); border-bottom: 1px solid var(--line); flex: none; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: .2px; white-space: nowrap; }
+.brand .logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent-dim); color: var(--accent); display: grid; place-items: center; }
+.brand small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .3px; }
+nav.tabs { display: flex; gap: 2px; height: 100%; overflow-x: auto; scrollbar-width: none; }
+nav.tabs button { display: flex; align-items: center; gap: 7px; height: 100%; padding: 0 12px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; white-space: nowrap; }
+nav.tabs button:hover { color: var(--text); }
+nav.tabs button.on { color: var(--text); border-bottom-color: var(--accent); }
+.hstat { margin-left: auto; display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.hs { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.hs b { color: var(--text); font-weight: 500; }
+.clock { font-family: var(--mono); color: var(--text); font-size: 12px; }
+.estop { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid #b42323; background: #c62828; color: #fff; font-weight: 700; letter-spacing: .6px; cursor: pointer; }
+.estop:hover { background: #d93030; }
+.estop.latched { background: #3a1416; color: #ff8a8a; border-color: #ef4f4f; }
+
+/* ---------- status dots / pills ---------- */
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--idle); flex: none; }
+.dot.ok { background: var(--ok); } .dot.warn { background: var(--warn); } .dot.err { background: var(--err); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 500; background: var(--idle-dim); color: #b5c0cc; white-space: nowrap; }
+.pill.ok { background: var(--ok-dim); color: #6fe0a2; } .pill.warn { background: var(--warn-dim); color: #f3c25a; }
+.pill.err { background: var(--err-dim); color: #ff8a8a; } .pill.info { background: var(--accent-dim); color: #8cc4ff; }
+
+/* ---------- alert ---------- */
+#alert { display: none; align-items: center; gap: 10px; padding: 8px 16px; font-weight: 500; border-bottom: 1px solid var(--line); flex: none; }
+#alert.show { display: flex; }
+#alert.err { background: #2a1114; color: #ffb4b4; } #alert.warn { background: #2a2010; color: #f6d38a; }
+#alert .act { margin-left: auto; }
+
+/* ---------- layout ---------- */
+main { flex: 1; min-height: 0; overflow: auto; padding: 12px; }
+.view { display: none; height: 100%; }
+.view.on { display: grid; gap: 12px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.ph { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 11.5px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); flex: none; }
+.ph .r { margin-left: auto; display: flex; gap: 6px; align-items: center; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.pb { padding: 12px; min-height: 0; }
+.scroll { overflow: auto; }
+
+#v-ops { grid-template-columns: minmax(0, 1fr) 430px; grid-template-rows: minmax(0, 1fr) auto; }
+#v-ops .mapcell { grid-row: 1; grid-column: 1; }
+#v-ops .side { grid-row: 1 / span 2; grid-column: 2; display: grid; gap: 12px; grid-template-rows: auto minmax(0, 1fr); min-height: 0; }
+#m-kv { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 12px; }
+#m-kv .v { font-size: 13px; }
+#v-ops .strip { grid-row: 2; grid-column: 1; }
+#v-perc { grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+#v-perc .cam { grid-row: 1 / span 2; }
+#v-nav { grid-template-columns: minmax(0, 1fr) 420px; grid-template-rows: minmax(0, 1fr) minmax(0, .8fr); }
+#v-nav .mapcell { grid-row: 1 / span 2; }
+#v-hist, #v-learn { grid-template-columns: minmax(0, 1fr) 420px; grid-template-rows: minmax(0, 1fr); }
+#v-sys { grid-template-columns: minmax(0, 1fr) 380px; grid-template-rows: minmax(0, 1fr); }
+
+/* ---------- map ---------- */
+.mapwrap { position: relative; flex: 1; min-height: 320px; overflow: hidden; background: #0c1117; border-radius: 0 0 var(--radius) var(--radius); touch-action: none; cursor: grab; }
+.mapwrap.drag { cursor: grabbing; }
+.mapwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mapctl { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.mapctl button { width: 30px; height: 30px; display: grid; place-items: center; background: rgba(16,22,29,.92); border: 1px solid var(--line-2); border-radius: 6px; color: var(--text); cursor: pointer; }
+.mapctl button:hover { border-color: var(--accent); }
+.mapctl button.on { color: var(--accent); border-color: var(--accent); }
+.legend { position: absolute; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 6px 10px; background: rgba(12,17,23,.88); border: 1px solid var(--line); border-radius: 6px; font-size: 11.5px; color: var(--muted); max-width: calc(100% - 70px); }
+.legend span { display: flex; align-items: center; gap: 5px; }
+.sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.swd { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.maptip { position: absolute; pointer-events: none; padding: 4px 8px; background: #0b1016; border: 1px solid var(--line-2); border-radius: 5px; font-size: 12px; display: none; white-space: nowrap; }
+
+/* ---------- camera ---------- */
+.camwrap { position: relative; background: #05080b; aspect-ratio: 4 / 3; display: grid; place-items: center; overflow: hidden; }
+.camwrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.camwrap .nofeed { position: absolute; inset: 0; display: none; place-items: center; color: var(--faint); text-align: center; font-size: 12px; }
+.camwrap.off .nofeed { display: grid; } .camwrap.off img { visibility: hidden; }
+.cammeta { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 8px 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.cammeta b { color: var(--text); font-weight: 500; font-family: var(--mono); }
+
+/* ---------- key-values ---------- */
+.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px 14px; }
+.kv > div { min-width: 0; }
+.k { color: var(--muted); font-size: 11px; letter-spacing: .3px; text-transform: uppercase; }
+.v { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v.mono, .mono { font-family: var(--mono); }
+.na { color: var(--faint); font-weight: 400; font-style: italic; }
+.strip .pb { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; }
+.strip .grp { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; }
+.strip .sep { width: 1px; align-self: stretch; background: var(--line); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- mission control ---------- */
+.mstate { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.mstate .big { font-size: 18px; font-weight: 600; letter-spacing: .2px; }
+.field { display: grid; gap: 4px; }
+.field label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .3px; }
+select, input[type=text] { height: 32px; padding: 0 10px; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 6px; outline: none; min-width: 0; }
+select:focus, input[type=text]:focus { border-color: var(--accent); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--panel-2); color: var(--text); cursor: pointer; font-weight: 500; }
+.btn:hover:not(:disabled) { border-color: #3a4757; background: #18212c; }
+.btn:disabled { opacity: .38; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #04121f; font-weight: 600; }
+.btn.primary:hover:not(:disabled) { background: #5aabff; }
+.btn.small { height: 28px; padding: 0 10px; font-size: 12px; }
+.steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.step { display: grid; gap: 5px; }
+.step .bar { height: 4px; border-radius: 2px; background: var(--line-2); }
+.step.done .bar { background: var(--ok); } .step.cur .bar { background: var(--accent); }
+.step.bad .bar { background: var(--err); }
+.step span { font-size: 10.5px; color: var(--faint); line-height: 1.2; }
+.step.done span, .step.cur span { color: var(--muted); } .step.cur span { color: var(--text); }
+.progress { height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .4s; }
+.toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; user-select: none; }
+.toggle input { accent-color: var(--accent); width: 15px; height: 15px; }
+.stack { display: grid; gap: 12px; align-content: start; }
+.hr { height: 1px; background: var(--line); }
+
+/* ---------- tables / logs ---------- */
+table { width: 100%; border-collapse: collapse; }
+th { position: sticky; top: 0; z-index: 1; background: var(--panel); text-align: left; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .3px; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th.sort { cursor: pointer; } th.sort:hover { color: var(--text); }
+th .arr { color: var(--accent); margin-left: 3px; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td.wrap { white-space: normal; }
+tr.clk { cursor: pointer; } tr.clk:hover td { background: #121a23; } tr.sel td { background: #142131; }
+td.num, th.num { text-align: right; font-family: var(--mono); }
+.log { font-family: var(--mono); font-size: 12px; }
+.log div { display: grid; grid-template-columns: 64px 52px 1fr; gap: 8px; padding: 4px 12px; border-bottom: 1px solid #161e27; }
+.log .t { color: var(--faint); } .log .lv { font-weight: 600; font-size: 11px; }
+.lv.INFO { color: #7fb6f5; } .lv.WARN, .lv.WARNING { color: var(--warn); } .lv.ERROR { color: var(--err); } .lv.SUCCESS { color: var(--ok); }
+.empty { padding: 18px 12px; color: var(--faint); text-align: center; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); align-items: center; }
+.filters select, .filters input { height: 30px; }
+.route { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 12px; }
+.route .n { padding: 2px 7px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); }
+.route .n.done { color: var(--trail); border-color: rgba(52,211,153,.35); }
+.route .n.cur { color: var(--text); border-color: var(--accent); background: var(--accent-dim); }
+.route .n.goal { color: var(--route); border-color: rgba(242,163,58,.45); }
+.route .a { color: var(--faint); }
+.bars { display: grid; gap: 6px; }
+.bars .b { display: grid; grid-template-columns: 120px 1fr 56px; gap: 8px; align-items: center; font-size: 12px; }
+.bars .b span:first-child { color: var(--muted); }
+.bars .t { height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+.bars .t i { display: block; height: 100%; background: var(--accent); }
+.note { color: var(--muted); font-size: 12px; line-height: 1.55; }
+.note code { font-family: var(--mono); font-size: 11.5px; color: var(--text); background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
+.health { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.hc { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: var(--panel-2); display: grid; gap: 6px; }
+.hc .top { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.hc .top .pill { margin-left: auto; }
+.hc .src { color: var(--faint); font-size: 11.5px; font-family: var(--mono); }
+.hc .met { color: var(--muted); font-size: 12px; }
+#toast { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 50; }
+#toast div { padding: 9px 14px; border-radius: 6px; background: #17202b; border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgba(0,0,0,.4); font-size: 12.5px; }
+#toast div.err { border-color: var(--err); } #toast div.ok { border-color: var(--ok); }
+.lidar { flex: 1; min-height: 220px; position: relative; }
+.lidar canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1280px) {
+  #v-ops { grid-template-columns: minmax(0, 1fr) 380px; }
+  .hs.optional { display: none; }
+}
+@media (max-width: 1100px) {
+  body { overflow: auto; }
+  main { overflow: visible; }
+  .view.on { height: auto; }
+  #v-ops, #v-perc, #v-nav, #v-hist, #v-learn, #v-sys { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  #v-ops .mapcell, #v-ops .side, #v-ops .strip, #v-perc .cam, #v-nav .mapcell { grid-row: auto; grid-column: auto; }
+  #v-ops .side { grid-template-rows: none; }
+  .mapwrap { min-height: 420px; height: 58vh; }
+  .scroll { max-height: 520px; }
+  .lidar { height: 300px; }
+  header { height: auto; flex-wrap: wrap; padding: 8px 12px; row-gap: 6px; }
+  nav.tabs { order: 3; width: 100%; height: 38px; }
+  .hstat { gap: 10px; }
+}
+@media (max-width: 640px) {
+  .btns { grid-template-columns: repeat(2, 1fr); }
+  .row2 { grid-template-columns: 1fr; }
+  .hs.hide-sm, .brand small { display: none; }
+  nav.tabs button span { display: none; }
+  main { padding: 8px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M8 7h8a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3z"/><circle cx="9.5" cy="12.5" r="1.2"/><circle cx="14.5" cy="12.5" r="1.2"/><path d="M10 16h4"/></svg></div>
+    <div>V3 Hospital Robotics<small>Logistics robot control</small></div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-v="ops" class="on"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Operations</span></button>
+    <button data-v="perc"><svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span>Perception</span></button>
+    <button data-v="nav"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg><span>Navigation</span></button>
+    <button data-v="hist"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span>History</span></button>
+    <button data-v="learn"><svg class="i" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 6h10M6 8l5 8M18 8l-5 8"/></svg><span>Path Learning</span></button>
+    <button data-v="sys"><svg class="i" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>System</span></button>
+  </nav>
+  <div class="hstat">
+    <div class="hs" title="Connection between this browser and the robot UI backend"><span class="dot" id="h-link"></span><span class="hide-sm">Link</span> <b id="h-link-t">connecting</b></div>
+    <div class="hs" title="Subsystems online"><span class="dot" id="h-health"></span><span class="hide-sm">Health</span> <b id="h-health-t">-</b></div>
+    <div class="hs optional" title="Gazebo simulation clock"><span class="dot" id="h-sim"></span>Sim <b id="h-sim-t">-</b></div>
+    <span class="clock" id="h-clock">--:--:--</span>
+    <button class="estop" id="estop" title="Emergency stop: latches, cancels navigation and holds the robot still until Reset"><svg class="i" viewBox="0 0 24 24"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z"/><path d="M12 8v5M12 16.5v.5"/></svg><span id="estop-t">E-STOP</span></button>
+  </div>
+</header>
+<div id="alert"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17.5v.5"/></svg><span id="alert-t"></span><span class="act" id="alert-act"></span></div>
+
+<main>
+<!-- ======================= OPERATIONS ======================= -->
+<section class="view on" id="v-ops">
+  <div class="panel mapcell">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Hospital map<div class="r" id="ops-map-note"></div></div>
+    <div class="mapwrap" id="map-ops"></div>
+  </div>
+  <div class="side">
+    <div class="panel">
+      <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>Live camera<div class="r"><span class="pill" id="cam-pill">-</span></div></div>
+      <div class="camwrap off" id="cam-ops"><img alt="Robot camera"><div class="nofeed">Camera stream unavailable</div></div>
+      <div class="cammeta" id="cam-ops-meta"></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>Mission control</div>
+      <div class="pb scroll stack" id="mission-panel">
+        <div class="mstate"><span class="big" id="m-state">-</span><span class="pill" id="m-result" style="display:none"></span></div>
+        <div class="steps" id="m-steps"></div>
+        <div class="row2">
+          <div class="field"><label for="selsrc">Collection point</label><select id="selsrc"></select></div>
+          <div class="field"><label for="seldst">Destination</label><select id="seldst"></select></div>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="b-start"><svg class="i" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>Start</button>
+          <button class="btn" id="b-pause"><svg class="i" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause</button>
+          <button class="btn" id="b-resume"><svg class="i" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>Resume</button>
+          <button class="btn" id="b-cancel"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>Cancel</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+          <button class="btn small" id="b-reset"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Reset</button>
+          <label class="toggle" title="Moving staff, visitors and a trolley in the simulated hospital (/simulation/enable_dynamic_obstacles)"><input type="checkbox" id="traffic">Simulated hospital traffic</label>
+        </div>
+        <div class="hr"></div>
+        <div class="kv" id="m-kv"></div>
+        <div><div class="k" style="margin-bottom:5px">Route progress <span id="m-prog-t" class="mono"></span></div><div class="progress"><i id="m-prog"></i></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel strip">
+    <div class="pb">
+      <div class="grp">
+        <div><div class="k">Robot state</div><div class="v" id="r-state">-</div></div>
+        <div><div class="k">Mission</div><div class="v mono" id="r-mission">-</div></div>
+        <div><div class="k">Position (map)</div><div class="v mono" id="r-pos">-</div></div>
+        <div><div class="k">Linear</div><div class="v mono" id="r-v">-</div></div>
+        <div><div class="k">Angular</div><div class="v mono" id="r-w">-</div></div>
+        <div><div class="k">Nearest LiDAR</div><div class="v mono" id="r-scan">-</div></div>
+      </div>
+      <div class="sep"></div>
+      <div class="chips" id="r-chips"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PERCEPTION ======================= -->
+<section class="view" id="v-perc">
+  <div class="panel cam">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>Camera with YOLO detections<div class="r"><span class="pill" id="cam2-pill">-</span></div></div>
+    <div class="camwrap off" id="cam-perc" style="flex:1; aspect-ratio:auto"><img alt="Robot camera with detections"><div class="nofeed">Camera stream unavailable</div></div>
+    <div class="cammeta" id="cam-perc-meta"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Detected objects<div class="r" id="det-count"></div></div>
+    <div class="scroll" style="flex:1">
+      <table><thead><tr><th>Class</th><th class="num">Conf.</th><th>Range</th><th class="num">x / y (m)</th><th class="num">Bearing</th></tr></thead><tbody id="det-body"></tbody></table>
+    </div>
+    <div class="pb note" style="border-top:1px solid var(--line)">Range is shown only when the camera box is associated with LiDAR returns (green box in the stream). Ground-plane estimates are labelled as such. Signs, markers and unassociated objects are shown as <b>not ranged</b>; no distance is invented.</div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg>LiDAR + camera association<div class="r" id="lidar-note"></div></div>
+    <div class="lidar" id="lidar"><canvas></canvas></div>
+  </div>
+</section>
+
+<!-- ======================= NAVIGATION ======================= -->
+<section class="view" id="v-nav">
+  <div class="panel mapcell">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>Route on map</div>
+    <div class="mapwrap" id="map-nav"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Navigation state<div class="r"><span class="pill" id="n-de">-</span></div></div>
+    <div class="pb scroll stack">
+      <div class="kv" id="n-kv"></div>
+      <div><div class="k" style="margin-bottom:6px">Current route</div><div class="route" id="n-route"><span class="na">No active route</span></div></div>
+      <div><div class="k" style="margin-bottom:6px">Clearance (LiDAR, m)</div><div class="bars" id="n-clear"></div></div>
+      <div><div class="k" style="margin-bottom:6px">Selected route cost terms</div><div class="bars" id="n-cost"></div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Navigation events<div class="r"><select id="ev-filter" style="height:26px"><option value="">All</option><option value="replan">Replans</option><option value="ttc">TTC / yield</option><option value="obstacle">Obstacles</option><option value="sign">Signs</option><option value="warn">Warnings / errors</option></select></div></div>
+    <div class="scroll log" id="n-events" style="flex:1"></div>
+  </div>
+</section>
+
+<!-- ======================= HISTORY ======================= -->
+<section class="view" id="v-hist">
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>Mission history<div class="r" id="h-count"></div></div>
+    <div class="filters">
+      <select id="hf-result"><option value="">All results</option><option>COMPLETE</option><option>FAILED</option><option>CANCELLED</option><option>ESTOP</option></select>
+      <select id="hf-src"><option value="">Any source</option></select>
+      <select id="hf-dst"><option value="">Any destination</option></select>
+      <input type="text" id="hf-q" placeholder="Search mission ID or route" style="flex:1; min-width:160px">
+    </div>
+    <div class="scroll" style="flex:1">
+      <table><thead><tr id="h-head"></tr></thead><tbody id="h-body"></tbody></table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Mission detail</div>
+    <div class="pb scroll stack" id="h-detail"><div class="empty">Select a mission</div></div>
+  </div>
+</section>
+
+<!-- ======================= PATH LEARNING ======================= -->
+<section class="view" id="v-learn">
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 6h10M6 8l5 8M18 8l-5 8"/></svg>Route segments<div class="r" id="l-count"></div></div>
+    <div class="filters">
+      <select id="lf-show"><option value="used">Traversed segments</option><option value="all">All segments</option><option value="issues">With failures / obstacles / replans</option></select>
+      <input type="text" id="lf-q" placeholder="Filter by location" style="flex:1; min-width:160px">
+    </div>
+    <div class="scroll" style="flex:1">
+      <table><thead><tr id="l-head"></tr></thead><tbody id="l-body"></tbody></table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/></svg>Learned usage</div>
+    <div class="mapwrap" id="map-learn" style="flex:1.2; min-height:280px"></div>
+    <div class="pb scroll stack" style="flex:1; border-top:1px solid var(--line)" id="l-side"></div>
+  </div>
+</section>
+
+<!-- ======================= SYSTEM ======================= -->
+<section class="view" id="v-sys">
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Subsystem health<div class="r" id="s-sum"></div></div>
+    <div class="pb scroll"><div class="health" id="s-grid"></div>
+      <div class="note" style="margin-top:14px"><b>Online</b> data arriving at the expected rate · <b>Starting</b> no data yet, backend started &lt; 90 s ago · <b>Error</b> process is in the ROS graph but its output is missing or too slow · <b>Offline</b> no process and no data · <b>Unavailable</b> no source exists for this value.</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h.01M7 17h.01"/></svg>ROS graph<div class="r" id="s-ncount"></div></div>
+    <div class="scroll" style="flex:1"><table><tbody id="s-nodes"></tbody></table></div>
+  </div>
+</section>
+</main>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const NA = '<span class="na">unavailable</span>';
+const fx = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? null : Number(v).toFixed(d);
+const pretty = s => String(s || "").replace(/_/g, " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+let HIST_PATH = null;
+const ACTIVE = ["GO_TO_COLLECTION", "AT_COLLECTION", "PAYLOAD_SECURED", "GO_TO_LAB", "AT_LAB", "PAUSED"];
+function activeRoute(s) { return ACTIVE.includes(s?.mission?.state) ? (s.navigation?.active_path || null) : null; }  // route only while a mission runs
+let STATE = null, MAP = null, TOPO = null, LAST_OK = 0, VIEW = "ops", HIST = [], LEARN = null, SCAN = null, SEL_MISSION = null;
+
+/* ---------------- networking ---------------- */
+async function api(path, body) {
+  const r = await fetch(path, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {cache: "no-store"});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+  return j;
+}
+function toast(msg, cls = "") {
+  const d = document.createElement("div"); d.className = cls; d.textContent = msg; $("toast").appendChild(d);
+  setTimeout(() => d.remove(), 3500);
+}
+async function cmd(c, extra = {}) {
+  try { const r = await api("/api/mission", {cmd: c, ...extra}); toast(`Command sent: ${c}`, "ok"); return r; }
+  catch (e) { toast(`${c} rejected: ${e.message}`, "err"); }
+}
+
+/* ---------------- helpers: status model ---------------- */
+const EXPECTED = {
+  gazebo:   {label: "Gazebo simulation", topic: "clock", min: 5, nodes: [], src: "/clock"},
+  camera:   {label: "Camera", topic: "camera", min: 5, nodes: ["ros_gz_bridge", "parameter_bridge"], src: "/camera/image_raw"},
+  lidar:    {label: "LiDAR", topic: "scan", min: 5, nodes: ["ros_gz_bridge", "parameter_bridge"], src: "/scan"},
+  odom:     {label: "Odometry", topic: "odom", min: 5, nodes: ["ros_gz_bridge", "parameter_bridge"], src: "/odom"},
+  localization: {label: "Localization (AMCL)", topic: "amcl", min: 0.05, nodes: ["amcl"], src: "/amcl_pose", stale: 30},
+  yolo:     {label: "YOLO detection", topic: "detections", min: 1, nodes: ["v3_detection_node"], src: "/vision/detections"},
+  fusion:   {label: "Camera–LiDAR fusion", topic: "fusion", min: 1, nodes: ["v3_spatial_fusion_node"], src: "/v3/spatial_objects"},
+  costmap:  {label: "Costmap obstacles", topic: "costmap", min: 1, nodes: ["v3_costmap_obstacle_node"], src: "/vision/costmap_obstacles"},
+  nav2:     {label: "Nav2", topic: null, nodes: ["bt_navigator", "controller_server", "planner_server", "behavior_server", "map_server"], src: "Nav2 servers"},
+  decision: {label: "Decision engine", topic: "decision_engine", min: 0.5, nodes: ["decision_engine_node"], src: "/navigation/mission_status"},
+  mission:  {label: "Mission manager", topic: "mission", min: 0.5, nodes: ["v3_mission_manager"], src: "/v3/mission/state"},
+};
+function compStatus(key, s) {
+  const e = EXPECTED[key], nodes = s.ros_nodes || [], uptime = s.ui_backend?.uptime_s ?? 999;
+  const present = e.nodes.length ? e.nodes.some(n => nodes.includes(n)) : true;
+  if (key === "nav2") {
+    const have = e.nodes.filter(n => nodes.includes(n));
+    if (have.length === e.nodes.length) return {st: "Online", cls: "ok", met: `${have.length}/${e.nodes.length} servers in ROS graph`};
+    if (!have.length) return uptime < 90 ? {st: "Starting", cls: "warn", met: "waiting for Nav2 servers"} : {st: "Offline", cls: "err", met: "no Nav2 server in ROS graph"};
+    return {st: "Error", cls: "err", met: `missing: ${e.nodes.filter(n => !nodes.includes(n)).join(", ")}`};
+  }
+  const t = s.system?.topics?.[e.topic] || {}, hz = t.hz || 0, age = t.age_s;
+  if (key === "localization" && present && s.robot?.pose) return {st: "Online", cls: "ok", met: age != null ? `last pose update ${age}s ago (AMCL publishes on motion)` : "pose available"};
+  if (hz >= e.min) return {st: "Online", cls: "ok", met: `${hz} Hz`};
+  if (age === null || age === undefined) {
+    if (uptime < 90) return {st: "Starting", cls: "warn", met: "no data yet"};
+    return present ? {st: "Error", cls: "err", met: "process running, no data received"} : {st: "Offline", cls: "err", met: "no process, no data"};
+  }
+  return present ? {st: "Error", cls: "err", met: `${hz} Hz (expected ≥ ${e.min}), last ${age}s ago`} : {st: "Offline", cls: "err", met: `stale ${age}s, process not in ROS graph`};
+}
+const MSTATE = {
+  IDLE: ["Idle", ""], READY: ["Ready", "ok"], GO_TO_COLLECTION: ["Driving to collection", "info"], AT_COLLECTION: ["At collection point", "info"],
+  PAYLOAD_SECURED: ["Payload secured", "info"], GO_TO_LAB: ["Driving to laboratory", "info"], AT_LAB: ["At laboratory", "info"],
+  MISSION_COMPLETE: ["Mission complete", "ok"], FAILED: ["Mission failed", "err"], CANCELLED: ["Cancelled", "warn"],
+  EMERGENCY_STOP: ["Emergency stop", "err"], PAUSED: ["Paused", "warn"],
+};
+const STEPS = [["GO_TO_COLLECTION", "To collection"], ["AT_COLLECTION", "Collecting"], ["PAYLOAD_SECURED", "Payload secured"],
+               ["GO_TO_LAB", "To laboratory"], ["AT_LAB", "Delivering"], ["MISSION_COMPLETE", "Complete"]];
+
+/* ---------------- map view (zoom / pan) ---------------- */
+let BASE = null;  // recoloured occupancy image (dark theme)
+function buildBase(img) {
+  const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+  const g = c.getContext("2d"); g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
+  for (let i = 0; i < p.length; i += 4) {
+    const v = p[i];
+    let r, gg, b;
+    if (v < 100) { r = 150; gg = 168; b = 188; }           // occupied
+    else if (v > 230) { r = 22; gg = 30; b = 40; }         // free
+    else { r = 12; gg = 17; b = 23; }                      // unknown
+    p[i] = r; p[i + 1] = gg; p[i + 2] = b; p[i + 3] = 255;
+  }
+  g.putImageData(d, 0, 0); return c;
+}
+function w2i(x, y) {  // world (map frame, m) -> map image pixel (as served, possibly rotated)
+  const col = (x - MAP.origin[0]) / MAP.resolution, row = MAP.height - (y - MAP.origin[1]) / MAP.resolution;
+  return MAP.rotated ? [row, MAP.width - col] : [col, row];
+}
+function dirI(th) { return MAP.rotated ? [-Math.sin(th), -Math.cos(th)] : [Math.cos(th), -Math.sin(th)]; }
+const COLORS = {route: "#f2a33a", trail: "#34d399", robot: "#3d9bff", obstacle: "#ef4f4f", scan: "rgba(255,99,99,.85)", node: "#56657a", edge: "rgba(120,140,165,.22)"};
+
+class MapView {
+  constructor(el, mode) {
+    this.el = el; this.mode = mode; this.k = 1; this.tx = 0; this.ty = 0; this.fitted = false; this.follow = false;
+    this.layers = {topo: mode !== "ops", labels: true, scan: mode === "ops"};
+    this.cv = document.createElement("canvas"); el.appendChild(this.cv);
+    this.tip = document.createElement("div"); this.tip.className = "maptip"; el.appendChild(this.tip);
+    const ctl = document.createElement("div"); ctl.className = "mapctl";
+    const b = (title, svg, fn) => { const x = document.createElement("button"); x.title = title; x.innerHTML = `<svg class="i" viewBox="0 0 24 24">${svg}</svg>`; x.onclick = e => { e.stopPropagation(); fn(x); }; ctl.appendChild(x); return x; };
+    b("Zoom in", '<path d="M12 5v14M5 12h14"/>', () => this.zoomAt(1.35));
+    b("Zoom out", '<path d="M5 12h14"/>', () => this.zoomAt(1 / 1.35));
+    b("Fit hospital", '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>', () => { this.follow = false; this.fbtn.classList.remove("on"); this.fit(); });
+    this.fbtn = b("Follow robot", '<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>', x => { this.follow = !this.follow; x.classList.toggle("on", this.follow); this.draw(); });
+    if (!["learn", "hist"].includes(mode)) {
+      b("Topology graph", '<circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 8l8 8"/>', x => { this.layers.topo = !this.layers.topo; x.classList.toggle("on", this.layers.topo); this.draw(); }).classList.toggle("on", this.layers.topo);
+      b("LiDAR scan", '<path d="M12 12l7-7"/><path d="M5 19a10 10 0 0 1 0-14"/><path d="M8 16a6 6 0 0 1 0-8"/>', x => { this.layers.scan = !this.layers.scan; x.classList.toggle("on", this.layers.scan); this.draw(); }).classList.toggle("on", this.layers.scan);
+    }
+    el.appendChild(ctl);
+    if (!["learn", "hist"].includes(mode)) {
+      const lg = document.createElement("div"); lg.className = "legend";
+      lg.innerHTML = `<span><i class="swd" style="background:${COLORS.robot}"></i>Robot</span><span><i class="sw" style="background:${COLORS.route}"></i>Planned route</span><span><i class="sw" style="background:${COLORS.trail}"></i>Travelled</span><span><i class="swd" style="background:#e85d9a"></i>Collection</span><span><i class="swd" style="background:#a78bfa"></i>Laboratory</span><span><i class="swd" style="background:${COLORS.obstacle}"></i>Fused obstacle</span>`;
+      el.appendChild(lg);
+    }
+    // interaction
+    let drag = null, pts = new Map();
+    el.addEventListener("pointerdown", e => { el.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); drag = {x: e.clientX, y: e.clientY, tx: this.tx, ty: this.ty, d: null}; el.classList.add("drag"); });
+    el.addEventListener("pointermove", e => {
+      if (!drag) { this.hover(e); return; }
+      pts.set(e.pointerId, [e.clientX, e.clientY]);
+      if (pts.size === 2) {  // pinch zoom
+        const [a, c] = [...pts.values()], d = Math.hypot(a[0] - c[0], a[1] - c[1]);
+        if (drag.d) this.zoomAt(d / drag.d, (a[0] + c[0]) / 2, (a[1] + c[1]) / 2);
+        drag.d = d; return;
+      }
+      this.follow = false; this.fbtn.classList.remove("on");
+      this.tx = drag.tx + (e.clientX - drag.x) * devicePixelRatio; this.ty = drag.ty + (e.clientY - drag.y) * devicePixelRatio; this.draw();
+    });
+    const up = e => { pts.delete(e.pointerId); if (!pts.size) { drag = null; el.classList.remove("drag"); } };
+    el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+    el.addEventListener("pointerleave", () => { this.tip.style.display = "none"; });
+    el.addEventListener("wheel", e => { e.preventDefault(); this.zoomAt(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX, e.clientY); }, {passive: false});
+    new ResizeObserver(() => { this.resize(); }).observe(el);
+  }
+  resize() {
+    const r = this.el.getBoundingClientRect(); if (!r.width) return;
+    this.cv.width = Math.round(r.width * devicePixelRatio); this.cv.height = Math.round(r.height * devicePixelRatio);
+    if (!this.fitted) this.fit(); else this.draw();
+  }
+  fit() {
+    if (!BASE || !this.cv.width) return;
+    const pad = 16 * devicePixelRatio;
+    this.k = Math.min((this.cv.width - 2 * pad) / BASE.width, (this.cv.height - 2 * pad) / BASE.height);
+    this.tx = (this.cv.width - BASE.width * this.k) / 2; this.ty = (this.cv.height - BASE.height * this.k) / 2;
+    this.fitted = true; this.draw();
+  }
+  zoomAt(f, cx, cy) {
+    const r = this.el.getBoundingClientRect();
+    const px = cx === undefined ? this.cv.width / 2 : (cx - r.left) * devicePixelRatio, py = cy === undefined ? this.cv.height / 2 : (cy - r.top) * devicePixelRatio;
+    const k2 = Math.max(0.2, Math.min(40, this.k * f)); f = k2 / this.k;
+    this.tx = px - (px - this.tx) * f; this.ty = py - (py - this.ty) * f; this.k = k2; this.draw();
+  }
+  c(x, y) { const [i, j] = w2i(x, y); return [this.tx + i * this.k, this.ty + j * this.k]; }
+  hover(e) {
+    if (!TOPO || !MAP) return;
+    const r = this.el.getBoundingClientRect(), mx = (e.clientX - r.left) * devicePixelRatio, my = (e.clientY - r.top) * devicePixelRatio;
+    let best = null, bd = 14 * devicePixelRatio;
+    for (const [id, n] of Object.entries(TOPO.nodes || {})) { const [x, y] = this.c(n.x, n.y), d = Math.hypot(x - mx, y - my); if (d < bd) { bd = d; best = [id, n]; } }
+    if (!best) { this.tip.style.display = "none"; return; }
+    this.tip.style.display = "block"; this.tip.style.left = (e.clientX - r.left + 12) + "px"; this.tip.style.top = (e.clientY - r.top + 10) + "px";
+    this.tip.innerHTML = `<b>${esc(best[1].name)}</b> <span class="mono" style="color:var(--muted)">${best[0]} · (${best[1].x.toFixed(1)}, ${best[1].y.toFixed(1)})</span>`;
+  }
+  draw() {
+    const g = this.cv.getContext("2d"), W = this.cv.width, H = this.cv.height, dpr = devicePixelRatio;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#0c1117"; g.fillRect(0, 0, W, H);
+    if (!BASE || !MAP) { g.fillStyle = "#5d6b7c"; g.font = `${13 * dpr}px sans-serif`; g.fillText("Map unavailable", 20 * dpr, 30 * dpr); return; }
+    const s = STATE || {}, pose = s.robot?.pose;
+    if (this.follow && pose) { const [i, j] = w2i(pose[0], pose[1]); this.tx = W / 2 - i * this.k; this.ty = H / 2 - j * this.k; }
+    g.imageSmoothingEnabled = this.k < 2; g.drawImage(BASE, this.tx, this.ty, BASE.width * this.k, BASE.height * this.k);
+    const nodes = TOPO?.nodes || {}, mpx = this.k / MAP.resolution;  // canvas px per metre
+    const line = (pts, col, w, dash) => {
+      if (!pts || pts.length < 2) return; g.save(); g.strokeStyle = col; g.lineWidth = w * dpr; g.lineJoin = g.lineCap = "round"; if (dash) g.setLineDash(dash.map(v => v * dpr));
+      g.beginPath(); pts.forEach((p, i) => { const [x, y] = this.c(p[0], p[1]); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.restore();
+    };
+    if (this.mode === "learn") { this.drawLearn(g, nodes, dpr); return; }
+    if (this.mode === "hist") {  // stored travelled path of the selected mission
+      const hp = HIST_PATH || [];
+      line(hp, COLORS.trail, 3);
+      if (hp.length) for (const [p, c] of [[hp[0], "#9fb0c4"], [hp[hp.length - 1], COLORS.trail]]) { const [x, y] = this.c(p[0], p[1]); g.fillStyle = c; g.beginPath(); g.arc(x, y, 5 * dpr, 0, 7); g.fill(); }
+      return;
+    }
+    if (this.layers.topo) {
+      const seen = new Set();
+      for (const [u, v] of TOPO?.edges || []) { const k = [u, v].sort().join("|"); if (seen.has(k) || !nodes[u] || !nodes[v]) continue; seen.add(k); line([[nodes[u].x, nodes[u].y], [nodes[v].x, nodes[v].y]], COLORS.edge, 1.5); }
+      for (const n of Object.values(nodes)) { const [x, y] = this.c(n.x, n.y); g.fillStyle = COLORS.node; g.beginPath(); g.arc(x, y, 2.5 * dpr, 0, 7); g.fill(); }
+    }
+    // LiDAR scan points (real /scan, transformed with the AMCL pose)
+    if (this.layers.scan && SCAN && SCAN.ranges && pose) {
+      g.fillStyle = COLORS.scan; const sz = Math.max(2.5, Math.min(4, 0.06 * mpx)) * dpr;
+      SCAN.ranges.forEach((r, i) => { if (r === null) return; const a = pose[2] + SCAN.angle_min + i * SCAN.angle_inc; const [x, y] = this.c(pose[0] + r * Math.cos(a), pose[1] + r * Math.sin(a)); g.fillRect(x - sz / 2, y - sz / 2, sz, sz); });
+    }
+    const m = s.mission?.mission, nav = s.navigation || {};
+    if (m && Array.isArray(m.path)) line(m.path, COLORS.trail, 3);
+    const route = activeRoute(s);
+    if (Array.isArray(route)) { const pts = route.filter(id => nodes[id]).map(id => [nodes[id].x, nodes[id].y]); if (pose && pts.length) pts.unshift([pose[0], pose[1]]); line(pts, COLORS.route, 3, [7, 5]); }
+    // locations
+    const locs = s.mission?.locations || {};
+    const lab = locs.laboratory, col = locs.collection_point;
+    if (this.layers.labels) {
+      g.font = `500 ${11 * dpr}px Inter, system-ui, sans-serif`; g.textBaseline = "middle";
+      for (const [id, n] of Object.entries(nodes)) {
+        if (n.type !== "destination") continue;
+        const isCol = col && col.node === id, isLab = lab && lab.node === id, [x, y] = this.c(n.x, n.y);
+        const colr = isCol ? "#e85d9a" : isLab ? "#a78bfa" : "#9fb0c4", rad = (isCol || isLab ? 6 : 4) * dpr;
+        g.fillStyle = colr; g.strokeStyle = "#0c1117"; g.lineWidth = 2 * dpr; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); g.stroke();
+        if (this.k * 20 > 0.8 || isCol || isLab) {
+          const label = isCol ? "Collection point" : isLab ? "Laboratory" : shortName(n.name);
+          const tw = g.measureText(label).width; g.fillStyle = "rgba(10,14,19,.82)"; g.fillRect(x + rad + 3 * dpr, y - 8 * dpr, tw + 8 * dpr, 16 * dpr);
+          g.fillStyle = isCol || isLab ? colr : "#c3cfdc"; g.fillText(label, x + rad + 7 * dpr, y);
+        }
+      }
+    }
+    // destination ring
+    if (m && locs[m.destination] && s.mission?.state !== "MISSION_COMPLETE") {
+      const tgt = ["GO_TO_COLLECTION", "AT_COLLECTION"].includes(s.mission.state) ? locs[m.source] : locs[m.destination];
+      if (tgt) { const [x, y] = this.c(tgt.x, tgt.y); g.strokeStyle = COLORS.route; g.lineWidth = 2 * dpr; g.beginPath(); g.arc(x, y, 12 * dpr, 0, 7); g.stroke(); }
+    }
+    // fused obstacles (LiDAR-ranged detections, robot frame -> map frame)
+    const sp = s.perception?.spatial;
+    if (pose && sp?.objects) {
+      for (const o of sp.objects) {
+        if (o.range_source !== "lidar" || o.x === null || o.x === undefined) continue;
+        const wx = pose[0] + o.x * Math.cos(pose[2]) - o.y * Math.sin(pose[2]), wy = pose[1] + o.x * Math.sin(pose[2]) + o.y * Math.cos(pose[2]);
+        const [x, y] = this.c(wx, wy); g.fillStyle = COLORS.obstacle; g.strokeStyle = "#0c1117"; g.lineWidth = 1.5 * dpr;
+        g.beginPath(); g.rect(x - 5 * dpr, y - 5 * dpr, 10 * dpr, 10 * dpr); g.fill(); g.stroke();
+        g.fillStyle = "#ffb4b4"; g.font = `${10.5 * dpr}px Inter, system-ui, sans-serif`; g.fillText(o.class.replace(/_/g, " "), x + 8 * dpr, y);
+      }
+    }
+    // robot (0.44 m footprint, heading arrow)
+    if (pose) {
+      const [x, y] = this.c(pose[0], pose[1]), [dx, dy] = dirI(pose[2]), r = Math.max(7 * dpr, 0.22 * mpx);
+      g.fillStyle = "rgba(61,155,255,.18)"; g.beginPath(); g.arc(x, y, r * 2.2, 0, 7); g.fill();
+      g.fillStyle = COLORS.robot; g.strokeStyle = "#e8f2ff"; g.lineWidth = 2 * dpr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(x + dx * r * 2.1, y + dy * r * 2.1); g.lineTo(x - dy * r * 0.75, y + dx * r * 0.75); g.lineTo(x + dy * r * 0.75, y - dx * r * 0.75); g.closePath(); g.fillStyle = "#e8f2ff"; g.fill();
+    }
+  }
+  drawLearn(g, nodes, dpr) {
+    const segs = (LEARN && LEARN.segments) || [], und = {};
+    for (const sg of segs) { const k = [sg.from_node, sg.to_node].sort().join("|"); const u = und[k] || (und[k] = {a: sg.from_node, b: sg.to_node, n: 0, f: 0, rel: 1, blocked: 0}); u.n += sg.traversal_count; u.f += sg.failure_count; u.rel = Math.min(u.rel, sg.reliability_score); u.blocked |= sg.is_blocked; }
+    const maxN = Math.max(1, ...Object.values(und).map(u => u.n));
+    for (const u of Object.values(und)) {
+      if (!nodes[u.a] || !nodes[u.b]) continue;
+      const [x1, y1] = this.c(nodes[u.a].x, nodes[u.a].y), [x2, y2] = this.c(nodes[u.b].x, nodes[u.b].y);
+      g.strokeStyle = u.blocked ? "#ef4f4f" : u.f > 0 || u.rel < 0.8 ? "#e8a317" : u.n ? "#34d399" : "rgba(120,140,165,.3)";
+      g.lineWidth = (u.n ? 2 + 6 * u.n / maxN : 1.2) * dpr; g.lineCap = "round"; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+    }
+    for (const n of Object.values(nodes)) { const [x, y] = this.c(n.x, n.y); g.fillStyle = n.type === "destination" ? "#9fb0c4" : "#56657a"; g.beginPath(); g.arc(x, y, 3 * dpr, 0, 7); g.fill(); }
+  }
+}
+
+/* ---------------- views ---------------- */
+let MAPS = {};
+function showView(v) {
+  VIEW = v;
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  setCamera("cam-ops", v === "ops"); setCamera("cam-perc", v === "perc");
+  if (v === "hist") loadHistory(); if (v === "learn") loadLearning();
+  try { localStorage.setItem("v3view", v); } catch (e) {}
+  requestAnimationFrame(() => { Object.values(MAPS).forEach(m => m.resize()); drawLidar(); });
+}
+function setCamera(id, on) {
+  const w = $(id), img = w.querySelector("img");
+  if (on && !img.dataset.on) { img.dataset.on = "1"; img.onload = () => w.classList.remove("off"); img.onerror = () => w.classList.add("off"); img.src = "/api/camera.mjpg?t=" + Date.now(); }
+  if (!on && img.dataset.on) { delete img.dataset.on; img.removeAttribute("src"); w.classList.add("off"); }  // stop the stream while hidden
+}
+
+/* ---------------- render: header / alert ---------------- */
+function renderHeader(s) {
+  const link = Date.now() - LAST_OK < 2500;
+  $("h-link").className = "dot " + (link ? "ok" : "err"); $("h-link-t").textContent = link ? "connected" : "lost";
+  if (!s) return;
+  const comps = Object.keys(EXPECTED).map(k => compStatus(k, s)), on = comps.filter(c => c.st === "Online").length;
+  $("h-health").className = "dot " + (on === comps.length ? "ok" : comps.some(c => c.cls === "err") ? "err" : "warn");
+  $("h-health-t").textContent = `${on}/${comps.length}`;
+  const clk = s.system?.topics?.clock?.hz || 0;
+  $("h-sim").className = "dot " + (clk > 5 ? "ok" : "err"); $("h-sim-t").textContent = clk > 5 ? "running" : "stopped";
+  const latched = !!s.mission?.estop_latched;
+  $("estop").classList.toggle("latched", latched); $("estop-t").textContent = latched ? "E-STOP LATCHED" : "E-STOP";
+  // operator attention
+  let msg = null, cls = "warn", act = "";
+  const st = s.mission?.state, ttc = s.navigation?.ttc;
+  const down = Object.keys(EXPECTED).map(k => [EXPECTED[k].label, compStatus(k, s)]).filter(([, c]) => c.cls === "err");
+  if (latched) { msg = "Emergency stop latched. The robot is held still. Press Reset in Mission control to release."; cls = "err"; }
+  else if (!link) { msg = "Connection to the robot backend lost. Displayed values are stale."; cls = "err"; }
+  else if (st === "FAILED") { msg = `Mission failed: ${s.mission?.events?.slice(-1)[0]?.msg || "see mission events"}`; cls = "err"; act = "Reset to clear"; }
+  else if (down.length) { msg = `Subsystem problem: ${down.map(d => `${d[0]} (${d[1].st.toLowerCase()})`).join(", ")}`; cls = "err"; }
+  else if (typeof ttc === "number" && ttc > 0 && ttc < 2.0) { msg = `Time-to-collision warning: ${ttc.toFixed(1)} s. Robot is yielding.`; }
+  else if (st === "PAUSED") { msg = "Mission paused by operator. Resume or Cancel."; }
+  $("alert").className = msg ? "show " + cls : ""; $("alert-t").textContent = msg || ""; $("alert-act").textContent = act;
+}
+
+/* ---------------- render: operations ---------------- */
+let LOCS_FILLED = false;
+function fillLocations(locs) {
+  if (LOCS_FILLED || !locs || !Object.keys(locs).length) return;
+  for (const [k, v] of Object.entries(locs)) for (const s of ["selsrc", "seldst", "hf-src", "hf-dst"]) $(s).add(new Option(v.label, k));
+  $("selsrc").value = "collection_point"; $("seldst").value = "laboratory"; LOCS_FILLED = true;
+}
+function renderOps(s) {
+  const ms = s.mission || {}, m = ms.mission || null, st = ms.state || "IDLE", [lab, cls] = MSTATE[st] || [pretty(st), ""];
+  fillLocations(ms.locations);
+  $("m-state").textContent = lab;
+  const res = $("m-result");
+  if (["MISSION_COMPLETE", "FAILED", "CANCELLED", "EMERGENCY_STOP"].includes(st)) { res.style.display = ""; res.className = "pill " + cls; res.textContent = st === "MISSION_COMPLETE" ? "Completed" : pretty(st); }
+  else res.style.display = "none";
+  // stepper
+  const idx = STEPS.findIndex(x => x[0] === st), prevIdx = STEPS.findIndex(x => x[0] === ms.prev_state);
+  const failed = ["FAILED", "CANCELLED", "EMERGENCY_STOP"].includes(st);
+  const legsDone = m?.progress?.legs_completed ?? 0, payload = m?.payload_state;
+  let reached = idx;
+  if (idx < 0 && m) { reached = payload === "DELIVERED" ? 4 : payload === "SECURED" ? (legsDone >= 2 ? 4 : 3) : legsDone >= 1 ? 1 : 0; }
+  $("m-steps").innerHTML = STEPS.map(([k, t], i) => {
+    let c = "";
+    if (st === "MISSION_COMPLETE") c = "done"; else if (m) { if (i < reached) c = "done"; else if (i === reached) c = failed ? "bad" : "cur"; }
+    return `<div class="step ${c}"><div class="bar"></div><span>${t}</span></div>`;
+  }).join("");
+  const L = ms.locations || {};
+  const kv = [["Mission", m ? `<span class="mono">${esc(m.mission_id)}</span>` : '<span class="na">none</span>'],
+    ["Source", m ? esc(L[m.source]?.label || m.source) : "-"], ["Destination", m ? esc(L[m.destination]?.label || m.destination) : "-"],
+    ["Payload", m ? `${esc(m.payload)} · ${esc(pretty(payload))}` : "-"], ["Elapsed", m ? `<span class="mono">${fx(m.elapsed_s, 0)} s</span>` : "-"],
+    ["Distance", m ? `<span class="mono">${fx(m.distance_m, 1)} m</span>` : "-"], ["Legs", m ? `<span class="mono">${legsDone} / ${m.progress?.legs_total ?? 2}</span>` : "-"],
+    ["Replans", m ? `<span class="mono">${m.replans_so_far ?? 0}</span>` : "-"]];
+  $("m-kv").innerHTML = kv.map(([k, v]) => `<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+  const rp = m?.progress?.route_progress_pct ?? s.navigation?.progress_pct;
+  $("m-prog").style.width = (m && rp !== null && rp !== undefined ? Math.max(0, Math.min(100, rp)) : 0) + "%";
+  $("m-prog-t").textContent = m && rp !== null && rp !== undefined ? `${Number(rp).toFixed(0)}% of current leg` : "";
+  // buttons
+  const active = ["GO_TO_COLLECTION", "AT_COLLECTION", "PAYLOAD_SECURED", "GO_TO_LAB", "AT_LAB"].includes(st);
+  $("b-start").disabled = st !== "READY" || !!ms.estop_latched;
+  $("b-pause").disabled = !active; $("b-resume").disabled = st !== "PAUSED"; $("b-cancel").disabled = !(active || st === "PAUSED");
+  $("b-reset").disabled = !["MISSION_COMPLETE", "FAILED", "CANCELLED", "EMERGENCY_STOP", "IDLE"].includes(st);
+  if (document.activeElement !== $("traffic") && s.traffic_enabled !== null && s.traffic_enabled !== undefined) $("traffic").checked = !!s.traffic_enabled;
+  // robot strip
+  const p = s.robot?.pose, tw = s.robot?.twist;
+  $("r-state").innerHTML = `<span class="pill ${cls}">${esc(lab)}</span>`;
+  $("r-mission").textContent = m ? m.mission_id : "none";
+  $("r-pos").innerHTML = p ? `${p[0].toFixed(2)}, ${p[1].toFixed(2)} · ${(p[2] * 180 / Math.PI).toFixed(0)}°` : NA;
+  $("r-v").innerHTML = tw ? `${tw[0].toFixed(2)} m/s` : NA; $("r-w").innerHTML = tw ? `${tw[1].toFixed(2)} rad/s` : NA;
+  $("r-scan").innerHTML = s.robot?.scan_min_m != null ? `${s.robot.scan_min_m.toFixed(2)} m` : NA;
+  const chip = (label, c) => `<span class="pill ${c.cls}" title="${esc(c.met)}"><span class="dot ${c.cls}"></span>${label}</span>`;
+  const link = Date.now() - LAST_OK < 2500;
+  $("r-chips").innerHTML = [`<span class="pill ${link ? "ok" : "err"}"><span class="dot ${link ? "ok" : "err"}"></span>Network</span>`,
+    chip("ROS", {cls: (s.ros_nodes || []).length ? "ok" : "err", met: `${(s.ros_nodes || []).length} nodes`}),
+    chip("Camera", compStatus("camera", s)), chip("LiDAR", compStatus("lidar", s)), chip("YOLO", compStatus("yolo", s)),
+    chip("Fusion", compStatus("fusion", s)), chip("Nav2", compStatus("nav2", s)), chip("Localization", compStatus("localization", s))].join("");
+  const ar = activeRoute(s);
+  $("ops-map-note").innerHTML = ar?.length ? `<span class="pill info">Goal: ${esc(nodeName(ar.slice(-1)[0]))}</span>` : "";
+  camMeta(s, "cam-ops-meta", "cam-pill");
+}
+function nodeName(id) { return TOPO?.nodes?.[id]?.name || id; }
+function shortName(n) { return String(n).replace(/ \(.*\)$/, "").split(" / ")[0]; }
+function camMeta(s, metaId, pillId) {
+  const t = s.system?.topics || {}, dt = s.perception?.detection_timing, c = compStatus("camera", s);
+  $(pillId).className = "pill " + c.cls; $(pillId).textContent = c.st;
+  const n = (s.perception?.spatial?.objects || []).length;
+  $(metaId).innerHTML = `<span>Camera <b>${t.camera?.hz ?? "-"} Hz</b></span><span>YOLO <b>${t.detections?.hz ?? "-"} Hz</b></span>` +
+    `<span>Inference <b>${dt?.total_ms != null ? dt.total_ms.toFixed(1) + " ms" : "n/a"}</b></span><span>Stream <b>${s.ui_backend?.stream_fps ?? "-"} fps</b></span><span>Objects <b>${n}</b></span>`;
+}
+
+/* ---------------- render: perception ---------------- */
+const UNRANGED = /sign|marker/;
+function rangeCell(o) {
+  if (o.range_source === "lidar" && o.range != null && !UNRANGED.test(o.class)) return `<span class="pill ok">${o.range.toFixed(2)} m · LiDAR</span>`;
+  if (o.range_source === "lidar" && o.range != null) return `<span class="pill ok">${o.range.toFixed(2)} m · LiDAR</span>`;
+  if (o.range_source === "ground_plane" && o.range != null && !UNRANGED.test(o.class)) return `<span class="pill warn" title="Estimated from the box bottom on the floor plane, not measured">≈${o.range.toFixed(1)} m · ground plane</span>`;
+  return `<span class="pill">not ranged</span>`;
+}
+function renderPerc(s) {
+  camMeta(s, "cam-perc-meta", "cam2-pill");
+  const objs = (s.perception?.spatial?.objects || []).slice().sort((a, b) => (a.range ?? 99) - (b.range ?? 99));
+  $("det-count").innerHTML = `<span class="pill info">${objs.length} objects</span>`;
+  $("det-body").innerHTML = objs.length ? objs.map(o => {
+    const ranged = o.range_source === "lidar" && o.x != null;
+    return `<tr><td>${esc(pretty(o.class))}</td><td class="num">${(o.confidence * 100).toFixed(0)}%</td><td>${rangeCell(o)}</td>` +
+      `<td class="num">${ranged ? `${o.x.toFixed(2)} / ${o.y.toFixed(2)}` : '<span class="na">-</span>'}</td><td class="num">${o.bearing_deg != null ? o.bearing_deg.toFixed(0) + "°" : "-"}</td></tr>`;
+  }).join("") : `<tr><td colspan="5" class="empty">No detections in the current frame</td></tr>`;
+  const sp = s.perception?.spatial;
+  $("lidar-note").innerHTML = sp ? `<span class="mono" style="color:var(--muted)">fusion ${fx(sp.fusion_ms, 1) ?? "-"} ms · scan↔image ${fx(sp.scan_image_dt_ms, 0) ?? "-"} ms</span>` : "";
+  drawLidar();
+}
+function drawLidar() {
+  if (VIEW !== "perc") return;
+  const wrap = $("lidar"), cv = wrap.querySelector("canvas"), r = wrap.getBoundingClientRect(); if (!r.width) return;
+  const dpr = devicePixelRatio; cv.width = r.width * dpr; cv.height = r.height * dpr;
+  const g = cv.getContext("2d"), W = cv.width, H = cv.height, cx = W / 2, cy = H * 0.62;
+  const R = 6.0, k = Math.min(W / 2, cy) / R * 0.95;  // 6 m view radius, robot facing up
+  g.fillStyle = "#0c1117"; g.fillRect(0, 0, W, H);
+  g.strokeStyle = "#1e2732"; g.lineWidth = 1; g.font = `${10 * dpr}px sans-serif`; g.fillStyle = "#5d6b7c";
+  for (let m = 1; m <= R; m++) { g.beginPath(); g.arc(cx, cy, m * k, 0, 7); g.stroke(); if (m % 2 === 0) g.fillText(m + " m", cx + 4 * dpr, cy - m * k - 3 * dpr); }
+  // camera field of view (HFOV 1.15 rad)
+  g.fillStyle = "rgba(61,155,255,.07)"; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, R * k, -Math.PI / 2 - 0.575, -Math.PI / 2 + 0.575); g.closePath(); g.fill();
+  const pt = (x, y) => [cx - y * k, cy - x * k];  // robot frame: x forward (up), y left
+  if (SCAN && SCAN.ranges) {
+    g.fillStyle = "rgba(239,79,79,.8)";
+    SCAN.ranges.forEach((rr, i) => { if (rr === null || rr > R) return; const a = SCAN.angle_min + i * SCAN.angle_inc, [x, y] = pt(rr * Math.cos(a), rr * Math.sin(a)); g.fillRect(x - 1.5 * dpr, y - 1.5 * dpr, 3 * dpr, 3 * dpr); });
+  } else { g.fillStyle = "#5d6b7c"; g.fillText("LiDAR scan unavailable", 12 * dpr, 20 * dpr); }
+  const objs = STATE?.perception?.spatial?.objects || [];
+  g.font = `500 ${11 * dpr}px Inter, system-ui, sans-serif`;
+  for (const o of objs) {
+    if (o.bearing_deg == null) continue;
+    const b = o.bearing_deg * Math.PI / 180;
+    if (o.range_source === "lidar" && o.x != null) {
+      const [x, y] = pt(o.x, o.y); g.strokeStyle = "#34d399"; g.lineWidth = 2 * dpr; g.strokeRect(x - 7 * dpr, y - 7 * dpr, 14 * dpr, 14 * dpr);
+      g.fillStyle = "#a7f3d0"; g.fillText(`${pretty(o.class)} ${o.range.toFixed(2)} m`, x + 10 * dpr, y + 4 * dpr);
+    } else {  // camera bearing only: draw the ray, no range
+      const [x, y] = pt(R * Math.cos(b), R * Math.sin(b)); g.strokeStyle = "rgba(242,163,58,.55)"; g.setLineDash([4 * dpr, 4 * dpr]); g.lineWidth = 1.2 * dpr;
+      g.beginPath(); g.moveTo(cx, cy); g.lineTo(x, y); g.stroke(); g.setLineDash([]); g.fillStyle = "#f2c27a"; g.fillText(`${pretty(o.class)} (bearing only)`, x + 4 * dpr, y);
+    }
+  }
+  g.fillStyle = "#3d9bff"; g.beginPath(); g.moveTo(cx, cy - 10 * dpr); g.lineTo(cx - 7 * dpr, cy + 7 * dpr); g.lineTo(cx + 7 * dpr, cy + 7 * dpr); g.closePath(); g.fill();
+  g.fillStyle = "#8796a8"; g.font = `${10.5 * dpr}px sans-serif`;
+  g.fillText("Red: LiDAR returns · Green: detection associated with LiDAR (ranged) · Orange: camera bearing only (not ranged) · Blue sector: camera FOV", 10 * dpr, H - 10 * dpr);
+}
+
+/* ---------------- render: navigation ---------------- */
+const NAV_EV = [];  // client-side accumulation of /navigation/events (dedup by t+message)
+function renderNav(s) {
+  const n = s.navigation || {}, ms = s.mission || {}, m = ms.mission, de = n.decision_engine_state || ms.decision_engine_state;
+  $("n-de").textContent = de ? pretty(de) : "unavailable"; $("n-de").className = "pill " + (de === "NAVIGATING" ? "info" : de === "GOAL_REACHED" ? "ok" : ["RECOVERY", "OBSTACLE_DETECTED", "REPLANNING"].includes(de) ? "warn" : "");
+  const ar = activeRoute(s), goal = ar?.length ? ar.slice(-1)[0] : null, p = s.robot?.pose;
+  const ttc = typeof n.ttc === "number" && n.ttc > 0 ? `${n.ttc.toFixed(1)} s` : '<span class="na">no closing object</span>';
+  const kv = [["Current goal", goal ? esc(nodeName(goal)) : '<span class="na">none</span>'], ["Robot location", p ? `<span class="mono">${p[0].toFixed(2)}, ${p[1].toFixed(2)}</span>` : NA],
+    ["Route cost", n.route_cost != null ? `<span class="mono">${n.route_cost.toFixed(1)}</span>` : "-"], ["Reliability", n.reliability_pct != null ? `<span class="mono">${n.reliability_pct.toFixed(0)}%</span>` : "-"],
+    ["Replans (leg)", `<span class="mono">${n.replans ?? "-"}</span>`], ["Last replan", n.last_replan_reason && n.last_replan_reason !== "NONE" ? esc(pretty(n.last_replan_reason)) : '<span class="na">none</span>'],
+    ["TTC", ttc], ["TTC events", `<span class="mono">${n.ttc_events ?? "-"}</span>`],
+    ["Obstacle encounters", `<span class="mono">${m?.obstacle_encounters ?? "-"}</span>`], ["Costmap obstacle pts", `<span class="mono">${n.costmap_obstacle_points ?? "-"}</span>`]];
+  $("n-kv").innerHTML = kv.map(([k, v]) => `<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+  // route chips
+  const route = ar;
+  if (route?.length) {
+    let curIdx = 0, bd = 1e9;
+    if (p) route.forEach((id, i) => { const nn = TOPO?.nodes?.[id]; if (nn) { const d = Math.hypot(nn.x - p[0], nn.y - p[1]); if (d < bd) { bd = d; curIdx = i; } } });
+    $("n-route").innerHTML = route.map((id, i) => `<span class="n ${i === route.length - 1 ? "goal" : i < curIdx ? "done" : i === curIdx ? "cur" : ""}" title="${esc(id)}">${esc(nodeName(id).replace(/ \(.*\)$/, ""))}</span>`).join('<span class="a">›</span>');
+  } else $("n-route").innerHTML = '<span class="na">No active route</span>';
+  const cl = n.clearances;
+  $("n-clear").innerHTML = cl ? ["front", "left", "right", "rear"].map(k => `<div class="b"><span>${pretty(k)}</span><div class="t"><i style="width:${Math.min(100, (cl[k] ?? 0) / 5 * 100)}%; background:${(cl[k] ?? 9) < 0.5 ? "var(--err)" : (cl[k] ?? 9) < 1 ? "var(--warn)" : "var(--ok)"}"></i></div><span class="mono">${cl[k] != null ? cl[k].toFixed(2) : "-"}</span></div>`).join("") : '<span class="na">unavailable</span>';
+  const cb = n.cost_breakdown;
+  if (cb) {
+    const terms = Object.entries(cb).filter(([k]) => k !== "reliability_factor"), mx = Math.max(1, ...terms.map(([, v]) => Math.abs(v)));
+    $("n-cost").innerHTML = terms.map(([k, v]) => `<div class="b"><span>${pretty(k.replace(/_cost$/, ""))}</span><div class="t"><i style="width:${Math.abs(v) / mx * 100}%; background:${k.includes("bonus") ? "var(--ok)" : "var(--accent)"}"></i></div><span class="mono">${k.includes("bonus") ? "−" : ""}${v.toFixed(1)}</span></div>`).join("");
+  } else $("n-cost").innerHTML = '<span class="na">No route evaluated yet</span>';
+  // events: decision engine + mission manager
+  for (const e of s.nav_events || []) { const key = e.t + e.message; if (!NAV_EV.some(x => x.key === key)) NAV_EV.push({key, t: e.t, ts: e.timestamp, level: e.level, msg: e.message}); }
+  for (const e of ms.events || []) { const key = e.t + e.msg; if (!NAV_EV.some(x => x.key === key)) NAV_EV.push({key, t: e.t, ts: new Date(e.t * 1000).toTimeString().slice(0, 8), level: e.level, msg: "[mission] " + e.msg}); }
+  NAV_EV.sort((a, b) => b.t - a.t); NAV_EV.length = Math.min(NAV_EV.length, 300);
+  renderEvents();
+}
+function renderEvents() {
+  const f = $("ev-filter").value, re = {replan: /replan|alternative|route/i, ttc: /ttc|yield|pausing/i, obstacle: /obstacle|blocked/i, sign: /sign/i}[f];
+  const ev = NAV_EV.filter(e => !f || (f === "warn" ? /WARN|ERROR/.test(e.level) : re.test(e.msg)));
+  $("n-events").innerHTML = ev.length ? ev.slice(0, 150).map(e => `<div><span class="t">${esc(e.ts)}</span><span class="lv ${esc(e.level)}">${esc(e.level)}</span><span>${esc(e.msg)}</span></div>`).join("") : '<div class="empty" style="display:block">No events yet</div>';
+}
+
+/* ---------------- history ---------------- */
+const HCOLS = [["mission_id", "Mission"], ["start_time", "Started"], ["source", "Source"], ["destination", "Destination"], ["result", "Result"],
+               ["duration_s", "Duration", 1], ["distance_m", "Distance", 1], ["replans", "Replans", 1], ["ttc_events", "TTC", 1], ["min_lidar_range_m", "Min clear.", 1], ["route", "Route used"]];
+let HSORT = ["start_time", -1];
+async function loadHistory() { try { HIST = await api("/api/history"); renderHistory(); } catch (e) { $("h-body").innerHTML = `<tr><td class="empty" colspan="11">History unavailable: ${esc(e.message)}</td></tr>`; } }
+function routeOf(h) { return (h.routes || []).map(r => (r.path || []).join(" › ")).filter(Boolean).join("  |  "); }
+function renderHistory() {
+  $("h-head").innerHTML = HCOLS.map(([k, t, num]) => `<th class="${k === "route" ? "" : "sort"} ${num ? "num" : ""}" data-k="${k}">${t}${HSORT[0] === k ? `<span class="arr">${HSORT[1] > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
+  const fr = $("hf-result").value, fs = $("hf-src").value, fd = $("hf-dst").value, q = $("hf-q").value.trim().toLowerCase();
+  let rows = HIST.filter(h => (!fr || h.result === fr) && (!fs || h.source === fs) && (!fd || h.destination === fd) && (!q || (h.mission_id + " " + routeOf(h)).toLowerCase().includes(q)));
+  const [k, d] = HSORT; rows.sort((a, b) => ((a[k] ?? -1) > (b[k] ?? -1) ? 1 : (a[k] ?? -1) < (b[k] ?? -1) ? -1 : 0) * d);
+  const L = STATE?.mission?.locations || {}, rc = {COMPLETE: "ok", FAILED: "err", CANCELLED: "warn", ESTOP: "err"};
+  const done = HIST.filter(h => h.result === "COMPLETE").length;
+  $("h-count").innerHTML = `<span class="pill">${rows.length} shown</span><span class="pill ok">${done} complete</span><span class="pill err">${HIST.length - done} not complete</span>`;
+  $("h-body").innerHTML = rows.length ? rows.map(h => `<tr class="clk ${SEL_MISSION === h.mission_id ? "sel" : ""}" data-id="${esc(h.mission_id)}"><td class="mono">${esc(h.mission_id)}</td><td class="mono">${new Date(h.start_time * 1000).toLocaleString()}</td>` +
+    `<td>${esc(L[h.source]?.label || h.source)}</td><td>${esc(L[h.destination]?.label || h.destination)}</td><td><span class="pill ${rc[h.result] || ""}">${esc(h.result)}</span></td>` +
+    `<td class="num">${fx(h.duration_s, 0) ?? "-"} s</td><td class="num">${fx(h.distance_m, 1) ?? "-"} m</td><td class="num">${h.replans ?? "-"}</td><td class="num">${h.ttc_events ?? "-"}</td><td class="num">${fx(h.min_lidar_range_m, 2) ?? "-"} m</td>` +
+    `<td style="max-width:340px; overflow:hidden; text-overflow:ellipsis" title="${esc(routeOf(h))}">${esc(routeOf(h).split("  |  ").map(r => r.split(" › ").length + " nodes").join(", ") || "-")}</td></tr>`).join("")
+    : `<tr><td class="empty" colspan="11">No missions match the filter</td></tr>`;
+}
+async function showMission(id) {
+  SEL_MISSION = id; renderHistory();
+  try {
+    const d = await api("/api/history/" + encodeURIComponent(id)), L = STATE?.mission?.locations || {};
+    const legs = (d.legs || []).map(l => `<div class="hc" style="background:var(--panel)"><div class="top">Leg to ${esc(L[l.target]?.label || l.target)}<span class="pill ${l.result === "arrived" ? "ok" : "err"}">${esc(l.result || "-")}</span></div>` +
+      `<div class="met">${fx(l.duration_s, 0) ?? "-"} s · ${(l.de_states || []).length} decision-engine state changes</div>` +
+      `<div class="route">${((l.route || {}).active_path || []).map(n => `<span class="n">${esc(nodeName(n).replace(/ \(.*\)$/, ""))}</span>`).join('<span class="a">›</span>') || '<span class="na">route not recorded</span>'}</div></div>`).join("");
+    const evl = Array.isArray(d.events) ? d.events : (d.events?.mission_events || []);
+    const ev = evl.slice(-40).reverse().map(e => `<div><span class="t">${new Date(e.t * 1000).toTimeString().slice(0, 8)}</span><span class="lv ${esc(e.level)}">${esc(e.level)}</span><span>${esc(e.msg)}</span></div>`).join("");
+    $("h-detail").innerHTML = `<div class="kv">${[["Result", `<span class="pill">${esc(d.result)}</span>`], ["Duration", `${fx(d.duration_s, 1)} s`], ["Distance", `${fx(d.distance_m, 1)} m`], ["Replans", d.replans], ["TTC events", d.ttc_events], ["Obstacles", d.obstacle_encounters], ["Min clearance", `${fx(d.min_lidar_range_m, 2)} m`], ["Payload", esc(d.payload)]].map(([k, v]) => `<div><div class="k">${k}</div><div class="v mono">${v ?? "-"}</div></div>`).join("")}</div>` +
+      (d.failure_reason ? `<div class="pill err" style="white-space:normal">${esc(d.failure_reason)}</div>` : "") +
+      `<div class="k">Travelled path (stored, start grey · end green)</div><div class="mapwrap" id="map-hist" style="min-height:220px; height:240px; flex:none; border-radius:6px; border:1px solid var(--line)"></div>` +
+      `<div class="k">Route legs</div>${legs || '<span class="na">no legs</span>'}<div class="k">Mission events</div><div class="log" style="border:1px solid var(--line); border-radius:6px">${ev || '<div class="empty">no events</div>'}</div>`;
+    HIST_PATH = d.path || [];
+    MAPS.hist = new MapView($("map-hist"), "hist"); MAPS.hist.resize();
+  } catch (e) { $("h-detail").innerHTML = `<div class="empty">Could not load mission: ${esc(e.message)}</div>`; }
+}
+
+/* ---------------- path learning ---------------- */
+const LCOLS = [["seg", "Segment"], ["distance", "Length", 1], ["traversal_count", "Used", 1], ["success_count", "OK", 1], ["failure_count", "Failed", 1],
+               ["reliability_score", "Reliability", 1], ["obs", "Obstacles seen", 1], ["replan_count", "Replans", 1], ["route_cost", "Route cost", 1], ["flags", "Flags"]];
+let LSORT = ["traversal_count", -1];
+async function loadLearning() { try { LEARN = await api("/api/learning"); renderLearning(); MAPS.learn?.draw(); } catch (e) { $("l-body").innerHTML = `<tr><td class="empty" colspan="10">Route learning data unavailable: ${esc(e.message)}</td></tr>`; } }
+function renderLearning() {
+  if (!LEARN) return;
+  $("l-head").innerHTML = LCOLS.map(([k, t, num]) => `<th class="sort ${num ? "num" : ""}" data-k="${k}">${t}${LSORT[0] === k ? `<span class="arr">${LSORT[1] > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
+  const show = $("lf-show").value, q = $("lf-q").value.trim().toLowerCase();
+  let rows = LEARN.segments.map(s => ({...s, seg: nodeName(s.from_node) + " → " + nodeName(s.to_node),
+    obs: Object.values(LEARN.obstacles[s.from_node + "|" + s.to_node] || {}).reduce((a, b) => a + b, 0), obsd: LEARN.obstacles[s.from_node + "|" + s.to_node] || {}}));
+  rows = rows.filter(r => (show === "all" || (show === "used" ? r.traversal_count > 0 : (r.failure_count || r.obs || r.replan_count || r.is_blocked))) && (!q || (r.seg + r.from_node + r.to_node).toLowerCase().includes(q)));
+  const [k, d] = LSORT; rows.sort((a, b) => ((a[k] ?? -1) > (b[k] ?? -1) ? 1 : (a[k] ?? -1) < (b[k] ?? -1) ? -1 : 0) * d);
+  $("l-count").innerHTML = `<span class="pill">${rows.length} of ${LEARN.segments.length} directed segments</span>`;
+  $("l-body").innerHTML = rows.length ? rows.map(r => {
+    const rel = r.reliability_score, rc = rel >= 0.9 ? "ok" : rel >= 0.7 ? "warn" : "err";
+    const flags = [r.is_blocked ? '<span class="pill err">blocked</span>' : "", r.is_dead_end ? '<span class="pill err">dead end</span>' : "", r.is_narrow ? '<span class="pill">narrow / door</span>' : ""].join(" ");
+    return `<tr><td>${esc(r.seg)}</td><td class="num">${r.distance.toFixed(1)} m</td><td class="num">${r.traversal_count}</td><td class="num">${r.success_count}</td><td class="num">${r.failure_count}</td>` +
+      `<td class="num"><span class="pill ${rc}">${(rel * 100).toFixed(0)}%</span></td><td class="num" title="${esc(Object.entries(r.obsd).map(([c, n]) => c + ": " + n).join(", "))}">${r.obs}</td><td class="num">${r.replan_count}</td>` +
+      `<td class="num">${r.route_cost != null ? r.route_cost.toFixed(1) : "-"}</td><td>${flags}</td></tr>`;
+  }).join("") : `<tr><td class="empty" colspan="10">No segments match</td></tr>`;
+  // side summary
+  const used = LEARN.segments.filter(s => s.traversal_count > 0), fails = LEARN.segments.reduce((a, s) => a + s.failure_count, 0);
+  const blocked = LEARN.segments.filter(s => s.is_blocked).length, reasons = {};
+  for (const r of LEARN.replans) reasons[r.replan_reason] = (reasons[r.replan_reason] || 0) + 1;
+  const ok = HIST.filter(h => h.result === "COMPLETE").length;
+  $("l-side").innerHTML = `<div class="kv">${[["Recorded traversals", LEARN.traversals.total], ["Successful", LEARN.traversals.successful], ["Segments used", `${used.length} / ${LEARN.segments.length}`], ["Segment failures", fails], ["Blocked now", blocked], ["Missions complete", HIST.length ? `${ok} / ${HIST.length}` : "open History"]].map(([k, v]) => `<div><div class="k">${k}</div><div class="v mono">${v}</div></div>`).join("")}</div>` +
+    `<div><div class="k" style="margin-bottom:6px">Stored replan reasons</div><div class="chips">${Object.entries(reasons).map(([k, v]) => `<span class="pill">${esc(pretty(k))}: ${v}</span>`).join("") || '<span class="na">none recorded</span>'}</div></div>` +
+    `<div class="legend" style="position:static; max-width:none"><span><i class="sw" style="background:#34d399"></i>Used, reliable</span><span><i class="sw" style="background:#e8a317"></i>Failures / reliability &lt; 80%</span><span><i class="sw" style="background:#ef4f4f"></i>Blocked</span><span>Line width = usage</span></div>` +
+    `<div class="note">The decision engine picks the route with the lowest total cost. Each segment's cost is computed from what is stored here: <code>${esc(LEARN.cost_model)}</code>. Failed traversals and lower reliability raise a segment's cost, so routes that failed before are avoided; repeatedly successful segments get a familiarity discount of up to 25% of their length. Obstacles recorded on a segment raise its obstacle density. A blocked segment is excluded until it is cleared.</div>`;
+}
+
+/* ---------------- system ---------------- */
+function renderSys(s) {
+  const comps = Object.entries(EXPECTED).map(([k, e]) => [k, e, compStatus(k, s)]);
+  comps.push(["ui", {label: "UI backend", src: `v3_web_server :${s.ui_backend?.port}`}, {st: "Online", cls: "ok", met: `uptime ${Math.round(s.ui_backend?.uptime_s || 0)} s`}]);
+  comps.push(["battery", {label: "Battery", src: "no battery topic in this robot"}, {st: "Unavailable", cls: "", met: "the simulated robot publishes no battery state"}]);
+  const on = comps.filter(c => c[2].st === "Online").length;
+  $("s-sum").innerHTML = `<span class="pill ${on === comps.length - 1 ? "ok" : "warn"}">${on} online</span>`;
+  $("s-grid").innerHTML = comps.map(([k, e, c]) => `<div class="hc"><div class="top"><span class="dot ${c.cls}"></span>${esc(e.label)}<span class="pill ${c.cls}">${c.st}</span></div><div class="met">${esc(c.met)}</div><div class="src">${esc(e.src)}${e.nodes?.length ? " · " + esc(e.nodes.join(", ")) : ""}</div></div>`).join("");
+  const nodes = s.ros_nodes || [];
+  $("s-ncount").innerHTML = `<span class="pill">${nodes.length} nodes</span>`;
+  $("s-nodes").innerHTML = nodes.length ? nodes.map(n => `<tr><td class="mono">${esc(n)}</td></tr>`).join("") : `<tr><td class="empty">ROS graph unavailable</td></tr>`;
+}
+
+/* ---------------- main loop ---------------- */
+async function poll() {
+  try { STATE = await api("/api/state"); LAST_OK = Date.now(); } catch (e) { /* keep last state, header shows lost link */ }
+  renderHeader(STATE);
+  if (STATE) {
+    renderOps(STATE);
+    if (VIEW === "perc") renderPerc(STATE); if (VIEW === "nav") renderNav(STATE); else if (STATE.nav_events) renderNavEventsOnly(STATE);
+    if (VIEW === "sys") renderSys(STATE);
+    if (VIEW === "ops") MAPS.ops.draw(); if (VIEW === "nav") MAPS.nav.draw();
+  }
+}
+function renderNavEventsOnly(s) {  // keep accumulating events while the Navigation view is hidden
+  for (const e of s.nav_events || []) { const key = e.t + e.message; if (!NAV_EV.some(x => x.key === key)) NAV_EV.push({key, t: e.t, ts: e.timestamp, level: e.level, msg: e.message}); }
+}
+async function pollScan() {
+  if (!["ops", "nav", "perc"].includes(VIEW)) return;
+  try { SCAN = await api("/api/scan"); } catch (e) { SCAN = null; }
+}
+async function init() {
+  // header clock
+  setInterval(() => { $("h-clock").textContent = new Date().toLocaleTimeString([], {hour12: false}); }, 500);
+  // tabs and controls
+  $("tabs").onclick = e => { const b = e.target.closest("button"); if (b) showView(b.dataset.v); };
+  $("b-start").onclick = () => { if ($("selsrc").value === $("seldst").value) return toast("Source and destination must differ", "err"); cmd("start", {source: $("selsrc").value, destination: $("seldst").value}); };
+  for (const c of ["pause", "resume", "cancel", "reset"]) $("b-" + c).onclick = () => cmd(c);
+  $("estop").onclick = () => cmd("estop");
+  document.addEventListener("keydown", e => { if (e.code === "Space" && e.shiftKey) { e.preventDefault(); cmd("estop"); } });  // Shift+Space = E-stop
+  $("traffic").onchange = async e => { try { await api("/api/traffic", {enable: e.target.checked}); toast(`Hospital traffic ${e.target.checked ? "enabled" : "disabled"}`, "ok"); } catch (x) { toast("Traffic toggle failed: " + x.message, "err"); } };
+  $("ev-filter").onchange = renderEvents;
+  for (const id of ["hf-result", "hf-src", "hf-dst"]) $(id).onchange = renderHistory; $("hf-q").oninput = renderHistory;
+  $("h-head").onclick = e => { const th = e.target.closest("th.sort"); if (!th) return; HSORT = [th.dataset.k, HSORT[0] === th.dataset.k ? -HSORT[1] : -1]; renderHistory(); };
+  $("h-body").onclick = e => { const tr = e.target.closest("tr[data-id]"); if (tr) showMission(tr.dataset.id); };
+  $("lf-show").onchange = renderLearning; $("lf-q").oninput = renderLearning;
+  $("l-head").onclick = e => { const th = e.target.closest("th.sort"); if (!th) return; LSORT = [th.dataset.k, LSORT[0] === th.dataset.k ? -LSORT[1] : -1]; renderLearning(); };
+  // map
+  try {
+    const j = await api("/api/map"); MAP = j.map; TOPO = j.topology;
+    const img = new Image(); img.onload = () => { BASE = buildBase(img); Object.values(MAPS).forEach(m => { m.fitted = false; m.resize(); }); }; img.src = MAP.image + "?t=" + Date.now();
+  } catch (e) { toast("Map unavailable: " + e.message, "err"); }
+  MAPS = {ops: new MapView($("map-ops"), "ops"), nav: new MapView($("map-nav"), "nav"), learn: new MapView($("map-learn"), "learn")};
+  let v = location.hash.slice(1); if (!v) { try { v = localStorage.getItem("v3view") || "ops"; } catch (e) { v = "ops"; } }
+  window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (document.getElementById("v-" + h)) showView(h); });
+  showView(document.getElementById("v-" + v) ? v : "ops");
+  setInterval(poll, 400); setInterval(pollScan, 300); setInterval(() => { if (VIEW === "hist") loadHistory(); if (VIEW === "learn") loadLearning(); }, 10000);
+  window.addEventListener("resize", drawLidar);
+  poll(); loadHistory();
+}
+// read-only handle for automated UI tests (tests/test_v3_ui.py)
+window.V3UI = {get map() { return MAP; }, get base() { return BASE; }, get maps() { return MAPS; }};
+init();
+</script>
+</body>
+</html>

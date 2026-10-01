@@ -1,0 +1,125 @@
+{
+ "summary": {
+  "detection_node_latency_ms": {
+   "mean": 9.81,
+   "p95": 10.57
+  },
+  "fusion_latency_ms": null,
+  "detection_rate_hz": 2.6
+ },
+ "scenarios": [
+  {
+   "scenario": "H_multiple_obstacles_robot_moving",
+   "target": "v3_patient_bed_1",
+   "class": "hospital_bed",
+   "fusion_frames": 0,
+   "outcomes": {},
+   "ON_rate_when_detected": null,
+   "false_association_rate_when_detected": null,
+   "lost_rate_when_detected": null,
+   "range_error_m": null,
+   "frame_to_frame_excess_jump_m": null,
+   "first_detection_to_first_ON_s": null,
+   "true_range_span_m": null,
+   "scan_image_dt_ms": null,
+   "motion_compensation": {},
+   "frames": [],
+   "v26_offline_same_frames": {
+    "frames_with_target_detection": 142,
+    "outcomes": {
+     "ON": 142
+    },
+    "ON_rate_when_detected": 1.0,
+    "false_association_rate_when_detected": 0.0
+   },
+   "costmap_phantom_check": {
+    "non_empty_clouds": 91,
+    "clouds_evaluated": 60,
+    "points_evaluated": 141169,
+    "points_farther_than_1m_from_any_real_object": 0
+   },
+   "static_scenario": true,
+   "gt_min_robot_object_clearance_m": null,
+   "gt_collision": false,
+   "semantic_obstacles": {
+    "messages": 142,
+    "by_class": {
+     "person": 110,
+     "surgical_trolley": 24,
+     "hospital_bed": 8
+    },
+    "dynamic_flagged_by_class": {
+     "person": 96,
+     "surgical_trolley": 9,
+     "hospital_bed": 1
+    },
+    "with_ttc_by_class": {
+     "person": 96,
+     "surgical_trolley": 8,
+     "hospital_bed": 1
+    },
+    "ttc_examples": [
+     [
+      983.965,
+      "person",
+      2.227,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:14 | TTC:2.9s"
+     ],
+     [
+      983.995,
+      "person",
+      2.222,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:14 | TTC:4.6s"
+     ],
+     [
+      984.06,
+      "person",
+      2.21,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:14 | TTC:2.7s"
+     ],
+     [
+      984.095,
+      "person",
+      2.204,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:14 | TTC:4.1s"
+     ],
+     [
+      984.13,
+      "person",
+      2.2,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:14 | TTC:6.4s"
+     ]
+    ],
+    "ttc_stats_by_class": {
+     "hospital_bed": {
+      "n": 1,
+      "min_s": 20.2,
+      "below_1_8s": 0
+     },
+     "surgical_trolley": {
+      "n": 8,
+      "min_s": 0.5,
+      "below_1_8s": 4
+     },
+     "person": {
+      "n": 96,
+      "min_s": 1.5,
+      "below_1_8s": 9
+     }
+    },
+    "motion_states": {
+     "MOVING_AWAY": 10,
+     "STATIC": 12,
+     "MOVING_TOWARDS": 105,
+     "CROSSING": 3,
+     "OUTSIDE_PATH": 12
+    }
+   }
+  }
+ ]
+}

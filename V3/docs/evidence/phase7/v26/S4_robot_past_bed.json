@@ -1,0 +1,117 @@
+{
+ "summary": {
+  "detection_node_latency_ms": {
+   "mean": 9.81,
+   "p95": 10.58
+  },
+  "fusion_latency_ms": null,
+  "detection_rate_hz": 2.14
+ },
+ "scenarios": [
+  {
+   "scenario": "S4_robot_past_bed",
+   "target": "v3_patient_bed_1",
+   "class": "hospital_bed",
+   "fusion_frames": 0,
+   "outcomes": {},
+   "ON_rate_when_detected": null,
+   "false_association_rate_when_detected": null,
+   "lost_rate_when_detected": null,
+   "range_error_m": null,
+   "frame_to_frame_excess_jump_m": null,
+   "first_detection_to_first_ON_s": null,
+   "true_range_span_m": null,
+   "scan_image_dt_ms": null,
+   "motion_compensation": {},
+   "frames": [],
+   "v26_offline_same_frames": {
+    "frames_with_target_detection": 117,
+    "outcomes": {
+     "ON": 117
+    },
+    "ON_rate_when_detected": 1.0,
+    "false_association_rate_when_detected": 0.0
+   },
+   "costmap_phantom_check": {
+    "non_empty_clouds": 120,
+    "clouds_evaluated": 60,
+    "points_evaluated": 195069,
+    "points_farther_than_1m_from_any_real_object": 15196
+   },
+   "static_scenario": true,
+   "gt_min_robot_object_clearance_m": null,
+   "gt_collision": false,
+   "semantic_obstacles": {
+    "messages": 297,
+    "by_class": {
+     "directional_sign": 63,
+     "hospital_bed": 234
+    },
+    "dynamic_flagged_by_class": {
+     "hospital_bed": 96,
+     "directional_sign": 2
+    },
+    "with_ttc_by_class": {
+     "hospital_bed": 96,
+     "directional_sign": 2
+    },
+    "ttc_examples": [
+     [
+      336.9,
+      "hospital_bed",
+      2.318,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:8 | TTC:2.5s"
+     ],
+     [
+      336.935,
+      "hospital_bed",
+      2.311,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:8 | TTC:3.8s"
+     ],
+     [
+      336.965,
+      "hospital_bed",
+      2.298,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:8 | TTC:1.8s"
+     ],
+     [
+      337.0,
+      "hospital_bed",
+      2.283,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:8 | TTC:1.9s"
+     ],
+     [
+      337.03,
+      "hospital_bed",
+      2.273,
+      true,
+      "Front-Right | MOVING_TOWARDS | ID:8 | TTC:2.5s"
+     ]
+    ],
+    "ttc_stats_by_class": {
+     "directional_sign": {
+      "n": 2,
+      "min_s": 1.8,
+      "below_1_8s": 0
+     },
+     "hospital_bed": {
+      "n": 96,
+      "min_s": 0.5,
+      "below_1_8s": 14
+     }
+    },
+    "motion_states": {
+     "OUTSIDE_PATH": 72,
+     "MOVING_TOWARDS": 107,
+     "STATIC": 22,
+     "MOVING_AWAY": 94,
+     "MOVING": 2
+    }
+   }
+  }
+ ]
+}

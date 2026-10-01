@@ -1,0 +1,43 @@
+{
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "torch": "2.14.0+cu130",
+  "note": "Gazebo and training stopped; RTX 3050 Laptop 4GB idle otherwise",
+  "results": {
+    "v25": {
+      "weights": "/home/soham-darade/CV_Autonomous_Navigation/models/yolov8n_v25.pt",
+      "images": 300,
+      "warmup": 20,
+      "latency_ms": {
+        "preprocess_mean": 0.51,
+        "inference_mean": 4.59,
+        "postprocess_mean": 0.78,
+        "end_to_end_mean": 6.93,
+        "end_to_end_p50": 6.89,
+        "end_to_end_p95": 7.64
+      },
+      "fps_end_to_end": 144.3,
+      "torch_peak_allocated_mib": 35.4,
+      "torch_peak_reserved_mib": 60.0,
+      "process_vram_mib_nvidia_smi": 144,
+      "params_M": 3.013
+    },
+    "v3": {
+      "weights": "/home/soham-darade/CV_Autonomous_Navigation/V3/models_trained/v3_yolov8n_from_v25.pt",
+      "images": 300,
+      "warmup": 20,
+      "latency_ms": {
+        "preprocess_mean": 0.49,
+        "inference_mean": 4.55,
+        "postprocess_mean": 0.79,
+        "end_to_end_mean": 6.88,
+        "end_to_end_p50": 6.82,
+        "end_to_end_p95": 7.5
+      },
+      "fps_end_to_end": 145.4,
+      "torch_peak_allocated_mib": 47.0,
+      "torch_peak_reserved_mib": 70.0,
+      "process_vram_mib_nvidia_smi": 154,
+      "params_M": 3.013
+    }
+  }
+}

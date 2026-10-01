@@ -1,0 +1,117 @@
+{
+ "tag": "traffic",
+ "traffic": true,
+ "missions": 5,
+ "complete": 5,
+ "success_rate": 1.0,
+ "outcomes": {
+  "MISSION_COMPLETE": 5
+ },
+ "duration_s": {
+  "n": 5,
+  "mean": 144.62,
+  "min": 144.0,
+  "max": 145.3,
+  "stdev": 0.61
+ },
+ "distance_m": {
+  "n": 5,
+  "mean": 60.92,
+  "min": 60.79,
+  "max": 61.16,
+  "stdev": 0.15
+ },
+ "min_lidar_range_m": {
+  "n": 5,
+  "mean": 0.4,
+  "min": 0.383,
+  "max": 0.419,
+  "stdev": 0.01
+ },
+ "replans": {
+  "n": 5,
+  "mean": 0.4,
+  "min": 0,
+  "max": 1,
+  "stdev": 0.55
+ },
+ "ttc_events": {
+  "n": 5,
+  "mean": 0,
+  "min": 0,
+  "max": 0,
+  "stdev": 0.0
+ },
+ "rows": [
+  {
+   "index": 1,
+   "mission_id": "M20261001-101336-3f2b",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.1,
+   "distance_m": 60.9,
+   "min_lidar_range_m": 0.383,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 4,
+   "sign_events": 10
+  },
+  {
+   "index": 2,
+   "mission_id": "M20261001-101601-4c65",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.0,
+   "distance_m": 60.95,
+   "min_lidar_range_m": 0.403,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 3,
+   "mission_id": "M20261001-101826-18d4",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 145.3,
+   "distance_m": 61.16,
+   "min_lidar_range_m": 0.415,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 4,
+   "mission_id": "M20261001-102052-624e",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 145.2,
+   "distance_m": 60.81,
+   "min_lidar_range_m": 0.394,
+   "replans": 1,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 5,
+   "mission_id": "M20261001-102317-714f",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.5,
+   "distance_m": 60.79,
+   "min_lidar_range_m": 0.419,
+   "replans": 1,
+   "ttc_events": 0,
+   "obstacle_encounters": 4,
+   "sign_events": 10
+  }
+ ]
+}

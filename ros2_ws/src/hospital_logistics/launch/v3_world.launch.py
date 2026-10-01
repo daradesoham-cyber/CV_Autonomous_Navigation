@@ -2,8 +2,9 @@
 V3 Hospital Logistics world launch.
 
 Same robot, spawn procedure and ros_gz_bridge config as V2.6 (autonomous_robot_gazebo/launch/gazebo.launch.py),
-but loads V3/worlds/hospital_logistics_world.sdf and adds V3/models to GZ_SIM_RESOURCE_PATH.
-The V2.6 launch file is not modified.
+but loads the NEW hospital V3/worlds/v3_hospital_world.sdf (AWS RoboMaker Hospital World floor plan, built by
+V3/scripts/build_aws_hospital_world.py) and adds V3/hospital/models + V3/models to GZ_SIM_RESOURCE_PATH.
+Spawn: main entrance lobby (V3/scripts/v3_hospital_layout.py SPAWN).
 """
 import os
 
@@ -16,15 +17,15 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-DEFAULT_V3_ROOT = os.environ.get('V3_ROOT', '/home/soham-darade/CV_Autonomous_Navigation/V3')
+DEFAULT_V3_ROOT = os.environ.get('V3_ROOT', os.path.expanduser('~/CV_Autonomous_Navigation/V3'))
 WORLD_NAME = 'realistic_facility_world'  # kept from V2.6 so the bridge clock topic matches
 
 
 def launch_setup(context, *args, **kwargs):
     v3_root = LaunchConfiguration('v3_root').perform(context)
-    world_path = os.path.join(v3_root, 'worlds', 'hospital_logistics_world.sdf')
+    world_path = os.path.join(v3_root, 'worlds', 'v3_hospital_world.sdf')
     if not os.path.isfile(world_path):
-        raise RuntimeError(f'V3 world not found: {world_path} (run V3/scripts/build_v3_hospital_world.py)')
+        raise RuntimeError(f'V3 world not found: {world_path} (run V3/scripts/build_aws_hospital_world.py)')
 
     pkg_gazebo = get_package_share_directory('autonomous_robot_gazebo')
     pkg_desc = get_package_share_directory('autonomous_robot_description')
@@ -33,7 +34,7 @@ def launch_setup(context, *args, **kwargs):
     headless = LaunchConfiguration('headless').perform(context).lower() == 'true'
 
     resource_path = os.pathsep.join(
-        p for p in [os.path.join(v3_root, 'models'), os.environ.get('GZ_SIM_RESOURCE_PATH', '')] if p)
+        p for p in [os.path.join(v3_root, 'hospital', 'models'), os.path.join(v3_root, 'models'), os.environ.get('GZ_SIM_RESOURCE_PATH', '')] if p)
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
@@ -66,10 +67,10 @@ def generate_launch_description():
         DeclareLaunchArgument('v3_root', default_value=DEFAULT_V3_ROOT),
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         DeclareLaunchArgument('headless', default_value='false'),
-        # V2.6 realistic-world spawn (Main Entrance Spawn node)
+        # NEW hospital spawn: main entrance lobby facing south (v3_hospital_layout.SPAWN)
         DeclareLaunchArgument('x_pose', default_value='0.0'),
-        DeclareLaunchArgument('y_pose', default_value='-11.0'),
+        DeclareLaunchArgument('y_pose', default_value='13.0'),
         DeclareLaunchArgument('z_pose', default_value='0.1'),
-        DeclareLaunchArgument('yaw_pose', default_value='1.57'),
+        DeclareLaunchArgument('yaw_pose', default_value='-1.5708'),
         OpaqueFunction(function=launch_setup),
     ])

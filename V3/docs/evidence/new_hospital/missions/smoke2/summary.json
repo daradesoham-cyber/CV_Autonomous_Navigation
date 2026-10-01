@@ -1,0 +1,61 @@
+{
+ "tag": "smoke2",
+ "traffic": false,
+ "missions": 1,
+ "complete": 1,
+ "success_rate": 1.0,
+ "outcomes": {
+  "MISSION_COMPLETE": 1
+ },
+ "duration_s": {
+  "n": 1,
+  "mean": 246.4,
+  "min": 246.4,
+  "max": 246.4,
+  "stdev": 0.0
+ },
+ "distance_m": {
+  "n": 1,
+  "mean": 106.72,
+  "min": 106.72,
+  "max": 106.72,
+  "stdev": 0.0
+ },
+ "min_lidar_range_m": {
+  "n": 1,
+  "mean": 0.32,
+  "min": 0.315,
+  "max": 0.315,
+  "stdev": 0.0
+ },
+ "replans": {
+  "n": 1,
+  "mean": 0,
+  "min": 0,
+  "max": 0,
+  "stdev": 0.0
+ },
+ "ttc_events": {
+  "n": 1,
+  "mean": 1,
+  "min": 1,
+  "max": 1,
+  "stdev": 0.0
+ },
+ "rows": [
+  {
+   "index": 1,
+   "mission_id": "M20261001-122813-7e5e",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 246.4,
+   "distance_m": 106.72,
+   "min_lidar_range_m": 0.315,
+   "replans": 0,
+   "ttc_events": 1,
+   "obstacle_encounters": 23,
+   "sign_events": 5
+  }
+ ]
+}

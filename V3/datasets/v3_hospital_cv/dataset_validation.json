@@ -1,0 +1,482 @@
+{
+  "root": "/home/soham-darade/CV_Autonomous_Navigation/V3/datasets/v3_hospital_cv",
+  "splits": {
+    "train": {
+      "images": 3000,
+      "empty_images": 759,
+      "instances": {
+        "cart": 843,
+        "iv_stand": 610,
+        "directional_sign": 2285,
+        "person": 875,
+        "hospital_bed": 557,
+        "lab_test_point_marker": 159,
+        "wheelchair": 461,
+        "surgical_trolley": 547,
+        "collection_point_marker": 134
+      },
+      "modes": {
+        "hard_negative": 597,
+        "random": 1311,
+        "sign_marker": 474,
+        "clutter": 298,
+        "empty": 306,
+        "random+resampled_random": 3,
+        "empty+resampled_random": 2,
+        "clutter+resampled_random": 2,
+        "hard_negative+resampled_random": 6,
+        "sign_marker+resampled_random": 1
+      },
+      "dropped_instances": {
+        "dropped_small": 781,
+        "dropped_occluded": 449
+      },
+      "bbox_camera_mismatches": 200,
+      "target_class_present": {
+        "None": 3000
+      },
+      "box_sqrt_area_px_median": {
+        "cart": 182.5,
+        "iv_stand": 142.5,
+        "directional_sign": 32.7,
+        "person": 161.6,
+        "hospital_bed": 223.0,
+        "lab_test_point_marker": 76.7,
+        "wheelchair": 237.4,
+        "surgical_trolley": 152.9,
+        "collection_point_marker": 91.6
+      },
+      "label_verification": {
+        "VERIFIED": 6363,
+        "PARTIAL": 108
+      }
+    },
+    "val": {
+      "images": 600,
+      "empty_images": 155,
+      "instances": {
+        "directional_sign": 438,
+        "lab_test_point_marker": 34,
+        "surgical_trolley": 119,
+        "wheelchair": 93,
+        "cart": 178,
+        "hospital_bed": 109,
+        "collection_point_marker": 26,
+        "person": 185,
+        "iv_stand": 113
+      },
+      "modes": {
+        "clutter": 58,
+        "sign_marker": 94,
+        "random": 279,
+        "hard_negative": 113,
+        "empty": 56
+      },
+      "dropped_instances": {
+        "dropped_small": 154,
+        "dropped_occluded": 101
+      },
+      "bbox_camera_mismatches": 40,
+      "target_class_present": {
+        "None": 600
+      },
+      "box_sqrt_area_px_median": {
+        "directional_sign": 34.5,
+        "lab_test_point_marker": 84.7,
+        "surgical_trolley": 145.9,
+        "wheelchair": 274.2,
+        "cart": 184.0,
+        "hospital_bed": 214.3,
+        "collection_point_marker": 93.6,
+        "person": 153.0,
+        "iv_stand": 137.3
+      },
+      "label_verification": {
+        "VERIFIED": 1275,
+        "PARTIAL": 20
+      }
+    },
+    "test": {
+      "images": 500,
+      "empty_images": 127,
+      "instances": {
+        "person": 186,
+        "hospital_bed": 47,
+        "cart": 39,
+        "surgical_trolley": 178,
+        "collection_point_marker": 4,
+        "wheelchair": 3,
+        "directional_sign": 1003,
+        "lab_test_point_marker": 32,
+        "iv_stand": 12
+      },
+      "modes": {
+        "canonical": 500
+      },
+      "dropped_instances": {
+        "dropped_small": 120,
+        "dropped_occluded": 109
+      },
+      "bbox_camera_mismatches": 35,
+      "target_class_present": {
+        "None": 500
+      },
+      "box_sqrt_area_px_median": {
+        "person": 131.3,
+        "hospital_bed": 158.9,
+        "cart": 31.7,
+        "surgical_trolley": 115.4,
+        "collection_point_marker": 151.3,
+        "wheelchair": 48.1,
+        "directional_sign": 39.9,
+        "lab_test_point_marker": 70.2,
+        "iv_stand": 55.5
+      },
+      "label_verification": {
+        "VERIFIED": 1365,
+        "PARTIAL": 139
+      }
+    }
+  },
+  "subsets": {
+    "A_hospital_beds": {
+      "images": 40,
+      "empty_images": 0,
+      "instances": {
+        "person": 8,
+        "hospital_bed": 48,
+        "directional_sign": 36,
+        "wheelchair": 1,
+        "cart": 6,
+        "surgical_trolley": 1,
+        "iv_stand": 1
+      },
+      "modes": {
+        "A_hospital_beds": 40
+      },
+      "dropped_instances": {
+        "dropped_occluded": 11,
+        "dropped_small": 7
+      },
+      "bbox_camera_mismatches": 0,
+      "target_class_present": {
+        "True": 40
+      },
+      "box_sqrt_area_px_median": {
+        "person": 60.5,
+        "hospital_bed": 229.1,
+        "directional_sign": 38.4,
+        "wheelchair": 25.6,
+        "cart": 87.0,
+        "surgical_trolley": 53.2,
+        "iv_stand": 112.0
+      },
+      "label_verification": {
+        "VERIFIED": 99,
+        "PARTIAL": 2
+      }
+    },
+    "B_bed_vs_lab_bench": {
+      "images": 40,
+      "empty_images": 5,
+      "instances": {
+        "cart": 9,
+        "hospital_bed": 20,
+        "directional_sign": 29,
+        "surgical_trolley": 6,
+        "lab_test_point_marker": 16
+      },
+      "modes": {
+        "B_bed_vs_lab_bench": 40
+      },
+      "dropped_instances": {
+        "dropped_occluded": 2,
+        "dropped_small": 6
+      },
+      "bbox_camera_mismatches": 0,
+      "target_class_present": {
+        "True": 20,
+        "None": 20
+      },
+      "box_sqrt_area_px_median": {
+        "cart": 86.5,
+        "hospital_bed": 169.8,
+        "directional_sign": 47.8,
+        "surgical_trolley": 49.9,
+        "lab_test_point_marker": 55.7
+      },
+      "label_verification": {
+        "VERIFIED": 80
+      }
+    },
+    "C_bed_vs_reception_desk": {
+      "images": 40,
+      "empty_images": 14,
+      "instances": {
+        "hospital_bed": 21,
+        "person": 11,
+        "directional_sign": 4
+      },
+      "modes": {
+        "C_bed_vs_reception_desk": 40
+      },
+      "dropped_instances": {
+        "dropped_occluded": 1,
+        "dropped_small": 2
+      },
+      "bbox_camera_mismatches": 1,
+      "target_class_present": {
+        "True": 20,
+        "None": 20
+      },
+      "box_sqrt_area_px_median": {
+        "hospital_bed": 260.6,
+        "person": 95.5,
+        "directional_sign": 15.0
+      },
+      "label_verification": {
+        "VERIFIED": 36
+      }
+    },
+    "D_chair_vs_cart": {
+      "images": 40,
+      "empty_images": 13,
+      "instances": {
+        "cart": 20,
+        "directional_sign": 39,
+        "wheelchair": 1,
+        "person": 4,
+        "surgical_trolley": 1
+      },
+      "modes": {
+        "D_chair_vs_cart": 40
+      },
+      "dropped_instances": {
+        "dropped_small": 9,
+        "dropped_occluded": 4
+      },
+      "bbox_camera_mismatches": 6,
+      "target_class_present": {
+        "True": 20,
+        "None": 20
+      },
+      "box_sqrt_area_px_median": {
+        "cart": 128.6,
+        "directional_sign": 32.5,
+        "wheelchair": 43.1,
+        "person": 72.6,
+        "surgical_trolley": 138.7
+      },
+      "label_verification": {
+        "VERIFIED": 65
+      }
+    },
+    "E_trolley_vs_forklift_cart": {
+      "images": 40,
+      "empty_images": 17,
+      "instances": {
+        "surgical_trolley": 20,
+        "directional_sign": 26,
+        "person": 2,
+        "lab_test_point_marker": 1,
+        "cart": 1,
+        "hospital_bed": 1
+      },
+      "modes": {
+        "E_trolley_vs_forklift_cart": 40
+      },
+      "dropped_instances": {
+        "dropped_small": 19,
+        "dropped_occluded": 1
+      },
+      "bbox_camera_mismatches": 5,
+      "target_class_present": {
+        "True": 20,
+        "None": 20
+      },
+      "box_sqrt_area_px_median": {
+        "surgical_trolley": 230.6,
+        "directional_sign": 17.3,
+        "person": 164.2,
+        "lab_test_point_marker": 54.4,
+        "cart": 41.0,
+        "hospital_bed": 246.9
+      },
+      "label_verification": {
+        "VERIFIED": 51
+      }
+    },
+    "F_wheelchair": {
+      "images": 40,
+      "empty_images": 0,
+      "instances": {
+        "wheelchair": 40,
+        "directional_sign": 40,
+        "person": 7,
+        "surgical_trolley": 2,
+        "lab_test_point_marker": 1,
+        "cart": 2
+      },
+      "modes": {
+        "F_wheelchair": 40
+      },
+      "dropped_instances": {
+        "dropped_occluded": 6,
+        "dropped_small": 33
+      },
+      "bbox_camera_mismatches": 3,
+      "target_class_present": {
+        "True": 40
+      },
+      "box_sqrt_area_px_median": {
+        "wheelchair": 307.6,
+        "directional_sign": 21.6,
+        "person": 46.3,
+        "surgical_trolley": 52.2,
+        "lab_test_point_marker": 12.0,
+        "cart": 72.0
+      },
+      "label_verification": {
+        "VERIFIED": 92
+      }
+    },
+    "G_iv_stand": {
+      "images": 40,
+      "empty_images": 2,
+      "instances": {
+        "person": 9,
+        "wheelchair": 2,
+        "iv_stand": 25,
+        "directional_sign": 103,
+        "surgical_trolley": 11,
+        "collection_point_marker": 2,
+        "lab_test_point_marker": 2,
+        "cart": 1,
+        "hospital_bed": 3
+      },
+      "modes": {
+        "G_iv_stand": 40
+      },
+      "dropped_instances": {
+        "dropped_small": 28,
+        "dropped_occluded": 17
+      },
+      "bbox_camera_mismatches": 12,
+      "target_class_present": {
+        "True": 20,
+        "None": 20
+      },
+      "box_sqrt_area_px_median": {
+        "person": 69.1,
+        "wheelchair": 90.9,
+        "iv_stand": 101.5,
+        "directional_sign": 29.0,
+        "surgical_trolley": 52.6,
+        "collection_point_marker": 23.5,
+        "lab_test_point_marker": 75.3,
+        "cart": 36.7,
+        "hospital_bed": 29.7
+      },
+      "label_verification": {
+        "VERIFIED": 158
+      }
+    },
+    "H_person": {
+      "images": 40,
+      "empty_images": 0,
+      "instances": {
+        "person": 70,
+        "directional_sign": 36,
+        "hospital_bed": 2,
+        "lab_test_point_marker": 1
+      },
+      "modes": {
+        "H_person": 40
+      },
+      "dropped_instances": {
+        "dropped_occluded": 5,
+        "dropped_small": 8
+      },
+      "bbox_camera_mismatches": 6,
+      "target_class_present": {
+        "True": 40
+      },
+      "box_sqrt_area_px_median": {
+        "person": 147.4,
+        "directional_sign": 28.3,
+        "hospital_bed": 14.9,
+        "lab_test_point_marker": 22.0
+      },
+      "label_verification": {
+        "VERIFIED": 109
+      }
+    },
+    "I_empty_hallway": {
+      "images": 40,
+      "empty_images": 27,
+      "instances": {
+        "directional_sign": 33,
+        "wheelchair": 1,
+        "person": 1,
+        "cart": 1
+      },
+      "modes": {
+        "I_empty_hallway": 40
+      },
+      "dropped_instances": {
+        "dropped_small": 7,
+        "dropped_occluded": 2
+      },
+      "bbox_camera_mismatches": 0,
+      "target_class_present": {
+        "None": 40
+      },
+      "box_sqrt_area_px_median": {
+        "directional_sign": 27.5,
+        "wheelchair": 40.3,
+        "person": 47.9,
+        "cart": 35.7
+      },
+      "label_verification": {
+        "VERIFIED": 36
+      }
+    },
+    "J_cluttered_corridor": {
+      "images": 40,
+      "empty_images": 6,
+      "instances": {
+        "iv_stand": 21,
+        "cart": 27,
+        "person": 40,
+        "directional_sign": 26,
+        "wheelchair": 11,
+        "hospital_bed": 9,
+        "surgical_trolley": 8
+      },
+      "modes": {
+        "J_cluttered_corridor": 40
+      },
+      "dropped_instances": {
+        "dropped_small": 17,
+        "dropped_occluded": 3
+      },
+      "bbox_camera_mismatches": 2,
+      "target_class_present": {
+        "None": 40
+      },
+      "box_sqrt_area_px_median": {
+        "iv_stand": 123.5,
+        "cart": 151.4,
+        "person": 154.9,
+        "directional_sign": 39.2,
+        "wheelchair": 178.5,
+        "hospital_bed": 179.5,
+        "surgical_trolley": 112.7
+      },
+      "label_verification": {
+        "VERIFIED": 140,
+        "PARTIAL": 2
+      }
+    }
+  }
+}

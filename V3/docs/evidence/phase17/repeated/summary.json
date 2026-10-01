@@ -1,0 +1,187 @@
+{
+ "tag": "repeated",
+ "traffic": false,
+ "missions": 10,
+ "complete": 10,
+ "success_rate": 1.0,
+ "outcomes": {
+  "MISSION_COMPLETE": 10
+ },
+ "duration_s": {
+  "n": 10,
+  "mean": 144.2,
+  "min": 143.7,
+  "max": 145.0,
+  "stdev": 0.38
+ },
+ "distance_m": {
+  "n": 10,
+  "mean": 60.76,
+  "min": 60.68,
+  "max": 60.97,
+  "stdev": 0.09
+ },
+ "min_lidar_range_m": {
+  "n": 10,
+  "mean": 0.39,
+  "min": 0.369,
+  "max": 0.423,
+  "stdev": 0.02
+ },
+ "replans": {
+  "n": 10,
+  "mean": 0.1,
+  "min": 0,
+  "max": 1,
+  "stdev": 0.32
+ },
+ "ttc_events": {
+  "n": 10,
+  "mean": 0,
+  "min": 0,
+  "max": 0,
+  "stdev": 0.0
+ },
+ "rows": [
+  {
+   "index": 1,
+   "mission_id": "M20261001-094927-86d4",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.5,
+   "distance_m": 60.76,
+   "min_lidar_range_m": 0.385,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 2,
+   "mission_id": "M20261001-095152-96a5",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.3,
+   "distance_m": 60.7,
+   "min_lidar_range_m": 0.369,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 3,
+   "mission_id": "M20261001-095417-25b3",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.4,
+   "distance_m": 60.71,
+   "min_lidar_range_m": 0.381,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 4,
+   "mission_id": "M20261001-095642-354c",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.1,
+   "distance_m": 60.85,
+   "min_lidar_range_m": 0.39,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 5,
+   "mission_id": "M20261001-095908-fe0b",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 143.8,
+   "distance_m": 60.72,
+   "min_lidar_range_m": 0.383,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 6,
+   "mission_id": "M20261001-100132-1143",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 143.7,
+   "distance_m": 60.75,
+   "min_lidar_range_m": 0.413,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 7,
+   "mission_id": "M20261001-100357-dc28",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.2,
+   "distance_m": 60.97,
+   "min_lidar_range_m": 0.406,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 8,
+   "mission_id": "M20261001-100622-a233",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 144.1,
+   "distance_m": 60.78,
+   "min_lidar_range_m": 0.407,
+   "replans": 1,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 9,
+   "mission_id": "M20261001-100846-3c50",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 145.0,
+   "distance_m": 60.68,
+   "min_lidar_range_m": 0.38,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  },
+  {
+   "index": 10,
+   "mission_id": "M20261001-101112-d9ae",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 143.9,
+   "distance_m": 60.72,
+   "min_lidar_range_m": 0.423,
+   "replans": 0,
+   "ttc_events": 0,
+   "obstacle_encounters": 3,
+   "sign_events": 10
+  }
+ ]
+}

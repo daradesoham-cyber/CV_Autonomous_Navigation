@@ -1,0 +1,233 @@
+{
+ "duration_s": 62.5,
+ "cpu_cores": 16,
+ "mission_states_seen": [
+  "DELIVERING",
+  "GO_TO_COLLECTION",
+  "GO_TO_LAB",
+  "READY"
+ ],
+ "total_cpu_pct_of_one_core": 459.5,
+ "total_rss_mb": 3553.1,
+ "per_process": {
+  "gz-sim-main": {
+   "cpu_pct": 68.3,
+   "rss_mb": 365.9,
+   "processes": 1
+  },
+  "v3_detection_node": {
+   "cpu_pct": 54.5,
+   "rss_mb": 1626.8,
+   "processes": 1
+  },
+  "v3_web_server": {
+   "cpu_pct": 47.5,
+   "rss_mb": 168.0,
+   "processes": 1
+  },
+  "v3_mission_manager": {
+   "cpu_pct": 45.6,
+   "rss_mb": 120.6,
+   "processes": 1
+  },
+  "decision_engine_node": {
+   "cpu_pct": 44.6,
+   "rss_mb": 113.3,
+   "processes": 1
+  },
+  "v3_spatial_fusion_node": {
+   "cpu_pct": 35.3,
+   "rss_mb": 102.5,
+   "processes": 1
+  },
+  "v3_costmap_obstacle_node": {
+   "cpu_pct": 25.4,
+   "rss_mb": 96.1,
+   "processes": 1
+  },
+  "parameter_bridge": {
+   "cpu_pct": 23.9,
+   "rss_mb": 74.7,
+   "processes": 1
+  },
+  "dynamic_obstacles_node": {
+   "cpu_pct": 23.6,
+   "rss_mb": 88.8,
+   "processes": 1
+  },
+  "bt_navigator": {
+   "cpu_pct": 20.5,
+   "rss_mb": 98.9,
+   "processes": 1
+  },
+  "controller_server": {
+   "cpu_pct": 15.3,
+   "rss_mb": 74.8,
+   "processes": 1
+  },
+  "lifecycle_manager": {
+   "cpu_pct": 13.5,
+   "rss_mb": 112.0,
+   "processes": 2
+  },
+  "planner_server": {
+   "cpu_pct": 13.1,
+   "rss_mb": 82.1,
+   "processes": 1
+  },
+  "behavior_server": {
+   "cpu_pct": 8.9,
+   "rss_mb": 63.2,
+   "processes": 1
+  },
+  "amcl": {
+   "cpu_pct": 8.4,
+   "rss_mb": 71.0,
+   "processes": 1
+  },
+  "map_server": {
+   "cpu_pct": 5.4,
+   "rss_mb": 62.2,
+   "processes": 1
+  },
+  "robot_state_publisher": {
+   "cpu_pct": 4.5,
+   "rss_mb": 45.4,
+   "processes": 1
+  },
+  "v3_full_system.launch.py": {
+   "cpu_pct": 1.0,
+   "rss_mb": 70.3,
+   "processes": 1
+  },
+  "run_v3_missions.py": {
+   "cpu_pct": 0.2,
+   "rss_mb": 32.1,
+   "processes": 2
+  },
+  "ruby": {
+   "cpu_pct": 0.0,
+   "rss_mb": 1.9,
+   "processes": 1
+  },
+  "initial_pose_publisher": {
+   "cpu_pct": 0.0,
+   "rss_mb": 82.5,
+   "processes": 1
+  }
+ },
+ "gpu": {
+  "util_pct": {
+   "mean": 16.55,
+   "min": 12.0,
+   "max": 19.0,
+   "n": 60
+  },
+  "mem_used_mb": {
+   "mean": 163.0,
+   "min": 163.0,
+   "max": 163.0,
+   "n": 60
+  },
+  "mem_total_mb": 4096.0
+ },
+ "topic_rates_hz": {
+  "amcl": {
+   "mean": 2.75,
+   "min": 0.4,
+   "max": 4.4,
+   "n": 60
+  },
+  "camera": {
+   "mean": 27.98,
+   "min": 26.6,
+   "max": 29.2,
+   "n": 60
+  },
+  "clock": {
+   "mean": 120.0,
+   "min": 120.0,
+   "max": 120.0,
+   "n": 60
+  },
+  "costmap": {
+   "mean": 9.98,
+   "min": 9.8,
+   "max": 10.0,
+   "n": 60
+  },
+  "decision_engine": {
+   "mean": 4.0,
+   "min": 3.8,
+   "max": 4.2,
+   "n": 60
+  },
+  "detections": {
+   "mean": 28.3,
+   "min": 26.6,
+   "max": 29.4,
+   "n": 60
+  },
+  "fusion": {
+   "mean": 28.31,
+   "min": 26.6,
+   "max": 29.4,
+   "n": 60
+  },
+  "mission": {
+   "mean": 2.07,
+   "min": 1.8,
+   "max": 2.8,
+   "n": 60
+  },
+  "odom": {
+   "mean": 28.51,
+   "min": 28.2,
+   "max": 28.6,
+   "n": 60
+  },
+  "scan": {
+   "mean": 19.94,
+   "min": 19.8,
+   "max": 20.0,
+   "n": 60
+  },
+  "ttc": {
+   "mean": 28.31,
+   "min": 26.6,
+   "max": 29.4,
+   "n": 60
+  }
+ },
+ "detection_ms": {
+  "preprocess": {
+   "mean": 0.91,
+   "min": 0.73,
+   "max": 1.26,
+   "n": 60
+  },
+  "inference": {
+   "mean": 8.09,
+   "min": 6.73,
+   "max": 9.66,
+   "n": 60
+  },
+  "postprocess": {
+   "mean": 1.37,
+   "min": 0.58,
+   "max": 2.47,
+   "n": 60
+  }
+ },
+ "fusion_ms": {
+  "mean": 1.04,
+  "min": 0.58,
+  "max": 2.52,
+  "n": 60
+ },
+ "load_avg": [
+  8.74609375,
+  8.873046875,
+  6.85693359375
+ ]
+}

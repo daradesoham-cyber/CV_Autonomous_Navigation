@@ -1,0 +1,233 @@
+{
+ "mission_context": {
+  "goal": "lab",
+  "active_route": [
+   "hospital",
+   "hospital_ward_entry",
+   "junction_2",
+   "corridor_east_1",
+   "junction_1",
+   "central_spine_1",
+   "junction_4",
+   "lab_corridor_entry",
+   "junction_7",
+   "storage_approach",
+   "lab_bypass_entry",
+   "junction_8",
+   "lab"
+  ],
+  "current_target_index": 3,
+  "branch_node": "junction_1",
+  "off_route_branch_destination": "reception",
+  "on_route_node_closed_in_case_9": "junction_1"
+ },
+ "note": "sign messages are injected test input; decisions are made by the unmodified V2.6 decision engine",
+ "observations": [
+  "the engine does not use sign direction for gating (case 3): a goal sign pointing a different way is logged as CONFIRMS and never changes the map-based route"
+ ],
+ "results": [
+  {
+   "case": "1_correct_sign",
+   "input_signs": [
+    [
+     "LABORATORY",
+     "LEFT",
+     0.9
+    ]
+   ],
+   "expected": "CONFIRMS",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "INFO",
+     "msg": "Sign CONFIRMS route: 'LABORATORY' -> 'LEFT' toward target [corridor_east_1] (goal: [lab])"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "2_irrelevant_sign",
+   "input_signs": [
+    [
+     "CAFETERIA",
+     "RIGHT",
+     0.9
+    ]
+   ],
+   "expected": "PRESERVE",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "INFO",
+     "msg": "Sign observed: 'CAFETERIA' -> 'RIGHT' (destination 'cafeteria' not on active route toward [lab]) \u2014 preserving global route"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "3_conflicting_direction_for_goal",
+   "input_signs": [
+    [
+     "LABORATORY",
+     "BACK",
+     0.9
+    ]
+   ],
+   "expected": "NO_HIJACK",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "INFO",
+     "msg": "Sign CONFIRMS route: 'LABORATORY' -> 'BACK' toward target [corridor_east_1] (goal: [lab])"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "4_near_branch_off_route_destination",
+   "input_signs": [
+    [
+     "RECEPTION",
+     "RIGHT",
+     0.9
+    ]
+   ],
+   "expected": "PRESERVE",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "INFO",
+     "msg": "Sign observed: 'RECEPTION' -> 'RIGHT' (destination 'reception' not on active route toward [lab]) \u2014 preserving global route"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "5_multiple_signs_one_frame",
+   "input_signs": [
+    [
+     "LABORATORY",
+     "AHEAD",
+     0.9
+    ],
+    [
+     "CAFETERIA",
+     "LEFT",
+     0.9
+    ],
+    [
+     "OFFICE",
+     "RIGHT",
+     0.9
+    ]
+   ],
+   "expected": "PER_SIGN",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "INFO",
+     "msg": "Sign CONFIRMS route: 'LABORATORY' -> 'AHEAD' toward target [corridor_east_1] (goal: [lab])"
+    },
+    {
+     "level": "INFO",
+     "msg": "Sign observed: 'CAFETERIA' -> 'LEFT' (destination 'cafeteria' not on active route toward [lab]) \u2014 preserving global route"
+    },
+    {
+     "level": "INFO",
+     "msg": "Sign observed: 'OFFICE' -> 'RIGHT' (destination 'office' not on active route toward [lab]) \u2014 preserving global route"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "6_no_sign",
+   "input_signs": [],
+   "expected": "NOTHING",
+   "result": "PASS",
+   "events": [],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "7_low_confidence",
+   "input_signs": [
+    [
+     "CAFETERIA",
+     "LEFT",
+     0.4
+    ]
+   ],
+   "expected": "IGNORED",
+   "result": "PASS",
+   "events": [],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": []
+  },
+  {
+   "case": "8_closed_off_route",
+   "input_signs": [
+    [
+     "CAFETERIA CLOSED",
+     "BLOCKED",
+     0.9
+    ]
+   ],
+   "expected": "PENALIZE_NO_REPLAN",
+   "result": "PASS",
+   "events": [
+    {
+     "level": "WARN",
+     "msg": "Sign 'CAFETERIA CLOSED': Penalized route to 'cafeteria_entry' (edges \u00d710)"
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": [
+    "cafeteria->cafeteria_entry",
+    "junction_3->cafeteria_entry"
+   ]
+  },
+  {
+   "case": "9_closed_on_active_route",
+   "input_signs": [
+    [
+     "JUNCTION 1 CLOSED",
+     "BLOCKED",
+     0.9
+    ]
+   ],
+   "expected": "PENALIZE_AND_REPLAN",
+   "result": "FAIL",
+   "events": [
+    {
+     "level": "WARN",
+     "msg": "Sign 'JUNCTION 1 CLOSED': Penalized route to 'junction_1' (edges \u00d710)"
+    },
+    {
+     "level": "WARN",
+     "msg": "Active path traverses closed node 'junction_1'! Triggering dynamic replan."
+    }
+   ],
+   "recovery_triggers": [],
+   "route_unchanged": true,
+   "edges_penalized": [
+    "central_spine_1->junction_1",
+    "corridor_east_1->junction_1",
+    "corridor_west_1->junction_1",
+    "reception->junction_1"
+   ]
+  }
+ ]
+}

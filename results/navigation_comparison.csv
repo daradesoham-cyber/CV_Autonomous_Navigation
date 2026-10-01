@@ -1,4 +1,0 @@
-Modality,Success_Rate_pct,Collisions,Replans,Avg_Path_Length_m,Avg_Time_s,Avg_Min_Clearance_m
-LiDAR Only,100.0,0,6,14.67,31.74,0.31
-Camera/CV Only,100.0,0,8,14.89,32.99,0.66
-LiDAR + CV Fusion,100.0,0,7,14.89,32.59,0.66

@@ -1,0 +1,341 @@
+{
+ "source_db_copied": "/home/soham-darade/CV_Autonomous_Navigation/V3/data/v3_navigation_memory.db",
+ "1_baseline_with_v3_history": [
+  {
+   "route_id": "Route A",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "corridor_east_1",
+    "junction_1",
+    "central_spine_1",
+    "junction_4",
+    "lab_corridor_entry",
+    "junction_7",
+    "storage_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 31.05,
+   "total_cost": 83.56,
+   "reliability_pct": 97.5,
+   "cost_breakdown": {
+    "distance_cost": 31.05,
+    "obstacle_cost": 3.5,
+    "history_cost": 8.06,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 7.5,
+    "time_cost": 38.81,
+    "familiarity_bonus": 5.34,
+    "reliability_factor": 0.97
+   },
+   "is_selected": true
+  },
+  {
+   "route_id": "Route B",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "east_bypass_1",
+    "east_bypass_2",
+    "wh_junction_6",
+    "wh_corridor_entry",
+    "junction_4",
+    "lab_corridor_entry",
+    "junction_7",
+    "storage_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 31.95,
+   "total_cost": 86.3,
+   "reliability_pct": 100.0,
+   "cost_breakdown": {
+    "distance_cost": 31.95,
+    "obstacle_cost": 0.0,
+    "history_cost": 0.0,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 18.75,
+    "time_cost": 39.94,
+    "familiarity_bonus": 4.34,
+    "reliability_factor": 1.0
+   },
+   "is_selected": false
+  },
+  {
+   "route_id": "Route C",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "corridor_east_1",
+    "junction_1",
+    "corridor_west_1",
+    "junction_3",
+    "west_bypass_south",
+    "west_bypass_north",
+    "west_bypass_top",
+    "vault_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 45.28,
+   "total_cost": 133.22,
+   "reliability_pct": 97.6,
+   "cost_breakdown": {
+    "distance_cost": 45.28,
+    "obstacle_cost": 3.5,
+    "history_cost": 8.06,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 22.5,
+    "time_cost": 56.61,
+    "familiarity_bonus": 2.73,
+    "reliability_factor": 0.98
+   },
+   "is_selected": false
+  }
+ ],
+ "edges_unique_to_selected_route": [
+  [
+   "junction_1",
+   "central_spine_1"
+  ],
+  [
+   "central_spine_1",
+   "junction_4"
+  ]
+ ],
+ "2_injected_test_input": "4 failures per unique edge via NavigationMemory.update_segment_metrics(success=False)",
+ "3_after_failures": [
+  {
+   "route_id": "Route A",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "east_bypass_1",
+    "east_bypass_2",
+    "wh_junction_6",
+    "wh_corridor_entry",
+    "junction_4",
+    "lab_corridor_entry",
+    "junction_7",
+    "storage_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 31.95,
+   "total_cost": 86.3,
+   "reliability_pct": 100.0,
+   "cost_breakdown": {
+    "distance_cost": 31.95,
+    "obstacle_cost": 0.0,
+    "history_cost": 0.0,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 18.75,
+    "time_cost": 39.94,
+    "familiarity_bonus": 4.34,
+    "reliability_factor": 1.0
+   },
+   "is_selected": true
+  },
+  {
+   "route_id": "Route B",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "corridor_east_1",
+    "junction_1",
+    "corridor_west_1",
+    "junction_3",
+    "west_bypass_south",
+    "west_bypass_north",
+    "west_bypass_top",
+    "vault_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 45.28,
+   "total_cost": 133.22,
+   "reliability_pct": 97.6,
+   "cost_breakdown": {
+    "distance_cost": 45.28,
+    "obstacle_cost": 3.5,
+    "history_cost": 8.06,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 22.5,
+    "time_cost": 56.61,
+    "familiarity_bonus": 2.73,
+    "reliability_factor": 0.98
+   },
+   "is_selected": false
+  }
+ ],
+ "4_injected_test_input": "12 successes per unique edge via update_segment_metrics(success=True)",
+ "5_after_successes": [
+  {
+   "route_id": "Route A",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "east_bypass_1",
+    "east_bypass_2",
+    "wh_junction_6",
+    "wh_corridor_entry",
+    "junction_4",
+    "lab_corridor_entry",
+    "junction_7",
+    "storage_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 31.95,
+   "total_cost": 86.3,
+   "reliability_pct": 100.0,
+   "cost_breakdown": {
+    "distance_cost": 31.95,
+    "obstacle_cost": 0.0,
+    "history_cost": 0.0,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 18.75,
+    "time_cost": 39.94,
+    "familiarity_bonus": 4.34,
+    "reliability_factor": 1.0
+   },
+   "is_selected": true
+  },
+  {
+   "route_id": "Route C",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "corridor_east_1",
+    "junction_1",
+    "central_spine_1",
+    "junction_4",
+    "lab_corridor_entry",
+    "junction_7",
+    "storage_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 31.05,
+   "total_cost": 128.61,
+   "reliability_pct": 93.7,
+   "cost_breakdown": {
+    "distance_cost": 31.05,
+    "obstacle_cost": 3.5,
+    "history_cost": 52.6,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 7.5,
+    "time_cost": 39.31,
+    "familiarity_bonus": 5.34,
+    "reliability_factor": 0.94
+   },
+   "is_selected": false
+  },
+  {
+   "route_id": "Route B",
+   "path": [
+    "hospital",
+    "hospital_ward_entry",
+    "junction_2",
+    "corridor_east_1",
+    "junction_1",
+    "corridor_west_1",
+    "junction_3",
+    "west_bypass_south",
+    "west_bypass_north",
+    "west_bypass_top",
+    "vault_approach",
+    "lab_bypass_entry",
+    "junction_8",
+    "lab"
+   ],
+   "distance": 45.28,
+   "total_cost": 133.22,
+   "reliability_pct": 97.6,
+   "cost_breakdown": {
+    "distance_cost": 45.28,
+    "obstacle_cost": 3.5,
+    "history_cost": 8.06,
+    "congestion_cost": 0.0,
+    "turn_cost": 0.0,
+    "narrow_cost": 22.5,
+    "time_cost": 56.61,
+    "familiarity_bonus": 2.73,
+    "reliability_factor": 0.98
+   },
+   "is_selected": false
+  }
+ ],
+ "selection": {
+  "baseline": [
+   "hospital",
+   "hospital_ward_entry",
+   "junction_2",
+   "corridor_east_1",
+   "junction_1",
+   "central_spine_1",
+   "junction_4",
+   "lab_corridor_entry",
+   "junction_7",
+   "storage_approach",
+   "lab_bypass_entry",
+   "junction_8",
+   "lab"
+  ],
+  "after_failures": [
+   "hospital",
+   "hospital_ward_entry",
+   "junction_2",
+   "east_bypass_1",
+   "east_bypass_2",
+   "wh_junction_6",
+   "wh_corridor_entry",
+   "junction_4",
+   "lab_corridor_entry",
+   "junction_7",
+   "storage_approach",
+   "lab_bypass_entry",
+   "junction_8",
+   "lab"
+  ],
+  "after_successes": [
+   "hospital",
+   "hospital_ward_entry",
+   "junction_2",
+   "east_bypass_1",
+   "east_bypass_2",
+   "wh_junction_6",
+   "wh_corridor_entry",
+   "junction_4",
+   "lab_corridor_entry",
+   "junction_7",
+   "storage_approach",
+   "lab_bypass_entry",
+   "junction_8",
+   "lab"
+  ],
+  "changed_after_failures": true
+ }
+}

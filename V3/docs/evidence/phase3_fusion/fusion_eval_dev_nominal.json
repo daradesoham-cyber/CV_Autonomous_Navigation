@@ -1,0 +1,550 @@
+{
+  "dev": {
+    "frames": 258,
+    "detections_unmatched_to_gt": 73,
+    "detected": {
+      "v26": {
+        "measurable": 376,
+        "outcomes": {
+          "OFF": 169,
+          "ON": 205,
+          "ABSTAIN": 2
+        },
+        "lidar_ON_rate": 0.545,
+        "false_association_rate": 0.449,
+        "lidar_OFF_rate": 0.449,
+        "any_ON_rate": 0.545,
+        "abstain_rate": 0.005,
+        "precision_of_lidar_associations": 0.548,
+        "ON_abs_range_error_m": {
+          "median": 0.196,
+          "p95": 0.52
+        },
+        "not_measurable": {
+          "n": 492,
+          "FALSE_RANGE": 449,
+          "VISUAL_ONLY": 43
+        },
+        "by_range": {
+          "0-1m": {
+            "n": 56,
+            "lidar_ON": 1.0,
+            "OFF": 0.0,
+            "any_ON": 1.0
+          },
+          "1-2m": {
+            "n": 100,
+            "lidar_ON": 0.71,
+            "OFF": 0.29,
+            "any_ON": 0.71
+          },
+          "2-3m": {
+            "n": 67,
+            "lidar_ON": 0.478,
+            "OFF": 0.522,
+            "any_ON": 0.478
+          },
+          "3-4m": {
+            "n": 61,
+            "lidar_ON": 0.361,
+            "OFF": 0.639,
+            "any_ON": 0.361
+          },
+          "4-+m": {
+            "n": 92,
+            "lidar_ON": 0.261,
+            "OFF": 0.717,
+            "any_ON": 0.261
+          }
+        },
+        "by_class": {
+          "person": {
+            "n": 140,
+            "lidar_ON": 0.786,
+            "OFF": 0.207,
+            "any_ON": 0.786,
+            "abstain": 0.007
+          },
+          "hospital_bed": {
+            "n": 41,
+            "lidar_ON": 0.39,
+            "OFF": 0.61,
+            "any_ON": 0.39,
+            "abstain": 0.0
+          },
+          "cart": {
+            "n": 50,
+            "lidar_ON": 0.4,
+            "OFF": 0.6,
+            "any_ON": 0.4,
+            "abstain": 0.0
+          },
+          "wheelchair": {
+            "n": 24,
+            "lidar_ON": 0.792,
+            "OFF": 0.208,
+            "any_ON": 0.792,
+            "abstain": 0.0
+          },
+          "iv_stand": {
+            "n": 28,
+            "lidar_ON": 0.321,
+            "OFF": 0.679,
+            "any_ON": 0.321,
+            "abstain": 0.0
+          },
+          "surgical_trolley": {
+            "n": 93,
+            "lidar_ON": 0.333,
+            "OFF": 0.656,
+            "any_ON": 0.333,
+            "abstain": 0.011
+          }
+        }
+      },
+      "v3": {
+        "measurable": 376,
+        "outcomes": {
+          "ON": 315,
+          "OFF": 16,
+          "GP_ON": 15,
+          "ABSTAIN": 24,
+          "GP_OFF": 6
+        },
+        "lidar_ON_rate": 0.838,
+        "false_association_rate": 0.059,
+        "lidar_OFF_rate": 0.043,
+        "any_ON_rate": 0.878,
+        "abstain_rate": 0.064,
+        "precision_of_lidar_associations": 0.952,
+        "ON_abs_range_error_m": {
+          "median": 0.2,
+          "p95": 0.464
+        },
+        "not_measurable": {
+          "n": 492,
+          "VISUAL_ONLY": 492
+        },
+        "by_range": {
+          "0-1m": {
+            "n": 56,
+            "lidar_ON": 0.982,
+            "OFF": 0.0,
+            "any_ON": 0.982
+          },
+          "1-2m": {
+            "n": 100,
+            "lidar_ON": 0.92,
+            "OFF": 0.0,
+            "any_ON": 0.97
+          },
+          "2-3m": {
+            "n": 67,
+            "lidar_ON": 0.881,
+            "OFF": 0.03,
+            "any_ON": 0.91
+          },
+          "3-4m": {
+            "n": 61,
+            "lidar_ON": 0.754,
+            "OFF": 0.082,
+            "any_ON": 0.82
+          },
+          "4-+m": {
+            "n": 92,
+            "lidar_ON": 0.685,
+            "OFF": 0.163,
+            "any_ON": 0.728
+          }
+        },
+        "by_class": {
+          "person": {
+            "n": 140,
+            "lidar_ON": 0.907,
+            "OFF": 0.021,
+            "any_ON": 0.914,
+            "abstain": 0.064
+          },
+          "hospital_bed": {
+            "n": 41,
+            "lidar_ON": 0.854,
+            "OFF": 0.122,
+            "any_ON": 0.854,
+            "abstain": 0.024
+          },
+          "cart": {
+            "n": 50,
+            "lidar_ON": 0.74,
+            "OFF": 0.08,
+            "any_ON": 0.78,
+            "abstain": 0.14
+          },
+          "wheelchair": {
+            "n": 24,
+            "lidar_ON": 0.917,
+            "OFF": 0.042,
+            "any_ON": 0.917,
+            "abstain": 0.042
+          },
+          "iv_stand": {
+            "n": 28,
+            "lidar_ON": 0.679,
+            "OFF": 0.071,
+            "any_ON": 0.75,
+            "abstain": 0.179
+          },
+          "surgical_trolley": {
+            "n": 93,
+            "lidar_ON": 0.806,
+            "OFF": 0.075,
+            "any_ON": 0.914,
+            "abstain": 0.011
+          }
+        }
+      }
+    },
+    "oracle": {
+      "v26": {
+        "measurable": 411,
+        "outcomes": {
+          "OFF": 205,
+          "ON": 204,
+          "ABSTAIN": 2
+        },
+        "lidar_ON_rate": 0.496,
+        "false_association_rate": 0.499,
+        "lidar_OFF_rate": 0.499,
+        "any_ON_rate": 0.496,
+        "abstain_rate": 0.005,
+        "precision_of_lidar_associations": 0.499,
+        "ON_abs_range_error_m": {
+          "median": 0.196,
+          "p95": 0.52
+        },
+        "not_measurable": {
+          "n": 512,
+          "FALSE_RANGE": 465,
+          "VISUAL_ONLY": 47
+        },
+        "by_range": {
+          "0-1m": {
+            "n": 55,
+            "lidar_ON": 1.0,
+            "OFF": 0.0,
+            "any_ON": 1.0
+          },
+          "1-2m": {
+            "n": 102,
+            "lidar_ON": 0.696,
+            "OFF": 0.304,
+            "any_ON": 0.696
+          },
+          "2-3m": {
+            "n": 70,
+            "lidar_ON": 0.457,
+            "OFF": 0.543,
+            "any_ON": 0.457
+          },
+          "3-4m": {
+            "n": 66,
+            "lidar_ON": 0.333,
+            "OFF": 0.667,
+            "any_ON": 0.333
+          },
+          "4-+m": {
+            "n": 118,
+            "lidar_ON": 0.203,
+            "OFF": 0.78,
+            "any_ON": 0.203
+          }
+        },
+        "by_class": {
+          "person": {
+            "n": 142,
+            "lidar_ON": 0.768,
+            "OFF": 0.225,
+            "any_ON": 0.768,
+            "abstain": 0.007
+          },
+          "hospital_bed": {
+            "n": 44,
+            "lidar_ON": 0.364,
+            "OFF": 0.636,
+            "any_ON": 0.364,
+            "abstain": 0.0
+          },
+          "cart": {
+            "n": 71,
+            "lidar_ON": 0.282,
+            "OFF": 0.718,
+            "any_ON": 0.282,
+            "abstain": 0.0
+          },
+          "wheelchair": {
+            "n": 24,
+            "lidar_ON": 0.792,
+            "OFF": 0.208,
+            "any_ON": 0.792,
+            "abstain": 0.0
+          },
+          "iv_stand": {
+            "n": 30,
+            "lidar_ON": 0.3,
+            "OFF": 0.7,
+            "any_ON": 0.3,
+            "abstain": 0.0
+          },
+          "surgical_trolley": {
+            "n": 100,
+            "lidar_ON": 0.31,
+            "OFF": 0.68,
+            "any_ON": 0.31,
+            "abstain": 0.01
+          }
+        }
+      },
+      "v3": {
+        "measurable": 411,
+        "outcomes": {
+          "ON": 334,
+          "OFF": 17,
+          "GP_ON": 17,
+          "ABSTAIN": 41,
+          "GP_OFF": 2
+        },
+        "lidar_ON_rate": 0.813,
+        "false_association_rate": 0.046,
+        "lidar_OFF_rate": 0.041,
+        "any_ON_rate": 0.854,
+        "abstain_rate": 0.1,
+        "precision_of_lidar_associations": 0.952,
+        "ON_abs_range_error_m": {
+          "median": 0.196,
+          "p95": 0.458
+        },
+        "not_measurable": {
+          "n": 512,
+          "VISUAL_ONLY": 512
+        },
+        "by_range": {
+          "0-1m": {
+            "n": 55,
+            "lidar_ON": 0.982,
+            "OFF": 0.0,
+            "any_ON": 1.0
+          },
+          "1-2m": {
+            "n": 102,
+            "lidar_ON": 0.941,
+            "OFF": 0.0,
+            "any_ON": 0.98
+          },
+          "2-3m": {
+            "n": 70,
+            "lidar_ON": 0.886,
+            "OFF": 0.014,
+            "any_ON": 0.9
+          },
+          "3-4m": {
+            "n": 66,
+            "lidar_ON": 0.758,
+            "OFF": 0.015,
+            "any_ON": 0.848
+          },
+          "4-+m": {
+            "n": 118,
+            "lidar_ON": 0.61,
+            "OFF": 0.144,
+            "any_ON": 0.653
+          }
+        },
+        "by_class": {
+          "person": {
+            "n": 142,
+            "lidar_ON": 0.908,
+            "OFF": 0.007,
+            "any_ON": 0.915,
+            "abstain": 0.077
+          },
+          "hospital_bed": {
+            "n": 44,
+            "lidar_ON": 0.773,
+            "OFF": 0.182,
+            "any_ON": 0.795,
+            "abstain": 0.023
+          },
+          "cart": {
+            "n": 71,
+            "lidar_ON": 0.577,
+            "OFF": 0.042,
+            "any_ON": 0.662,
+            "abstain": 0.296
+          },
+          "wheelchair": {
+            "n": 24,
+            "lidar_ON": 0.917,
+            "OFF": 0.0,
+            "any_ON": 0.917,
+            "abstain": 0.083
+          },
+          "iv_stand": {
+            "n": 30,
+            "lidar_ON": 0.733,
+            "OFF": 0.067,
+            "any_ON": 0.833,
+            "abstain": 0.1
+          },
+          "surgical_trolley": {
+            "n": 100,
+            "lidar_ON": 0.86,
+            "OFF": 0.05,
+            "any_ON": 0.92,
+            "abstain": 0.03
+          }
+        }
+      }
+    },
+    "taxonomy_detected": {
+      "n_off": 169,
+      "category": {
+        "foreground_selected": 78,
+        "no_object_returns_in_window": 35,
+        "background_selected": 56
+      },
+      "selected_surface": {
+        "structure": 94,
+        "other_object": 75
+      },
+      "selected_points_mostly_outside_box": 101,
+      "by_class": {
+        "person": {
+          "foreground_selected": 17,
+          "no_object_returns_in_window": 11,
+          "background_selected": 1
+        },
+        "hospital_bed": {
+          "foreground_selected": 21,
+          "no_object_returns_in_window": 4
+        },
+        "cart": {
+          "no_object_returns_in_window": 7,
+          "background_selected": 14,
+          "foreground_selected": 9
+        },
+        "wheelchair": {
+          "foreground_selected": 5
+        },
+        "iv_stand": {
+          "foreground_selected": 7,
+          "no_object_returns_in_window": 7,
+          "background_selected": 5
+        },
+        "surgical_trolley": {
+          "background_selected": 36,
+          "no_object_returns_in_window": 6,
+          "foreground_selected": 19
+        }
+      },
+      "object_beams_in_box_by_class_median": {
+        "person": 7.0,
+        "hospital_bed": 42,
+        "cart": 2.0,
+        "wheelchair": 22.5,
+        "iv_stand": 1.0,
+        "surgical_trolley": 3
+      },
+      "objects_with_zero_lidar_returns": {
+        "person": 11,
+        "hospital_bed": 4,
+        "cart": 6,
+        "wheelchair": 0,
+        "iv_stand": 7,
+        "surgical_trolley": 6
+      },
+      "v26_linear_bearing_error_deg": {
+        "median": 1.127,
+        "max": 1.498
+      }
+    },
+    "taxonomy_oracle": {
+      "n_off": 205,
+      "category": {
+        "foreground_selected": 87,
+        "no_object_returns_in_window": 61,
+        "background_selected": 57
+      },
+      "selected_surface": {
+        "structure": 112,
+        "other_object": 93
+      },
+      "selected_points_mostly_outside_box": 132,
+      "by_class": {
+        "person": {
+          "foreground_selected": 18,
+          "no_object_returns_in_window": 13,
+          "background_selected": 1
+        },
+        "hospital_bed": {
+          "foreground_selected": 19,
+          "no_object_returns_in_window": 9
+        },
+        "cart": {
+          "no_object_returns_in_window": 24,
+          "background_selected": 14,
+          "foreground_selected": 13
+        },
+        "wheelchair": {
+          "foreground_selected": 4,
+          "no_object_returns_in_window": 1
+        },
+        "iv_stand": {
+          "foreground_selected": 9,
+          "no_object_returns_in_window": 6,
+          "background_selected": 6
+        },
+        "surgical_trolley": {
+          "background_selected": 36,
+          "no_object_returns_in_window": 8,
+          "foreground_selected": 24
+        }
+      },
+      "object_beams_in_box_by_class_median": {
+        "person": 7.0,
+        "hospital_bed": 37.0,
+        "cart": 1,
+        "wheelchair": 22.5,
+        "iv_stand": 1.0,
+        "surgical_trolley": 3.0
+      },
+      "objects_with_zero_lidar_returns": {
+        "person": 13,
+        "hospital_bed": 9,
+        "cart": 23,
+        "wheelchair": 1,
+        "iv_stand": 6,
+        "surgical_trolley": 8
+      },
+      "v26_linear_bearing_error_deg": {
+        "median": 1.103,
+        "max": 1.498
+      }
+    },
+    "latency_ms_per_association": {
+      "v26": {
+        "mean": 0.173,
+        "p95": 0.2468,
+        "n": 1791
+      },
+      "v3": {
+        "mean": 0.4165,
+        "p95": 1.6641,
+        "n": 1791
+      },
+      "v3_scan_prep_ms": {
+        "mean": 0.2238,
+        "p95": 0.2845,
+        "n": 300
+      }
+    }
+  }
+}

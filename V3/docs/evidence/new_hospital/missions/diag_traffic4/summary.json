@@ -1,0 +1,76 @@
+{
+ "tag": "diag_traffic4",
+ "traffic": true,
+ "missions": 2,
+ "complete": 1,
+ "success_rate": 0.5,
+ "outcomes": {
+  "FAILED": 1,
+  "MISSION_COMPLETE": 1
+ },
+ "duration_s": {
+  "n": 1,
+  "mean": 294.1,
+  "min": 294.1,
+  "max": 294.1,
+  "stdev": 0.0
+ },
+ "distance_m": {
+  "n": 1,
+  "mean": 130.93,
+  "min": 130.93,
+  "max": 130.93,
+  "stdev": 0.0
+ },
+ "min_lidar_range_m": {
+  "n": 1,
+  "mean": 0.28,
+  "min": 0.279,
+  "max": 0.279,
+  "stdev": 0.0
+ },
+ "replans": {
+  "n": 1,
+  "mean": 1,
+  "min": 1,
+  "max": 1,
+  "stdev": 0.0
+ },
+ "ttc_events": {
+  "n": 1,
+  "mean": 1,
+  "min": 1,
+  "max": 1,
+  "stdev": 0.0
+ },
+ "rows": [
+  {
+   "index": 1,
+   "mission_id": "M20261001-140049-5353",
+   "final_state": "MISSION_COMPLETE",
+   "result": "COMPLETE",
+   "failure_reason": null,
+   "duration_s": 294.1,
+   "distance_m": 130.93,
+   "min_lidar_range_m": 0.279,
+   "replans": 1,
+   "ttc_events": 1,
+   "obstacle_encounters": 28,
+   "sign_events": 5
+  },
+  {
+   "index": 2,
+   "mission_id": "M20261001-140544-3ddd",
+   "final_state": "FAILED",
+   "result": "FAILED",
+   "failure_reason": "timeout: leg to laboratory exceeded 300 s",
+   "duration_s": 506.5,
+   "distance_m": 157.63,
+   "min_lidar_range_m": 0.217,
+   "replans": 11,
+   "ttc_events": 2,
+   "obstacle_encounters": 26,
+   "sign_events": 6
+  }
+ ]
+}

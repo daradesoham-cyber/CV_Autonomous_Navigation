@@ -1,8 +1,0 @@
-metric,value,unit
-camera_fps,30.0,FPS
-yolo_inference_fps,144.2,FPS
-yolo_avg_latency_ms,5.62,ms
-yolo_p95_latency_ms,7.17,ms
-gpu_vram_used_mib,173.0,MiB
-gpu_utilization_pct,46.3,%
-cpu_utilization_pct,11.5,%

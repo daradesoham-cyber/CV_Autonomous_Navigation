@@ -1,0 +1,104 @@
+{
+ "summary": {
+  "detection_node_latency_ms": {
+   "mean": 12.29,
+   "p95": 15.07
+  },
+  "fusion_latency_ms": null,
+  "detection_rate_hz": 2.46
+ },
+ "scenarios": [
+  {
+   "scenario": "S3_robot_toward_bed",
+   "target": "v3_patient_bed_1",
+   "class": "hospital_bed",
+   "fusion_frames": 0,
+   "outcomes": {},
+   "ON_rate_when_detected": null,
+   "false_association_rate_when_detected": null,
+   "lost_rate_when_detected": null,
+   "range_error_m": null,
+   "frame_to_frame_excess_jump_m": null,
+   "first_detection_to_first_ON_s": null,
+   "true_range_span_m": null,
+   "scan_image_dt_ms": null,
+   "motion_compensation": {},
+   "frames": [],
+   "v26_offline_same_frames": {
+    "frames_with_target_detection": 144,
+    "outcomes": {
+     "ON": 144
+    },
+    "ON_rate_when_detected": 1.0,
+    "false_association_rate_when_detected": 0.0
+   },
+   "costmap_phantom_check": {
+    "non_empty_clouds": 42,
+    "clouds_evaluated": 42,
+    "points_evaluated": 106134,
+    "points_farther_than_1m_from_any_real_object": 0
+   },
+   "semantic_obstacles": {
+    "messages": 123,
+    "by_class": {
+     "hospital_bed": 123
+    },
+    "dynamic_flagged_by_class": {
+     "hospital_bed": 100
+    },
+    "with_ttc_by_class": {
+     "hospital_bed": 100
+    },
+    "ttc_examples": [
+     [
+      1945.255,
+      "hospital_bed",
+      2.48,
+      true,
+      "Front-Center | MOVING_TOWARDS | ID:6 | TTC:6.4s"
+     ],
+     [
+      1945.285,
+      "hospital_bed",
+      2.473,
+      true,
+      "Front-Center | MOVING_TOWARDS | ID:6 | TTC:4.0s"
+     ],
+     [
+      1945.32,
+      "hospital_bed",
+      2.469,
+      true,
+      "Front-Center | MOVING_TOWARDS | ID:6 | TTC:7.1s"
+     ],
+     [
+      1945.35,
+      "hospital_bed",
+      2.462,
+      true,
+      "Front-Center | MOVING_TOWARDS | ID:6 | TTC:3.6s"
+     ],
+     [
+      1945.385,
+      "hospital_bed",
+      2.452,
+      true,
+      "Front-Center | MOVING_TOWARDS | ID:6 | TTC:3.2s"
+     ]
+    ],
+    "ttc_stats_by_class": {
+     "hospital_bed": {
+      "n": 100,
+      "min_s": 1.4,
+      "below_1_8s": 7
+     }
+    },
+    "motion_states": {
+     "STATIC": 15,
+     "MOVING_AWAY": 6,
+     "MOVING_TOWARDS": 102
+    }
+   }
+  }
+ ]
+}

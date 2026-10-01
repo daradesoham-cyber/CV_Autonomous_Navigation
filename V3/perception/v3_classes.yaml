@@ -1,0 +1,49 @@
+# V3 perception class set (Phase 2).
+# Ground truth comes from Gazebo's Label system + boundingbox_camera: every labelled model below
+# carries <label>class_id + 1</label> in the dataset world (label 0 is reserved for background).
+# Unlisted models (walls, benches, reception desk, chairs, drawers, BP monitor, cabinets, racks,
+# tables, forklift/cart/pallet primitives) are deliberately UNLABELLED: they are the hard negatives.
+version: "3.0"
+classes:
+  - id: 0
+    name: person
+    models: [Scrubs, MaleVisitorOnPhone, FemaleVisitor]
+    world_models: [dynamic_person]
+  - id: 1
+    name: hospital_bed
+    models: [MalePatientBed, TrolleyBed]
+  - id: 2
+    name: cart            # medical carts
+    models: [BPCart, InstrumentCart1, BloodPressureMonitor]   # BloodPressureMonitor is a monitor on a wheeled stand, visually near-identical to BPCart
+  - id: 3
+    name: wheelchair
+    models: [PatientWheelChair]
+  - id: 4
+    name: iv_stand
+    models: [IVStand]
+  - id: 5
+    name: surgical_trolley
+    models: [SurgicalTrolley]
+    world_models: [dynamic_hospital_trolley]
+  - id: 6
+    name: directional_sign
+    world_model_prefix: "sign_"      # V2.6 corridor signs
+  - id: 7
+    name: collection_point_marker
+    world_models: [v3_sign_collection_point]
+  - id: 8
+    name: lab_test_point_marker
+    world_models: [v3_sign_laboratory_test_point]
+
+# V2.5 classes intentionally NOT carried into V3 (see V3_CV_DOMAIN_TRANSFER_REPORT.md):
+#   forklift, pallet, box, charging_station: only untextured box primitives exist in the scene, so
+#     labelling them would re-teach the "grey box = object" shortcut behind the Phase 1 failures;
+#     they stay LiDAR obstacles and act as hard negatives.
+#   obstacle: no defined visual referent.
+#   door: V2.6/V3 doorways are open gaps; there is no door model to label.
+dropped_v25_classes: [forklift, pallet, box, obstacle, door, charging_station]
+
+# Occupants: MalePatientBed and PatientWheelChair are single meshes that include a person. The
+# occupant is part of the bed/wheelchair object; evaluation ignores `person` predictions lying
+# >= 70 % inside such a GT box (ignore region), instead of counting them as true or false.
+occupied_object_classes: [hospital_bed, wheelchair]

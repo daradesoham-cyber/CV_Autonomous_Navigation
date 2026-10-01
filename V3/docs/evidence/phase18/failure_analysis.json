@@ -1,0 +1,62 @@
+{
+ "final": {
+  "missions": 10,
+  "outcomes": {
+   "MISSION_COMPLETE": 10
+  },
+  "failure_reasons": {},
+  "leg_results": {
+   "arrived": 20
+  },
+  "replans_total": 6,
+  "missions_with_replan": 5,
+  "min_lidar_range_m": {
+   "min": 0.256,
+   "max": 0.403
+  },
+  "replan_reasons": {
+   "DYNAMIC_OBSTACLE": 6
+  },
+  "warn_error_events_top": []
+ },
+ "repeated": {
+  "missions": 10,
+  "outcomes": {
+   "MISSION_COMPLETE": 10
+  },
+  "failure_reasons": {},
+  "leg_results": {
+   "arrived": 20
+  },
+  "replans_total": 1,
+  "missions_with_replan": 1,
+  "min_lidar_range_m": {
+   "min": 0.369,
+   "max": 0.423
+  },
+  "replan_reasons": {
+   "DYNAMIC_OBSTACLE": 1
+  },
+  "warn_error_events_top": []
+ },
+ "traffic": {
+  "missions": 5,
+  "outcomes": {
+   "MISSION_COMPLETE": 5
+  },
+  "failure_reasons": {},
+  "leg_results": {
+   "arrived": 10
+  },
+  "replans_total": 2,
+  "missions_with_replan": 2,
+  "min_lidar_range_m": {
+   "min": 0.383,
+   "max": 0.419
+  },
+  "replan_reasons": {
+   "DYNAMIC_OBSTACLE": 2
+  },
+  "warn_error_events_top": []
+ }
+}

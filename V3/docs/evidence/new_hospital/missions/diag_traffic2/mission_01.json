@@ -1,0 +1,264 @@
+{
+ "index": 1,
+ "traffic": true,
+ "final_state": "FAILED",
+ "mission_id": "M20261001-132437-0e1c",
+ "client_wall_s": 300.6,
+ "api_timeline": [
+  {
+   "t": 1790841277.94,
+   "state": "READY",
+   "de_state": null
+  },
+  {
+   "t": 1790841277.95,
+   "state": "READY",
+   "de_state": null
+  },
+  {
+   "t": 1790841278.45,
+   "state": "GO_TO_COLLECTION",
+   "de_state": null
+  },
+  {
+   "t": 1790841278.46,
+   "state": "GO_TO_COLLECTION",
+   "de_state": null
+  },
+  {
+   "t": 1790841578.57,
+   "state": "FAILED",
+   "de_state": "NAVIGATING"
+  }
+ ],
+ "mission_record": {
+  "collection_marker_seen": 0,
+  "destination": "laboratory",
+  "distance_m": 0.7,
+  "duration_s": 300.4,
+  "end_time": 1790841578.3701832,
+  "events": {
+   "mission_events": [
+    {
+     "level": "INFO",
+     "msg": "mission M20261001-132437-0e1c start: collection_point -> laboratory",
+     "state": "READY",
+     "t": 1790841277.94
+    },
+    {
+     "level": "INFO",
+     "msg": "READY -> GO_TO_COLLECTION: goal 'collection_point' sent to decision engine",
+     "state": "READY",
+     "t": 1790841277.94
+    },
+    {
+     "level": "INFO",
+     "msg": "GO_TO_COLLECTION -> FAILED: timeout: leg to collection_point exceeded 300 s",
+     "state": "GO_TO_COLLECTION",
+     "t": 1790841578.37
+    }
+   ],
+   "sign_decisions": []
+  },
+  "failure_reason": "timeout: leg to collection_point exceeded 300 s",
+  "lab_marker_seen": 0,
+  "legs": [
+   {
+    "de_states": [
+     "PLANNING",
+     "NAVIGATING",
+     "RECOVERY",
+     "REPLANNING",
+     "NAVIGATING",
+     "RECOVERY",
+     "REPLANNING",
+     "NAVIGATING"
+    ],
+    "decision_engine_events": [
+     "Mission goal requested: 'COLLECTION_POINT'",
+     "Evaluating route options to 'collection_point'",
+     "Selected Route A with total cost 126.3 (48.3m, 3 alternatives evaluated).",
+     "Traveling via lobby -> reception -> corridor_w_north -> corridor_w_mid -> x_west_north -> x_west_mid -> x_west_south -> ward_west_door -> collection_point",
+     "Robot stuck near (0.02, 13.02) for > 5.0s!",
+     "RECOVERY TRIGGERED (NO_PROGRESS)! Attempt 1.",
+     "Executing recovery: NO_PROGRESS",
+     "Replan triggered (NO_PROGRESS): Recovery attempt 1",
+     "Selected alternative route 'Route A' (Cost: 126.3, Dist: 48.3m, Reason: NO_PROGRESS)",
+     "Engaging alternative route: lobby -> reception -> corridor_w_north -> corridor_w_mid -> x_west_north -> x_west_mid -> x_west_south -> ward_west_door -> collection_point",
+     "PATH_DEVIATION: Robot is 2.19m off planned corridor centerline (lobby -> reception)",
+     "Robot stuck near (0.01, 13.35) for > 5.0s!",
+     "RECOVERY TRIGGERED (NO_PROGRESS)! Attempt 2.",
+     "Executing recovery: NO_PROGRESS",
+     "Replan triggered (NO_PROGRESS): Recovery attempt 2",
+     "Selected alternative route 'Route A' (Cost: 126.3, Dist: 48.3m, Reason: NO_PROGRESS)",
+     "Engaging alternative route: lobby -> reception -> corridor_w_north -> corridor_w_mid -> x_west_north -> x_west_mid -> x_west_south -> ward_west_door -> collection_point",
+     "PATH_DEVIATION: Robot is 2.50m off planned corridor centerline (lobby -> reception)"
+    ],
+    "duration_s": 300.4,
+    "end": 1790841578.369023,
+    "node": "collection_point",
+    "paused_s": 0,
+    "result": "timeout",
+    "route": {
+     "active_path": [
+      "lobby",
+      "reception",
+      "corridor_w_north",
+      "corridor_w_mid",
+      "x_west_north",
+      "x_west_mid",
+      "x_west_south",
+      "ward_west_door",
+      "collection_point"
+     ],
+     "alternatives": [
+      {
+       "cost_breakdown": {
+        "congestion_cost": 0.0,
+        "distance_cost": 48.32,
+        "familiarity_bonus": 12.01,
+        "history_cost": 19.75,
+        "narrow_cost": 7.5,
+        "obstacle_cost": 2.33,
+        "reliability_factor": 0.88,
+        "time_cost": 60.4,
+        "turn_cost": 0.0
+       },
+       "distance": 48.32,
+       "estimated_time": 107.4,
+       "is_selected": true,
+       "path": [
+        "lobby",
+        "reception",
+        "corridor_w_north",
+        "corridor_w_mid",
+        "x_west_north",
+        "x_west_mid",
+        "x_west_south",
+        "ward_west_door",
+        "collection_point"
+       ],
+       "reliability_pct": 87.8,
+       "route_id": "Route A",
+       "total_cost": 126.3
+      },
+      {
+       "cost_breakdown": {
+        "congestion_cost": 0.0,
+        "distance_cost": 50.19,
+        "familiarity_bonus": 9.81,
+        "history_cost": 17.93,
+        "narrow_cost": 7.5,
+        "obstacle_cost": 2.33,
+        "reliability_factor": 0.9,
+        "time_cost": 62.73,
+        "turn_cost": 0.0
+       },
+       "distance": 50.19,
+       "estimated_time": 111.5,
+       "is_selected": false,
+       "path": [
+        "lobby",
+        "lobby_west",
+        "corridor_w_north",
+        "corridor_w_mid",
+        "x_west_north",
+        "x_west_mid",
+        "x_west_south",
+        "ward_west_door",
+        "collection_point"
+       ],
+       "reliability_pct": 90.1,
+       "route_id": "Route C",
+       "total_cost": 130.87
+      },
+      {
+       "cost_breakdown": {
+        "congestion_cost": 0.0,
+        "distance_cost": 60.19,
+        "familiarity_bonus": 3.65,
+        "history_cost": 27.78,
+        "narrow_cost": 7.5,
+        "obstacle_cost": 0.0,
+        "reliability_factor": 0.87,
+        "time_cost": 75.23,
+        "turn_cost": 0.0
+       },
+       "distance": 60.19,
+       "estimated_time": 133.7,
+       "is_selected": false,
+       "path": [
+        "lobby",
+        "lobby_east",
+        "corridor_e_north",
+        "corridor_e_mid",
+        "x_east_north",
+        "x_east_mid",
+        "x_east_south",
+        "cross_south_mid",
+        "x_west_south",
+        "ward_west_door",
+        "collection_point"
+       ],
+       "reliability_pct": 87.2,
+       "route_id": "Route B",
+       "total_cost": 167.05
+      }
+     ],
+     "cost_breakdown": {
+      "congestion_cost": 0.0,
+      "distance_cost": 48.32,
+      "familiarity_bonus": 12.01,
+      "history_cost": 19.75,
+      "narrow_cost": 7.5,
+      "obstacle_cost": 2.33,
+      "reliability_factor": 0.88,
+      "time_cost": 60.4,
+      "turn_cost": 0.0
+     },
+     "de_min_clearance": 1.21,
+     "reliability_pct": 87.8,
+     "replan_reasons": [
+      "NO_PROGRESS",
+      "NO_PROGRESS"
+     ],
+     "replans": 2,
+     "route_cost": 126.3,
+     "ttc_events_de": 0
+    },
+    "start": 1790841277.9443984,
+    "target": "collection_point"
+   }
+  ],
+  "min_lidar_range_m": 1.184,
+  "mission_id": "M20261001-132437-0e1c",
+  "obstacle_encounters": 0,
+  "path": [
+   [
+    0.04,
+    13.19
+   ],
+   [
+    0.01,
+    13.35
+   ],
+   [
+    -0.0,
+    13.5
+   ],
+   [
+    -0.01,
+    13.64
+   ]
+  ],
+  "pauses": 0,
+  "payload": "blood_sample",
+  "replans": 2,
+  "result": "FAILED",
+  "result_note": "timeout: leg to collection_point exceeded 300 s",
+  "sign_events": 0,
+  "source": "collection_point",
+  "start_time": 1790841277.9436667,
+  "ttc_events": 0
+ }
+}
