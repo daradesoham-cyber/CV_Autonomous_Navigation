@@ -1,23 +1,27 @@
-# Python Dependencies for CV Autonomous Navigation System
-# Environment: Ubuntu 26.04 LTS | ROS 2 Lyrical | Python 3.14 / Virtual Environment
+# Python dependencies for CV Autonomous Navigation V3.0 (install into ~/CV_Autonomous_Navigation/.venv)
+# Environment: Ubuntu 26.04 LTS | ROS 2 Lyrical | Python 3.14 | Gazebo Sim 10.5
+# Versions below are the ones V3.0 was validated with.
 
-# Core Deep Learning & Computer Vision
-torch>=2.0.0
-torchvision>=0.15.0
-ultralytics>=8.0.0
-opencv-python>=4.8.0
+# Perception (YOLOv8 on CUDA)
+torch>=2.14
+torchvision
+ultralytics>=8.4
+opencv-python>=5.0
+numpy>=2.5
+scipy>=1.18
 
-# Numerical, Scientific & Graph Modeling
-numpy>=1.24.0
-scipy>=1.11.0
-pandas>=2.0.0
-networkx>=3.0
-
-# Visualization & Benchmarking
-matplotlib>=3.7.0
-psutil>=5.9.0
+# Web dashboard server
+flask>=3.1
 pyyaml>=6.0
+pillow>=12.0
 
-# Note: ROS 2 packages (rclpy, cv_bridge, tf2_ros, nav2_msgs, sensor_msgs, geometry_msgs)
-# are sourced directly from the ROS 2 Lyrical installation:
-# source /opt/ros/lyrical/setup.bash
+# World / map generation tools (V3/scripts/generate_hospital_map.py, build_*.py)
+trimesh>=5.1
+pycollada>=0.9
+shapely>=2.1
+
+# Benchmarking
+psutil>=7.0
+
+# ROS 2 packages (rclpy, sensor_msgs, nav2, ros_gz) and the gz Python bindings come from the system installation:
+#   source /opt/ros/lyrical/setup.bash
